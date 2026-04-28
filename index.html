@@ -1296,7 +1296,7 @@
       <a href="tel:+917039773570" class="contact-link">✆ +91-7039773570</a>
     </div>
     <div class="footer-bar">
-      <div class="footer-copy">© 2025 S Deepak Achary. All rights reserved.</div>
+      <div class="footer-copy">© <span id="copy-year"></span> S Deepak Achary. All rights reserved.</div>
       <div class="footer-made">Hyderabad, India &nbsp;✦&nbsp; Built with intent.</div>
     </div>
   </div>
@@ -1630,6 +1630,7 @@ document.querySelectorAll('a, button, .skill-card, .project-frame').forEach(el =
     ring.style.borderColor = 'rgba(200,146,42,0.4)';
   });
 });
+document.getElementById('copy-year').textContent = new Date().getFullYear();
 </script>
 </body>
 </html>
