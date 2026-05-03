@@ -1,0 +1,170 @@
+[
+  {
+    "name": "BEPARA",
+    "slug": "bepara",
+    "status": "Live",
+    "status_key": "live",
+    "description": "project: bepara type: status: active",
+    "tags": [
+      "Next.js",
+      "React",
+      "Tailwind",
+      "TypeScript",
+      "Supabase"
+    ],
+    "live_url": "https://bepara.pages.dev/",
+    "local": true,
+    "last_updated": "2026-05-02",
+    "github_remote": "git@github.com:sdachary/bepara.git"
+  },
+  {
+    "name": "CHITRAGUPTA",
+    "slug": "chitragupta",
+    "status": "Live",
+    "status_key": "live",
+    "description": "project: chitragupta type: status: active",
+    "tags": [
+      "Vite",
+      "Hono",
+      "TypeScript",
+      "Cloudflare Pages",
+      "Supabase"
+    ],
+    "live_url": "https://chitragupta.pages.dev/",
+    "local": true,
+    "last_updated": "2026-04-27",
+    "github_remote": "git@github.com:sdachary/chitragupta.git"
+  },
+  {
+    "name": "GANESH",
+    "slug": "ganesh",
+    "status": "Local / Standalone",
+    "status_key": "local",
+    "description": "project: ganesh type: status: active",
+    "tags": [],
+    "live_url": null,
+    "local": true,
+    "last_updated": null,
+    "github_remote": null
+  },
+  {
+    "name": "INDRA",
+    "slug": "indra",
+    "status": "Local / Standalone",
+    "status_key": "local",
+    "description": "project: indra type: status: active",
+    "tags": [],
+    "live_url": null,
+    "local": true,
+    "last_updated": "2026-04-27",
+    "github_remote": "git@github.com:sdachary/indra.git"
+  },
+  {
+    "name": "KANAK",
+    "slug": "kanak",
+    "status": "Live",
+    "status_key": "live",
+    "description": "project: kanak type: status: active",
+    "tags": [
+      "Cloudflare Pages"
+    ],
+    "live_url": "https://kanak-dj5.pages.dev/",
+    "local": true,
+    "last_updated": "2026-04-27",
+    "github_remote": "git@github.com:sdachary/kanak.git"
+  },
+  {
+    "name": "KARMA",
+    "slug": "karma",
+    "status": "Local / Standalone",
+    "status_key": "local",
+    "description": "project: karma type: status: active",
+    "tags": [
+      "Python",
+      "FastAPI"
+    ],
+    "live_url": null,
+    "local": true,
+    "last_updated": "2026-04-28",
+    "github_remote": "git@github.com:sdachary/karma.git"
+  },
+  {
+    "name": "KUBERA",
+    "slug": "kubera",
+    "status": "Open Source",
+    "status_key": "open-source",
+    "description": "<div align=\"center\">",
+    "tags": [
+      "React",
+      "Vite"
+    ],
+    "live_url": null,
+    "local": true,
+    "last_updated": "2026-05-03",
+    "github_remote": "git@github.com:sdachary/kubera.git",
+    "github_url": "https://github.com/sdachary/kubera"
+  },
+  {
+    "name": "MCP-HUB",
+    "slug": "mcp-hub",
+    "status": "Local / Standalone",
+    "status_key": "local",
+    "description": "project: devendra type: status: active",
+    "tags": [],
+    "live_url": null,
+    "local": true,
+    "last_updated": "2026-05-03",
+    "github_remote": "git@github.com:sdachary/devendra.git"
+  },
+  {
+    "name": "SOCIAL-BLUEPRINT-AI",
+    "slug": "social-blueprint-ai",
+    "status": "Local / Standalone",
+    "status_key": "local",
+    "description": "project: social-blueprint-ai type: status: active",
+    "tags": [
+      "React",
+      "Vite",
+      "Express",
+      "Hono",
+      "Tailwind",
+      "TypeScript",
+      "Cloudflare Pages"
+    ],
+    "live_url": null,
+    "local": true,
+    "last_updated": "2026-04-27",
+    "github_remote": "https://github.com/sdachary/social-blueprint-ai"
+  },
+  {
+    "name": "UNNATI",
+    "slug": "unnati",
+    "status": "Live",
+    "status_key": "live",
+    "description": "project: unnati type: status: active",
+    "tags": [
+      "Next.js",
+      "React",
+      "Tailwind",
+      "TypeScript",
+      "Cloudflare Pages",
+      "Supabase"
+    ],
+    "live_url": "https://unnati-70z.pages.dev/",
+    "local": true,
+    "last_updated": "2026-05-02",
+    "github_remote": "git@github.com:sdachary/unnati.git"
+  },
+  {
+    "name": "VISHWAKARMA",
+    "slug": "vishwakarma",
+    "status": "Live",
+    "status_key": "live",
+    "description": "project: vishwakarma type: status: active",
+    "tags": [],
+    "live_url": "https://vishwakarma.pages.dev/",
+    "local": true,
+    "last_updated": "2026-04-27",
+    "github_remote": "git@github.com:sdachary/vishwakarma.git"
+  }
+]
