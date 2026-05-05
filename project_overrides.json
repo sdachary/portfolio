@@ -12,10 +12,15 @@
     "live_url": "https://kanak-dj5.pages.dev/"
   },
   "bepara": {
-    "live_url": "https://bepara.pages.dev/"
+    "live_url": "https://bepara.pages.dev/",
+    "description": "Inventory management SaaS for retail businesses. Track products, scan barcodes, and sync real-time data with Supabase."
   },
   "kubera": {
     "github_url": "https://github.com/sdachary/kubera",
-    "status": "open-source"
+    "status": "open-source",
+    "description": "Personal finance OS — self-hosted, open-source tool for tracking wealth, investments, and financial goals."
+  },
+  "mcp-hub": {
+    "description": "Central MCP Hub orchestrating AI agents and skills across the ecosystem via standardized Model Context Protocol."
   }
 }

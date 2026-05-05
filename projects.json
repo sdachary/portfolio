@@ -4,7 +4,7 @@
     "slug": "bepara",
     "status": "Live",
     "status_key": "live",
-    "description": "project: bepara type: status: active",
+    "description": "Inventory management SaaS for retail businesses. Track products, scan barcodes, and sync real-time data with Supabase.",
     "tags": [
       "Next.js",
       "React",
@@ -22,7 +22,7 @@
     "slug": "chitragupta",
     "status": "Live",
     "status_key": "live",
-    "description": "project: chitragupta type: status: active",
+    "description": "Chitragupta is a high-fidelity financial ledger for business partnerships. Automated command center for tracking investments, revenue, and profit settlements",
     "tags": [
       "Vite",
       "Hono",
@@ -40,7 +40,7 @@
     "slug": "ganesh",
     "status": "Local / Standalone",
     "status_key": "local",
-    "description": "project: ganesh type: status: active",
+    "description": "Process 700+ screenshots automatically with smart resource management that scales CPU/RAM based on system activity",
     "tags": [],
     "live_url": null,
     "local": true,
@@ -52,7 +52,7 @@
     "slug": "indra",
     "status": "Local / Standalone",
     "status_key": "local",
-    "description": "project: indra type: status: active",
+    "description": "Indra is the high-performance automation backbone for the ecosystem. Powered by n8n, it orchestrates complex multi-service workflows, webhook triggers, and real-time state synchronization across all b...",
     "tags": [],
     "live_url": null,
     "local": true,
@@ -64,7 +64,7 @@
     "slug": "kanak",
     "status": "Live",
     "status_key": "live",
-    "description": "project: kanak type: status: active",
+    "description": "Kanak is the high-performance SaaS control plane for modern retail and enterprise management. Real-time bento dashboard for inventory, market monitoring, and financial settlement",
     "tags": [
       "Cloudflare Pages"
     ],
@@ -78,7 +78,7 @@
     "slug": "karma",
     "status": "Local / Standalone",
     "status_key": "local",
-    "description": "project: karma type: status: active",
+    "description": "A production-ready MVP for a distributed compute marketplace where users can contribute their compute resources and earn rewards",
     "tags": [
       "Python",
       "FastAPI"
@@ -93,7 +93,7 @@
     "slug": "kubera",
     "status": "Open Source",
     "status_key": "open-source",
-    "description": "<div align=\"center\">",
+    "description": "Personal finance OS \u2014 self-hosted, open-source tool for tracking wealth, investments, and financial goals.",
     "tags": [
       "React",
       "Vite"
@@ -109,7 +109,7 @@
     "slug": "mcp-hub",
     "status": "Local / Standalone",
     "status_key": "local",
-    "description": "project: devendra type: status: active",
+    "description": "Central MCP Hub orchestrating AI agents and skills across the ecosystem via standardized Model Context Protocol.",
     "tags": [],
     "live_url": null,
     "local": true,
@@ -121,7 +121,7 @@
     "slug": "social-blueprint-ai",
     "status": "Local / Standalone",
     "status_key": "local",
-    "description": "project: social-blueprint-ai type: status: active",
+    "description": "AI-powered social media audit and growth strategy tool built with React + Vite (frontend) and Cloudflare Workers + D1 (backend)",
     "tags": [
       "React",
       "Vite",
@@ -141,7 +141,7 @@
     "slug": "unnati",
     "status": "Live",
     "status_key": "live",
-    "description": "project: unnati type: status: active",
+    "description": "AI-powered job search assistant that automates tedious parts of job hunting while keeping you in control",
     "tags": [
       "Next.js",
       "React",
@@ -160,7 +160,7 @@
     "slug": "vishwakarma",
     "status": "Live",
     "status_key": "live",
-    "description": "project: vishwakarma type: status: active",
+    "description": "Vishwakarma is a simplified provisioning portal for non-technical users. It enables a \"Guided Form\" workflow where clients can request cloud resources with a single click, while the backend handles al...",
     "tags": [],
     "live_url": "https://vishwakarma.pages.dev/",
     "local": true,

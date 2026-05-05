@@ -133,23 +133,86 @@ def parse_wrangler_toml(content):
 
 
 def get_readme_description(content):
-    """Extract first paragraph as description"""
+    """Extract project description from README: prefers bold tagline after title, then first real paragraph"""
     if not content:
         return ""
     lines = content.split("\n")
-    desc_lines = []
-    started = False
+
+    in_code = False
+    in_metadata = False
+    found_h1 = False
+    after_h1_lines = []
+    bold_desc = None
+
     for line in lines:
-        line = line.strip()
-        if not line or line.startswith("#") or line.startswith("---"):
-            if started:
+        stripped = line.strip()
+
+        # Track code blocks
+        if stripped.startswith("```"):
+            in_code = not in_code
+            continue
+        if in_code:
+            continue
+
+        # Track metadata block (YAML-style at top)
+        if stripped.startswith(("project:", "type:", "status:", "priority:", "tags:")):
+            in_metadata = True
+            continue
+        if in_metadata:
+            if stripped and not stripped.startswith((">", "-", "*", "[", "|", "```")):
+                in_metadata = False
+            else:
+                continue
+
+        # Skip dividers and HTML comments
+        if stripped.startswith(("---", "<!")):
+            continue
+
+        # Detect H1 title
+        if stripped.startswith("# "):
+            found_h1 = True
+            continue
+
+        if not found_h1:
+            continue
+
+        # Skip badge/shield/image lines
+        if stripped.startswith("!") or "shield" in stripped.lower() or "badge" in stripped.lower():
+            continue
+
+        # Skip ASCII art
+        if any(c in stripped for c in "╗╔╝╚║═║▌▐█"):
+            continue
+
+        # Skip table rows
+        if stripped.startswith(("|", ":")):
+            continue
+
+        # Skip metadata-like lines (Status:, Language:, Location:)
+        if any(stripped.startswith(f"**{kw}") for kw in ["Status", "Language", "Location", "Author", "License"]):
+            continue
+
+        # Capture bold description line (common pattern: **Desc** is the project tagline)
+        if not bold_desc and stripped.startswith("**") and stripped.count("**") >= 2:
+            bold_desc = stripped.replace("**", "")
+            continue
+
+        # Skip headings, blockquotes, lists, dividers
+        if stripped.startswith(("#", ">", "-", "*", "_", "=", "1.", "2.", "3.", "4.", "5.", "```")):
+            if after_h1_lines:
                 break
             continue
-        started = True
-        desc_lines.append(line)
-        if len(desc_lines) >= 3:
-            break
-    return " ".join(desc_lines)[:200]
+
+        # Collect real paragraph lines (prefer sentence structures)
+        if stripped:
+            after_h1_lines.append(stripped)
+            if len(after_h1_lines) >= 2:
+                break
+
+    # Prefer bold tagline, then first paragraph
+    desc = bold_desc if bold_desc else " ".join(after_h1_lines[:2])
+    desc = desc.replace("**", "").replace("*", "")
+    return desc[:200].rstrip(". ") + ("..." if len(desc) > 200 else "") if desc else ""
 
 
 def scan_projects():
