@@ -14,7 +14,7 @@
     ],
     "live_url": "https://bepara.pages.dev/",
     "local": true,
-    "last_updated": "2026-05-03",
+    "last_updated": "2026-05-08",
     "github_remote": "git@github.com:sdachary/bepara.git"
   },
   {
@@ -70,7 +70,7 @@
     ],
     "live_url": "https://kanak-dj5.pages.dev/",
     "local": true,
-    "last_updated": "2026-04-27",
+    "last_updated": "2026-05-08",
     "github_remote": "git@github.com:sdachary/kanak.git"
   },
   {
@@ -94,13 +94,10 @@
     "status": "Open Source",
     "status_key": "open-source",
     "description": "Personal finance OS \u2014 self-hosted, open-source tool for tracking wealth, investments, and financial goals.",
-    "tags": [
-      "React",
-      "Vite"
-    ],
+    "tags": [],
     "live_url": null,
     "local": true,
-    "last_updated": "2026-05-04",
+    "last_updated": "2026-05-08",
     "github_remote": "git@github.com:sdachary/kubera.git",
     "github_url": "https://github.com/sdachary/kubera"
   },
@@ -113,7 +110,7 @@
     "tags": [],
     "live_url": null,
     "local": true,
-    "last_updated": "2026-05-03",
+    "last_updated": "2026-05-08",
     "github_remote": "git@github.com:sdachary/devendra.git"
   },
   {
