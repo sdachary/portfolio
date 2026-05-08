@@ -16,6 +16,7 @@
     "description": "Inventory management SaaS for retail businesses. Track products, scan barcodes, and sync real-time data with Supabase."
   },
   "kubera": {
+    "live_url": "https://sdachary.github.io/kubera",
     "github_url": "https://github.com/sdachary/kubera",
     "status": "open-source",
     "description": "Personal finance OS — self-hosted, open-source tool for tracking wealth, investments, and financial goals."
