@@ -97,7 +97,7 @@
     "tags": [],
     "live_url": "https://sdachary.github.io/kubera",
     "local": true,
-    "last_updated": "2026-05-08",
+    "last_updated": "2026-05-10",
     "github_remote": "git@github.com:sdachary/kubera.git",
     "github_url": "https://github.com/sdachary/kubera"
   },
@@ -112,6 +112,20 @@
     "local": true,
     "last_updated": "2026-05-08",
     "github_remote": "git@github.com:sdachary/devendra.git"
+  },
+  {
+    "name": "OPEN-DESIGN",
+    "slug": "open-design",
+    "status": "Local / Standalone",
+    "status_key": "local",
+    "description": "<p align=\"center\"> <img src=\"docs/assets/banner.png\" alt=\"Open Design \u2014 editorial cover: design with the agent on your laptop\" width=\"100%\" />",
+    "tags": [
+      "TypeScript"
+    ],
+    "live_url": null,
+    "local": true,
+    "last_updated": "2026-05-08",
+    "github_remote": "https://github.com/nexu-io/open-design"
   },
   {
     "name": "SOCIAL-BLUEPRINT-AI",
