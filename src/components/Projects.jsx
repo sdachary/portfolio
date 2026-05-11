@@ -20,7 +20,7 @@ export default function Projects() {
   const stageRef = useRef(null)
 
   useEffect(() => {
-    fetch('/projects.json')
+    fetch(import.meta.env.BASE_URL + 'projects.json')
       .then(r => r.json())
       .then(setProjects)
       .catch(() => {})

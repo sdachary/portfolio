@@ -1,0 +1,181 @@
+[
+  {
+    "name": "BEPARA",
+    "slug": "bepara",
+    "status": "Live",
+    "status_key": "live",
+    "description": "Inventory management SaaS for retail businesses. Track products, scan barcodes, and sync real-time data with Supabase.",
+    "tags": [
+      "Next.js",
+      "React",
+      "Tailwind",
+      "TypeScript",
+      "Supabase"
+    ],
+    "live_url": "https://bepara.pages.dev/",
+    "local": true,
+    "last_updated": "2026-05-08",
+    "github_remote": "git@github.com:sdachary/bepara.git"
+  },
+  {
+    "name": "CHITRAGUPTA",
+    "slug": "chitragupta",
+    "status": "Live",
+    "status_key": "live",
+    "description": "Chitragupta is a high-fidelity financial ledger for business partnerships. Automated command center for tracking investments, revenue, and profit settlements",
+    "tags": [
+      "Vite",
+      "Hono",
+      "TypeScript",
+      "Cloudflare Pages",
+      "Supabase"
+    ],
+    "live_url": "https://chitragupta.pages.dev/",
+    "local": true,
+    "last_updated": "2026-04-27",
+    "github_remote": "git@github.com:sdachary/chitragupta.git"
+  },
+  {
+    "name": "GANESH",
+    "slug": "ganesh",
+    "status": "Local / Standalone",
+    "status_key": "local",
+    "description": "Process 700+ screenshots automatically with smart resource management that scales CPU/RAM based on system activity",
+    "tags": [],
+    "live_url": null,
+    "local": true,
+    "last_updated": null,
+    "github_remote": null
+  },
+  {
+    "name": "INDRA",
+    "slug": "indra",
+    "status": "Local / Standalone",
+    "status_key": "local",
+    "description": "Indra is the high-performance automation backbone for the ecosystem. Powered by n8n, it orchestrates complex multi-service workflows, webhook triggers, and real-time state synchronization across all b...",
+    "tags": [],
+    "live_url": null,
+    "local": true,
+    "last_updated": "2026-04-27",
+    "github_remote": "git@github.com:sdachary/indra.git"
+  },
+  {
+    "name": "KANAK",
+    "slug": "kanak",
+    "status": "Live",
+    "status_key": "live",
+    "description": "Kanak is the high-performance SaaS control plane for modern retail and enterprise management. Real-time bento dashboard for inventory, market monitoring, and financial settlement",
+    "tags": [
+      "Cloudflare Pages"
+    ],
+    "live_url": "https://kanak-dj5.pages.dev/",
+    "local": true,
+    "last_updated": "2026-05-08",
+    "github_remote": "git@github.com:sdachary/kanak.git"
+  },
+  {
+    "name": "KARMA",
+    "slug": "karma",
+    "status": "Local / Standalone",
+    "status_key": "local",
+    "description": "A production-ready MVP for a distributed compute marketplace where users can contribute their compute resources and earn rewards",
+    "tags": [
+      "Python",
+      "FastAPI"
+    ],
+    "live_url": null,
+    "local": true,
+    "last_updated": "2026-04-28",
+    "github_remote": "git@github.com:sdachary/karma.git"
+  },
+  {
+    "name": "KUBERA",
+    "slug": "kubera",
+    "status": "Open Source",
+    "status_key": "open-source",
+    "description": "Personal finance OS \u2014 self-hosted, open-source tool for tracking wealth, investments, and financial goals.",
+    "tags": [],
+    "live_url": "https://sdachary.github.io/kubera",
+    "local": true,
+    "last_updated": "2026-05-10",
+    "github_remote": "git@github.com:sdachary/kubera.git",
+    "github_url": "https://github.com/sdachary/kubera"
+  },
+  {
+    "name": "MCP-HUB",
+    "slug": "mcp-hub",
+    "status": "Local / Standalone",
+    "status_key": "local",
+    "description": "Central MCP Hub orchestrating AI agents and skills across the ecosystem via standardized Model Context Protocol.",
+    "tags": [],
+    "live_url": null,
+    "local": true,
+    "last_updated": "2026-05-08",
+    "github_remote": "git@github.com:sdachary/devendra.git"
+  },
+  {
+    "name": "OPEN-DESIGN",
+    "slug": "open-design",
+    "status": "Local / Standalone",
+    "status_key": "local",
+    "description": "<p align=\"center\"> <img src=\"docs/assets/banner.png\" alt=\"Open Design \u2014 editorial cover: design with the agent on your laptop\" width=\"100%\" />",
+    "tags": [
+      "TypeScript"
+    ],
+    "live_url": null,
+    "local": true,
+    "last_updated": "2026-05-08",
+    "github_remote": "https://github.com/nexu-io/open-design"
+  },
+  {
+    "name": "SOCIAL-BLUEPRINT-AI",
+    "slug": "social-blueprint-ai",
+    "status": "Local / Standalone",
+    "status_key": "local",
+    "description": "AI-powered social media audit and growth strategy tool built with React + Vite (frontend) and Cloudflare Workers + D1 (backend)",
+    "tags": [
+      "React",
+      "Vite",
+      "Express",
+      "Hono",
+      "Tailwind",
+      "TypeScript",
+      "Cloudflare Pages"
+    ],
+    "live_url": null,
+    "local": true,
+    "last_updated": "2026-04-27",
+    "github_remote": "https://github.com/sdachary/social-blueprint-ai"
+  },
+  {
+    "name": "UNNATI",
+    "slug": "unnati",
+    "status": "Live",
+    "status_key": "live",
+    "description": "AI-powered job search assistant that automates tedious parts of job hunting while keeping you in control",
+    "tags": [
+      "Next.js",
+      "React",
+      "Tailwind",
+      "TypeScript",
+      "Cloudflare Pages",
+      "Supabase"
+    ],
+    "live_url": "https://unnati-70z.pages.dev/",
+    "local": true,
+    "last_updated": "2026-05-02",
+    "github_remote": "git@github.com:sdachary/unnati.git"
+  },
+  {
+    "name": "VISHWAKARMA",
+    "slug": "vishwakarma",
+    "status": "Live",
+    "status_key": "live",
+    "description": "Vishwakarma is a simplified provisioning portal for non-technical users. It enables a \"Guided Form\" workflow where clients can request cloud resources with a single click, while the backend handles al...",
+    "tags": [],
+    "live_url": "https://vishwakarma.pages.dev/",
+    "local": true,
+    "last_updated": "2026-04-27",
+    "github_remote": "git@github.com:sdachary/vishwakarma.git"
+  }
+]
