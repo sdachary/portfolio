@@ -14,29 +14,29 @@ export default function Cursor() {
     document.addEventListener('mousemove', onMove)
 
     const el = cursorRef.current
-    const ring = ringRef.current
+    const ringEl = ringRef.current
 
     function animate() {
-      if (!el || !ring) return
+      if (!el || !ringEl) return
       el.style.left = pos.current.mx + 'px'
       el.style.top = pos.current.my + 'px'
       ring.current.x += (pos.current.mx - ring.current.x) * 0.12
       ring.current.y += (pos.current.my - ring.current.y) * 0.12
-      ring.style.left = ring.current.x + 'px'
-      ring.style.top = ring.current.y + 'px'
+      ringEl.style.left = ring.current.x + 'px'
+      ringEl.style.top = ring.current.y + 'px'
       requestAnimationFrame(animate)
     }
     animate()
 
     const expand = () => {
       el.style.transform = 'translate(-50%, -50%) scale(2)'
-      ring.style.transform = 'translate(-50%, -50%) scale(1.5)'
-      ring.style.borderColor = 'rgba(200,146,42,0.7)'
+      ringEl.style.transform = 'translate(-50%, -50%) scale(1.5)'
+      ringEl.style.borderColor = 'rgba(200,146,42,0.7)'
     }
     const shrink = () => {
       el.style.transform = 'translate(-50%, -50%) scale(1)'
-      ring.style.transform = 'translate(-50%, -50%) scale(1)'
-      ring.style.borderColor = 'rgba(200,146,42,0.4)'
+      ringEl.style.transform = 'translate(-50%, -50%) scale(1)'
+      ringEl.style.borderColor = 'rgba(200,146,42,0.4)'
     }
 
     const interactives = document.querySelectorAll('a, button, .skill-card, .project-frame, .exp-item')
