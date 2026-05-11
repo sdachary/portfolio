@@ -7,10 +7,11 @@ import Skills from './components/Skills'
 import Projects from './components/Projects'
 import Experience from './components/Experience'
 import Contact from './components/Contact'
+import Preloader from './components/Preloader'
 
 export default function App() {
   return (
-    <>
+    <Preloader>
       <Cursor />
       <Navbar />
       <Hero />
@@ -21,12 +22,6 @@ export default function App() {
       <Experience />
       <Contact />
 
-      <style>{`
-        @keyframes scrollPulse {
-          0%, 100% { opacity: 0.3; transform: scaleY(0.5); transform-origin: top; }
-          50% { opacity: 1; transform: scaleY(1); transform-origin: top; }
-        }
-      `}</style>
-    </>
+    </Preloader>
   )
 }
