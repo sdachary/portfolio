@@ -103,7 +103,7 @@ export default function Hero() {
 
     resize()
     initParticles()
-    animate()
+    animate(0)
     window.addEventListener('resize', () => { resize(); initParticles() })
 
     return () => {
