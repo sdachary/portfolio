@@ -83,6 +83,61 @@ export default function Preloader({ children }) {
           0%, 100% { opacity: 0.3; transform: scaleY(0.5); transform-origin: top; }
           50% { opacity: 1; transform: scaleY(1); transform-origin: top; }
         }
+
+        @media (max-width: 768px) {
+          #about, #experience, #skills, #dual, #contact {
+            padding: 4rem 1.5rem !important;
+          }
+          #about {
+            grid-template-columns: 1fr !important;
+            gap: 2rem !important;
+          }
+          #hero {
+            padding: 0 1.5rem 3rem !important;
+          }
+          #hero > div:first-child {
+            max-width: 100% !important;
+          }
+          #projects {
+            padding: 4rem 0 3rem !important;
+          }
+          #projects > div:first-child {
+            padding: 0 1.5rem 2rem !important;
+          }
+          nav {
+            padding: 1rem 1.5rem !important;
+          }
+          nav ul {
+            gap: 1rem !important;
+          }
+          #skills > div:first-child,
+          #experience > div:first-child {
+            padding-bottom: 1rem !important;
+          }
+          #dual > div:last-child {
+            grid-template-columns: 1fr !important;
+            gap: 2rem !important;
+          }
+          #dual > div:last-child > div:nth-child(2) {
+            display: none !important;
+          }
+          #contact > div a {
+            padding: 0.5rem 0 !important;
+            font-size: 0.6rem !important;
+          }
+        }
+
+        @media (max-width: 480px) {
+          nav ul {
+            gap: 0.5rem !important;
+          }
+          nav a {
+            font-size: 0.55rem !important;
+          }
+          nav > div {
+            font-size: 0.6rem !important;
+          }
+        }
       `}</style>
     </>
   )

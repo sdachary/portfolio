@@ -7,6 +7,9 @@ export default function Cursor() {
   const ring = useRef({ x: -100, y: -100 })
 
   useEffect(() => {
+    const isTouch = 'ontouchstart' in window || navigator.maxTouchPoints > 0
+    if (isTouch) return
+
     const onMove = (e) => {
       pos.current.mx = e.clientX
       pos.current.my = e.clientY
@@ -53,25 +56,32 @@ export default function Cursor() {
       <div ref={cursorRef} id="cursor" />
       <div ref={ringRef} id="cursor-ring" />
       <style>{`
-        #cursor {
-          position: fixed;
-          width: 10px; height: 10px;
-          background: var(--amber);
-          border-radius: 50%;
-          pointer-events: none;
-          z-index: 10000;
-          transform: translate(-50%, -50%);
-          mix-blend-mode: difference;
-          transition: transform 0.15s;
+        #cursor, #cursor-ring {
+          display: none;
         }
-        #cursor-ring {
-          position: fixed;
-          width: 36px; height: 36px;
-          border: 1px solid rgba(200,146,42,0.4);
-          border-radius: 50%;
-          pointer-events: none;
-          z-index: 9999;
-          transform: translate(-50%, -50%);
+        @media (hover: hover) and (pointer: fine) {
+          #cursor {
+            display: block;
+            position: fixed;
+            width: 10px; height: 10px;
+            background: var(--amber);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 10000;
+            transform: translate(-50%, -50%);
+            mix-blend-mode: difference;
+            transition: transform 0.15s;
+          }
+          #cursor-ring {
+            display: block;
+            position: fixed;
+            width: 36px; height: 36px;
+            border: 1px solid rgba(200,146,42,0.4);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 9999;
+            transform: translate(-50%, -50%);
+          }
         }
       `}</style>
     </>
