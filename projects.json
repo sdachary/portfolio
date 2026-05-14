@@ -14,7 +14,7 @@
     ],
     "live_url": "https://bepara.pages.dev/",
     "local": true,
-    "last_updated": "2026-05-08",
+    "last_updated": "2026-05-12",
     "github_remote": "git@github.com:sdachary/bepara.git"
   },
   {
@@ -32,7 +32,7 @@
     ],
     "live_url": "https://chitragupta.pages.dev/",
     "local": true,
-    "last_updated": "2026-04-27",
+    "last_updated": "2026-05-14",
     "github_remote": "git@github.com:sdachary/chitragupta.git"
   },
   {
@@ -64,13 +64,13 @@
     "slug": "kanak",
     "status": "Live",
     "status_key": "live",
-    "description": "Kanak is the high-performance SaaS control plane for modern retail and enterprise management. Real-time bento dashboard for inventory, market monitoring, and financial settlement",
+    "description": "Kanak is the high-performance SaaS control plane for jewellery retail management. Real-time dashboard for inventory, gold rate tracking, sales, purchases, customer ledger, and financial settlement",
     "tags": [
       "Cloudflare Pages"
     ],
     "live_url": "https://kanak-dj5.pages.dev/",
     "local": true,
-    "last_updated": "2026-05-08",
+    "last_updated": "2026-05-11",
     "github_remote": "git@github.com:sdachary/kanak.git"
   },
   {
@@ -85,7 +85,7 @@
     ],
     "live_url": null,
     "local": true,
-    "last_updated": "2026-04-28",
+    "last_updated": "2026-05-13",
     "github_remote": "git@github.com:sdachary/karma.git"
   },
   {
@@ -97,7 +97,7 @@
     "tags": [],
     "live_url": "https://sdachary.github.io/kubera",
     "local": true,
-    "last_updated": "2026-05-10",
+    "last_updated": "2026-05-11",
     "github_remote": "git@github.com:sdachary/kubera.git",
     "github_url": "https://github.com/sdachary/kubera"
   },
@@ -110,7 +110,7 @@
     "tags": [],
     "live_url": null,
     "local": true,
-    "last_updated": "2026-05-08",
+    "last_updated": "2026-05-13",
     "github_remote": "git@github.com:sdachary/devendra.git"
   },
   {
@@ -175,7 +175,7 @@
     "tags": [],
     "live_url": "https://vishwakarma.pages.dev/",
     "local": true,
-    "last_updated": "2026-04-27",
+    "last_updated": "2026-05-13",
     "github_remote": "git@github.com:sdachary/vishwakarma.git"
   }
 ]
