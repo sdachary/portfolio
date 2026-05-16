@@ -22,7 +22,7 @@
     "slug": "chitragupta",
     "status": "Live",
     "status_key": "live",
-    "description": "Chitragupta is a high-fidelity financial ledger for business partnerships. Automated command center for tracking investments, revenue, and profit settlements",
+    "description": "Multi-tenant business ledger for partnerships. Tracks income, expenses, investments, withdrawals; auto-calculates settlements; generates GST/TDS compliance reports. Built on Cloudflare Pages + Hono +...",
     "tags": [
       "Vite",
       "Hono",
@@ -32,7 +32,7 @@
     ],
     "live_url": "https://chitragupta.pages.dev/",
     "local": true,
-    "last_updated": "2026-05-14",
+    "last_updated": "2026-05-16",
     "github_remote": "git@github.com:sdachary/chitragupta.git"
   },
   {
@@ -97,7 +97,7 @@
     "tags": [],
     "live_url": "https://sdachary.github.io/kubera",
     "local": true,
-    "last_updated": "2026-05-11",
+    "last_updated": "2026-05-16",
     "github_remote": "git@github.com:sdachary/kubera.git",
     "github_url": "https://github.com/sdachary/kubera"
   },
@@ -110,7 +110,7 @@
     "tags": [],
     "live_url": null,
     "local": true,
-    "last_updated": "2026-05-13",
+    "last_updated": "2026-05-16",
     "github_remote": "git@github.com:sdachary/devendra.git"
   },
   {
