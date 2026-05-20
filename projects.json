@@ -14,7 +14,7 @@
     ],
     "live_url": "https://bepara.pages.dev/",
     "local": true,
-    "last_updated": "2026-05-12",
+    "last_updated": "2026-05-19",
     "github_remote": "git@github.com:sdachary/bepara.git"
   },
   {
@@ -32,7 +32,7 @@
     ],
     "live_url": "https://chitragupta.pages.dev/",
     "local": true,
-    "last_updated": "2026-05-16",
+    "last_updated": "2026-05-20",
     "github_remote": "git@github.com:sdachary/chitragupta.git"
   },
   {
@@ -110,7 +110,7 @@
     "tags": [],
     "live_url": null,
     "local": true,
-    "last_updated": "2026-05-16",
+    "last_updated": "2026-05-17",
     "github_remote": "git@github.com:sdachary/devendra.git"
   },
   {
@@ -126,6 +126,18 @@
     "local": true,
     "last_updated": "2026-05-08",
     "github_remote": "https://github.com/nexu-io/open-design"
+  },
+  {
+    "name": "SARKARIALERT",
+    "slug": "sarkarialert",
+    "status": "Local / Standalone",
+    "status_key": "local",
+    "description": "Live: [sarkarialert.in](https://sarkarialert.in)",
+    "tags": [],
+    "live_url": null,
+    "local": true,
+    "last_updated": null,
+    "github_remote": null
   },
   {
     "name": "SOCIAL-BLUEPRINT-AI",
