@@ -187,7 +187,7 @@ export default function Hero() {
             onMouseEnter={e => { e.target.style.background = 'rgba(200,146,42,0.2)'; e.target.style.borderColor = '#c8922a' }}
             onMouseLeave={e => { e.target.style.background = 'rgba(200,146,42,0.1)'; e.target.style.borderColor = 'var(--amber)' }}
           >
-            \u2193 Download Resume
+            {'\u2193'} Download Resume
           </a>
           <a href="#work" style={{
             fontFamily: 'var(--font-mono)', fontSize: '0.7rem',
@@ -199,7 +199,7 @@ export default function Hero() {
             onMouseEnter={e => { e.target.style.color = 'var(--white)'; e.target.style.borderColor = 'var(--white)' }}
             onMouseLeave={e => { e.target.style.color = 'var(--muted)'; e.target.style.borderColor = 'var(--line)' }}
           >
-            Work With Me \u2192
+            Work With Me {'\u2192'}
           </a>
         </motion.div>
       </div>

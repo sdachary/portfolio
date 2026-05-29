@@ -150,12 +150,12 @@ export default function Contact() {
               </button>
               {status === 'success' && (
                 <p style={{ fontFamily: 'var(--font-mono)', fontSize: '0.65rem', color: '#4ade80', letterSpacing: '0.05em' }}>
-                  \u2713 Message sent! I'll get back to you soon.
+                  {'\u2713'} Message sent! I'll get back to you soon.
                 </p>
               )}
               {status === 'error' && (
                 <p style={{ fontFamily: 'var(--font-mono)', fontSize: '0.65rem', color: '#ef4444', letterSpacing: '0.05em' }}>
-                  \u2717 Something went wrong. Try emailing me directly at deepakachary246@gmail.com
+                  {'\u2717'} Something went wrong. Try emailing me directly at deepakachary246@gmail.com
                 </p>
               )}
             </div>
