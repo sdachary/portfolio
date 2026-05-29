@@ -21,6 +21,61 @@ const tracks = [
   },
 ]
 
+function Card({ data, side, accent }) {
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 40 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      transition={{ duration: 0.7, delay: side === 'left' ? 0 : 0.2, ease: 'easeOut' }}
+    >
+      <div style={{
+        fontFamily: 'var(--font-mono)', fontSize: '0.6rem',
+        letterSpacing: '0.3em', textTransform: 'uppercase',
+        marginBottom: '1.2rem', padding: '0.3rem 0.8rem', display: 'inline-block',
+        border: '1px solid', color: accent,
+        borderColor: accent === 'var(--amber)' ? 'rgba(200,146,42,0.3)' : 'rgba(184,76,42,0.3)',
+      }}>
+        For {data.target}
+      </div>
+      <h2 style={{
+        fontFamily: 'var(--font-display)', fontSize: 'clamp(2.5rem, 4vw, 4.5rem)',
+        lineHeight: 1, marginBottom: '0.3rem', color: 'var(--white)',
+      }}>
+        {data.role}
+      </h2>
+      <div style={{
+        fontFamily: 'var(--font-mono)', fontSize: '0.8rem',
+        color: accent, marginBottom: '2rem', letterSpacing: '0.1em',
+      }}>
+        {data.subtitle}
+      </div>
+      <p style={{
+        fontFamily: 'var(--font-body)', fontSize: '1rem',
+        color: 'var(--muted)', lineHeight: 1.7, fontWeight: 300,
+        marginBottom: '2.5rem',
+      }}>
+        {data.desc}
+      </p>
+      <a href={data.href} style={{
+        fontFamily: 'var(--font-mono)', fontSize: '0.7rem',
+        color: accent, textDecoration: 'none',
+        letterSpacing: '0.2em', textTransform: 'uppercase',
+        borderBottom: '1px solid',
+        borderColor: accent === 'var(--amber)' ? 'rgba(200,146,42,0.3)' : 'rgba(184,76,42,0.3)',
+        paddingBottom: '0.3rem',
+        transition: 'gap 0.3s, border-color 0.3s',
+        display: 'inline-flex', alignItems: 'center', gap: '0.5rem',
+      }}
+        onMouseEnter={e => { e.target.style.gap = '1rem'; e.target.style.borderColor = accent }}
+        onMouseLeave={e => { e.target.style.gap = '0.5rem'; e.target.style.borderColor = 'rgba(200,146,42,0.3)' }}
+      >
+        {data.cta}
+      </a>
+    </motion.div>
+  )
+}
+
 export default function WorkWithMe() {
   return (
     <section id="work" style={{
@@ -41,61 +96,9 @@ export default function WorkWithMe() {
         gridTemplateColumns: '1fr 1px 1fr',
         gap: '4rem', alignItems: 'start',
       }}>
-        {tracks.map((t, i) => (
-          <motion.div
-            key={i}
-            initial={{ opacity: 0, y: 40 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.7, delay: i === 0 ? 0 : 0.2, ease: 'easeOut' }}
-          >
-            <div style={{
-              fontFamily: 'var(--font-mono)', fontSize: '0.6rem',
-              letterSpacing: '0.3em', textTransform: 'uppercase',
-              marginBottom: '1.2rem', padding: '0.3rem 0.8rem', display: 'inline-block',
-              border: '1px solid', color: t.accent,
-              borderColor: t.accent === 'var(--amber)' ? 'rgba(200,146,42,0.3)' : 'rgba(184,76,42,0.3)',
-            }}>
-              For {t.target}
-            </div>
-            <h2 style={{
-              fontFamily: 'var(--font-display)', fontSize: 'clamp(2.5rem, 4vw, 4.5rem)',
-              lineHeight: 1, marginBottom: '0.3rem', color: 'var(--white)',
-            }}>
-              {t.role}
-            </h2>
-            <div style={{
-              fontFamily: 'var(--font-mono)', fontSize: '0.8rem',
-              color: t.accent, marginBottom: '2rem', letterSpacing: '0.1em',
-            }}>
-              {t.subtitle}
-            </div>
-            <p style={{
-              fontFamily: 'var(--font-body)', fontSize: '1rem',
-              color: 'var(--muted)', lineHeight: 1.7, fontWeight: 300,
-              marginBottom: '2.5rem',
-              overflowWrap: 'break-word',
-            }}>
-              {t.desc}
-            </p>
-            <a href={t.href} style={{
-              fontFamily: 'var(--font-mono)', fontSize: '0.7rem',
-              color: t.accent, textDecoration: 'none',
-              letterSpacing: '0.2em', textTransform: 'uppercase',
-              borderBottom: '1px solid',
-              borderColor: t.accent === 'var(--amber)' ? 'rgba(200,146,42,0.3)' : 'rgba(184,76,42,0.3)',
-              paddingBottom: '0.3rem',
-              transition: 'gap 0.3s, border-color 0.3s',
-              display: 'inline-flex', alignItems: 'center', gap: '0.5rem',
-            }}
-              onMouseEnter={e => { e.target.style.gap = '1rem'; e.target.style.borderColor = t.accent }}
-              onMouseLeave={e => { e.target.style.gap = '0.5rem'; e.target.style.borderColor = 'rgba(200,146,42,0.3)' }}
-            >
-              {t.cta}
-            </a>
-          </motion.div>
-        ))}
+        <Card data={tracks[0]} side="left" accent="var(--amber)" />
         <div style={{ background: 'var(--line)', height: '100%', minHeight: 300 }} />
+        <Card data={tracks[1]} side="right" accent="var(--rust)" />
       </div>
     </section>
   )
