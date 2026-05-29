@@ -169,6 +169,39 @@ export default function Hero() {
         >
           Senior Data Analyst &nbsp;✦&nbsp; AI Architect &nbsp;✦&nbsp; Solopreneur Builder
         </motion.p>
+
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.8, delay: 1 }}
+          style={{ marginTop: '2.5rem', display: 'flex', gap: '1.5rem', alignItems: 'center' }}
+        >
+          <a href="/portfolio/resume.pdf" target="_blank" rel="noreferrer" style={{
+            fontFamily: 'var(--font-mono)', fontSize: '0.7rem',
+            color: 'var(--white)', textDecoration: 'none',
+            letterSpacing: '0.2em', textTransform: 'uppercase',
+            padding: '0.7rem 1.5rem', border: '1px solid var(--amber)',
+            background: 'rgba(200,146,42,0.1)',
+            transition: 'background 0.3s, border-color 0.3s',
+          }}
+            onMouseEnter={e => { e.target.style.background = 'rgba(200,146,42,0.2)'; e.target.style.borderColor = '#c8922a' }}
+            onMouseLeave={e => { e.target.style.background = 'rgba(200,146,42,0.1)'; e.target.style.borderColor = 'var(--amber)' }}
+          >
+            \u2193 Download Resume
+          </a>
+          <a href="#work" style={{
+            fontFamily: 'var(--font-mono)', fontSize: '0.7rem',
+            color: 'var(--muted)', textDecoration: 'none',
+            letterSpacing: '0.2em', textTransform: 'uppercase',
+            borderBottom: '1px solid var(--line)', paddingBottom: '0.3rem',
+            transition: 'color 0.3s, border-color 0.3s',
+          }}
+            onMouseEnter={e => { e.target.style.color = 'var(--white)'; e.target.style.borderColor = 'var(--white)' }}
+            onMouseLeave={e => { e.target.style.color = 'var(--muted)'; e.target.style.borderColor = 'var(--line)' }}
+          >
+            Work With Me \u2192
+          </a>
+        </motion.div>
       </div>
 
       <motion.div

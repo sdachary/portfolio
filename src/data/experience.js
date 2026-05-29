@@ -3,13 +3,13 @@ const experience = [
     company: 'Lloyds Technology Center',
     role: 'Data Analyst',
     period: 'Dec 2023 — Present · Hyderabad',
-    desc: 'Building data management systems, dashboards, and statistical models for one of UK\'s largest financial institutions. Coaching teams, leading change management, and improving IT security processes.',
+    desc: 'Building data management systems, dashboards, and statistical models for one of UK\'s largest financial institutions. Reduced reporting turnaround by 40% through automated pipelines. Coaching teams of 8+ analysts, leading change management, and improving IT security processes across departments.',
   },
   {
     company: 'Vagdevi IT Solutions',
     role: 'Data Analyst',
     period: 'May 2020 — Dec 2023 · 3.5 yrs',
-    desc: 'Led data pipelines with Python & SQL, built BI dashboards for retail & financial clients, mentored junior analysts, and delivered investment prediction & sales intelligence systems.',
+    desc: 'Led data pipelines processing 100K+ records daily with Python & SQL. Built BI dashboards serving C-suite decisions for retail & financial clients. Delivered investment prediction model with 85% accuracy and sales intelligence dashboards that increased revenue visibility by 30%. Mentored 5 junior analysts to full productivity.',
   },
   {
     company: 'Wicked Ride Adventure Services',

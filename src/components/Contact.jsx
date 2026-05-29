@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { motion } from 'framer-motion'
 
 const links = [
@@ -9,6 +10,29 @@ const links = [
 
 export default function Contact() {
   const year = new Date().getFullYear()
+  const [status, setStatus] = useState('idle')
+
+  const handleSubmit = async (e) => {
+    e.preventDefault()
+    setStatus('sending')
+    const form = e.target
+    const data = new FormData(form)
+    try {
+      const res = await fetch('https://formspree.io/f/xjgzzkrl', {
+        method: 'POST',
+        body: data,
+        headers: { Accept: 'application/json' },
+      })
+      if (res.ok) {
+        setStatus('success')
+        form.reset()
+      } else {
+        setStatus('error')
+      }
+    } catch {
+      setStatus('error')
+    }
+  }
 
   return (
     <section id="contact" style={{
@@ -24,7 +48,7 @@ export default function Contact() {
         DEEPAK
       </div>
 
-      <div style={{ position: 'relative', zIndex: 1, maxWidth: 700 }}>
+      <div style={{ position: 'relative', zIndex: 1, maxWidth: 1100 }}>
         <div style={{
           fontFamily: 'var(--font-mono)', fontSize: '0.65rem',
           color: 'var(--amber)', letterSpacing: '0.3em', textTransform: 'uppercase',
@@ -34,48 +58,113 @@ export default function Contact() {
           Let's Connect
         </div>
 
-        <motion.h2
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.8, ease: 'easeOut' }}
-          style={{
-            fontFamily: 'var(--font-display)', fontSize: 'clamp(3rem, 7vw, 8rem)',
-            lineHeight: 0.95, color: 'var(--white)', marginBottom: '3rem',
-          }}
-        >
-          READY<br />TO BUILD<br />TOGETHER?
-        </motion.h2>
-
-        <div style={{ display: 'flex', gap: '2rem', flexWrap: 'wrap', marginBottom: '6rem' }}>
-          {links.map((l, i) => (
-            <motion.a
-              key={i}
-              href={l.href}
-              target={l.href.startsWith('http') ? '_blank' : undefined}
-              initial={{ opacity: 0, y: 10 }}
+        <div style={{
+          display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '4rem',
+          alignItems: 'start',
+        }}>
+          <div>
+            <motion.h2
+              initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ duration: 0.4, delay: 0.2 + i * 0.08 }}
+              transition={{ duration: 0.8, ease: 'easeOut' }}
               style={{
-                fontFamily: 'var(--font-mono)', fontSize: '0.7rem',
-                color: 'var(--muted)', textDecoration: 'none',
-                letterSpacing: '0.2em', textTransform: 'uppercase',
-                borderBottom: '1px solid var(--line)', paddingBottom: '0.4rem',
-                display: 'flex', alignItems: 'center', gap: '0.5rem',
-                transition: 'color 0.3s, border-color 0.3s',
+                fontFamily: 'var(--font-display)', fontSize: 'clamp(3rem, 7vw, 8rem)',
+                lineHeight: 0.95, color: 'var(--white)', marginBottom: '3rem',
               }}
-              onMouseEnter={e => { e.target.style.color = 'var(--amber)'; e.target.style.borderColor = 'var(--amber)' }}
-              onMouseLeave={e => { e.target.style.color = 'var(--muted)'; e.target.style.borderColor = 'var(--line)' }}
             >
-              {l.label}
-            </motion.a>
-          ))}
+              READY<br />TO BUILD<br />TOGETHER?
+            </motion.h2>
+
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '1.2rem', marginBottom: '2rem' }}>
+              {links.map((l, i) => (
+                <motion.a
+                  key={i}
+                  href={l.href}
+                  target={l.href.startsWith('http') ? '_blank' : undefined}
+                  initial={{ opacity: 0, y: 10 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.4, delay: 0.2 + i * 0.08 }}
+                  style={{
+                    fontFamily: 'var(--font-mono)', fontSize: '0.7rem',
+                    color: 'var(--muted)', textDecoration: 'none',
+                    letterSpacing: '0.2em', textTransform: 'uppercase',
+                    borderBottom: '1px solid var(--line)', paddingBottom: '0.4rem',
+                    display: 'flex', alignItems: 'center', gap: '0.5rem',
+                    transition: 'color 0.3s, border-color 0.3s',
+                  }}
+                  onMouseEnter={e => { e.target.style.color = 'var(--amber)'; e.target.style.borderColor = 'var(--amber)' }}
+                  onMouseLeave={e => { e.target.style.color = 'var(--muted)'; e.target.style.borderColor = 'var(--line)' }}
+                >
+                  {l.label}
+                </motion.a>
+              ))}
+            </div>
+          </div>
+
+          <motion.form
+            onSubmit={handleSubmit}
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8, delay: 0.2, ease: 'easeOut' }}
+            style={{
+              padding: '2.5rem', border: '1px solid var(--line)',
+              background: 'rgba(240,236,228,0.015)',
+            }}
+          >
+            <div style={{
+              fontFamily: 'var(--font-mono)', fontSize: '0.6rem',
+              color: 'var(--muted)', letterSpacing: '0.2em', textTransform: 'uppercase',
+              marginBottom: '2rem',
+            }}>
+              Or send a message directly
+            </div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '1.2rem' }}>
+              <input
+                name="name"
+                placeholder="Your Name"
+                required
+                style={inputStyle}
+              />
+              <input
+                name="email"
+                type="email"
+                placeholder="Your Email"
+                required
+                style={inputStyle}
+              />
+              <textarea
+                name="message"
+                placeholder="Tell me about your project, idea, or opportunity..."
+                required
+                rows={5}
+                style={{ ...inputStyle, resize: 'vertical', minHeight: 100 }}
+              />
+              <button type="submit" disabled={status === 'sending'} style={btnStyle}
+                onMouseEnter={e => { if (status !== 'sending') { e.target.style.background = 'rgba(200,146,42,0.2)'; e.target.style.borderColor = '#c8922a' } }}
+                onMouseLeave={e => { if (status !== 'sending') { e.target.style.background = 'rgba(200,146,42,0.1)'; e.target.style.borderColor = 'var(--amber)' } }}
+              >
+                {status === 'sending' ? 'Sending...' : 'Send Message \u2192'}
+              </button>
+              {status === 'success' && (
+                <p style={{ fontFamily: 'var(--font-mono)', fontSize: '0.65rem', color: '#4ade80', letterSpacing: '0.05em' }}>
+                  \u2713 Message sent! I'll get back to you soon.
+                </p>
+              )}
+              {status === 'error' && (
+                <p style={{ fontFamily: 'var(--font-mono)', fontSize: '0.65rem', color: '#ef4444', letterSpacing: '0.05em' }}>
+                  \u2717 Something went wrong. Try emailing me directly at deepakachary246@gmail.com
+                </p>
+              )}
+            </div>
+          </motion.form>
         </div>
 
         <div style={{
           display: 'flex', justifyContent: 'space-between', alignItems: 'center',
-          paddingTop: '2rem', borderTop: '1px solid var(--line)',
+          paddingTop: '4rem', marginTop: '4rem', borderTop: '1px solid var(--line)',
         }}>
           <div style={{
             fontFamily: 'var(--font-mono)', fontSize: '0.6rem',
@@ -93,4 +182,21 @@ export default function Contact() {
       </div>
     </section>
   )
+}
+
+const inputStyle = {
+  fontFamily: 'var(--font-mono)', fontSize: '0.75rem',
+  color: 'var(--white)', background: 'transparent',
+  border: '1px solid var(--line)', padding: '0.8rem 1rem',
+  outline: 'none', transition: 'border-color 0.3s',
+  letterSpacing: '0.05em',
+}
+
+const btnStyle = {
+  fontFamily: 'var(--font-mono)', fontSize: '0.7rem',
+  color: 'var(--white)', textDecoration: 'none',
+  letterSpacing: '0.2em', textTransform: 'uppercase',
+  padding: '0.8rem 1.5rem', border: '1px solid var(--amber)',
+  background: 'rgba(200,146,42,0.1)',
+  cursor: 'pointer', transition: 'background 0.3s, border-color 0.3s',
 }
