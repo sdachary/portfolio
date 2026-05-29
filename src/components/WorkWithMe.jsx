@@ -74,8 +74,7 @@ export default function WorkWithMe() {
               fontFamily: 'var(--font-body)', fontSize: '1rem',
               color: 'var(--muted)', lineHeight: 1.7, fontWeight: 300,
               marginBottom: '2.5rem',
-              overflowWrap: 'break-word', wordBreak: 'break-word',
-              maxWidth: '100%',
+              overflowWrap: 'break-word',
             }}>
               {t.desc}
             </p>
