@@ -6,7 +6,7 @@ Only the latest deployed version of Portfolio receives security updates.
 ## Reporting a Vulnerability
 We take security seriously. If you discover a security vulnerability, please report it privately:
 
-**Email:** admin@example.com
+**Email:** sdachary@gmail.com
 
 **Do not** file a public GitHub issue or discuss the vulnerability in public forums.
 
