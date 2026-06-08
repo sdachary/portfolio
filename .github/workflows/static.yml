@@ -32,6 +32,12 @@ jobs:
         run: npm ci
       - name: Build
         run: npm run build
+      - name: Knip dead code analysis
+        run: npx knip
+        continue-on-error: true
+      - name: npm audit
+        run: npm audit --audit-level=high
+        continue-on-error: true
       - name: Setup Pages
         uses: actions/configure-pages@v5
       - name: Upload artifact
