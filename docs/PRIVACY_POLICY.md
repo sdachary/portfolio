@@ -1,6 +1,6 @@
 # Privacy Policy — Portfolio
 
-**Last updated:** June 3, 2026
+**Last updated:** June 20, 2026
 
 ## 1. Information We Collect
 
@@ -43,8 +43,16 @@ Each third-party service has its own privacy policy governing the use of your da
 ## 5. Data Retention
 We retain your data for as long as your account is active. After account deletion, data is purged within 30 days unless required for legal or compliance purposes.
 
-## 6. Your Rights (GDPR)
-If you are in the EEA, you have the right to:
+## 6. Your Rights (DPDP Act 2023 / GDPR)
+
+**Under the DPDP Act 2023 (India):**
+- Right to Access (Section 11 DPDP)
+- Right to Correction (Section 12 DPDP)
+- Right to Erasure (Section 13 DPDP)
+- Right to Grievance (Section 14 DPDP)
+- Right to Nominate (Section 15 DPDP)
+
+**Under GDPR (EEA):**
 - Access your personal data
 - Correct inaccurate data
 - Delete your data ("right to be forgotten")
@@ -52,7 +60,7 @@ If you are in the EEA, you have the right to:
 - Data portability
 - Withdraw consent at any time
 
-To exercise these rights: sdachary@gmail.com
+To exercise these rights: dpo@kubera.app
 
 ## 7. Cookies
 We use essential cookies for authentication and session management. We do not use tracking cookies or third-party analytics cookies.
@@ -65,4 +73,11 @@ We may update this policy. Material changes will be communicated via email or in
 
 ## 10. Contact
 Portfolio<br>
-sdachary@gmail.com
+Data Protection Officer: Deepak Achary, dpo@kubera.app
+dpo@kubera.app
+
+## 11. Data Localization
+All personal data (if any) is stored within India. No cross-border data transfer occurs.
+
+## 12. Grievance Redressal
+If your grievance is not resolved within 90 days, you may file a complaint with the Data Protection Board of India at https://complaints.dpbi.gov.in
