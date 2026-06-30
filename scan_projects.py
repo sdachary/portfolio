@@ -345,7 +345,7 @@ if __name__ == "__main__":
     projects = scan_projects()
 
     # Write JSON
-    output_path = Path(__file__).parent / "projects.json"
+    output_path = Path(__file__).parent / "public" / "projects.json"
     with open(output_path, "w") as f:
         json.dump(projects, f, indent=2)
     print(f"✓ Generated {output_path} with {len(projects)} projects")

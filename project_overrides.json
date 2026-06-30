@@ -13,7 +13,7 @@
   },
   "bepara": {
     "live_url": "https://bepara.pages.dev/",
-    "description": "Inventory management SaaS for retail businesses. Track products, scan barcodes, and sync real-time data with Supabase."
+    "description": "GST-compliant billing, inventory, and e-way bill management for Indian businesses. Built with Next.js + Supabase + Cloudflare Pages."
   },
   "kubera": {
     "live_url": "https://sdachary.github.io/kubera",
@@ -22,6 +22,12 @@
     "description": "Personal finance OS — self-hosted, open-source tool for tracking wealth, investments, and financial goals."
   },
   "mcp-hub": {
-    "description": "Central MCP Hub orchestrating AI agents and skills across the ecosystem via standardized Model Context Protocol."
+    "description": "Unified AI Agent Orchestration Platform — 120+ tools, 55 skills, 22 agents via SSE transport on port 3000."
+  },
+  "open-design": {
+    "description": "The open-source alternative to Claude Design. Local-first, web-deployable, BYOK at every layer — 16 coding-agent CLIs, 31 composable Skills, and 72 brand-grade Design Systems."
+  },
+  "sarkarialert": {
+    "description": "Production-grade, fully automated Government Jobs portal for India. Auto-synced via GitHub Actions, PWA with search, bookmarks, dark mode, and WCAG AA accessibility."
   }
 }

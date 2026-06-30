@@ -4,7 +4,7 @@
     "slug": "bepara",
     "status": "Live",
     "status_key": "live",
-    "description": "Inventory management SaaS for retail businesses. Track products, scan barcodes, and sync real-time data with Supabase.",
+    "description": "GST-compliant billing, inventory, and e-way bill management for Indian businesses. Built with Next.js + Supabase + Cloudflare Pages.",
     "tags": [
       "Next.js",
       "React",
@@ -14,7 +14,7 @@
     ],
     "live_url": "https://bepara.pages.dev/",
     "local": true,
-    "last_updated": "2026-05-08",
+    "last_updated": "2026-06-26",
     "github_remote": "git@github.com:sdachary/bepara.git"
   },
   {
@@ -22,7 +22,7 @@
     "slug": "chitragupta",
     "status": "Live",
     "status_key": "live",
-    "description": "Chitragupta is a high-fidelity financial ledger for business partnerships. Automated command center for tracking investments, revenue, and profit settlements",
+    "description": "Multi-tenant business ledger for partnerships. Tracks income, expenses, investments, withdrawals; auto-calculates settlements; generates GST/TDS compliance reports.",
     "tags": [
       "Vite",
       "Hono",
@@ -32,31 +32,23 @@
     ],
     "live_url": "https://chitragupta.pages.dev/",
     "local": true,
-    "last_updated": "2026-04-27",
+    "last_updated": "2026-06-20",
     "github_remote": "git@github.com:sdachary/chitragupta.git"
-  },
-  {
-    "name": "GANESH",
-    "slug": "ganesh",
-    "status": "Local / Standalone",
-    "status_key": "local",
-    "description": "Process 700+ screenshots automatically with smart resource management that scales CPU/RAM based on system activity",
-    "tags": [],
-    "live_url": null,
-    "local": true,
-    "last_updated": null,
-    "github_remote": null
   },
   {
     "name": "INDRA",
     "slug": "indra",
     "status": "Local / Standalone",
     "status_key": "local",
-    "description": "Indra is the high-performance automation backbone for the ecosystem. Powered by n8n, it orchestrates complex multi-service workflows, webhook triggers, and real-time state synchronization across all b...",
-    "tags": [],
+    "description": "High-performance automation backbone for the ecosystem. Powered by n8n, it orchestrates complex multi-service workflows, webhook triggers, and real-time state synchronization.",
+    "tags": [
+      "n8n",
+      "Docker",
+      "PostgreSQL"
+    ],
     "live_url": null,
     "local": true,
-    "last_updated": "2026-04-27",
+    "last_updated": "2026-06-20",
     "github_remote": "git@github.com:sdachary/indra.git"
   },
   {
@@ -64,13 +56,15 @@
     "slug": "kanak",
     "status": "Live",
     "status_key": "live",
-    "description": "Kanak is the high-performance SaaS control plane for modern retail and enterprise management. Real-time bento dashboard for inventory, market monitoring, and financial settlement",
+    "description": "Jewellery retail management SaaS. Real-time dashboard for inventory, gold rate tracking, sales, purchases, customer ledger, billing, and financial settlement.",
     "tags": [
-      "Cloudflare Pages"
+      "Cloudflare Pages",
+      "Supabase",
+      "JavaScript"
     ],
     "live_url": "https://kanak-dj5.pages.dev/",
     "local": true,
-    "last_updated": "2026-05-08",
+    "last_updated": "2026-06-26",
     "github_remote": "git@github.com:sdachary/kanak.git"
   },
   {
@@ -78,14 +72,14 @@
     "slug": "karma",
     "status": "Local / Standalone",
     "status_key": "local",
-    "description": "A production-ready MVP for a distributed compute marketplace where users can contribute their compute resources and earn rewards",
+    "description": "Production-ready MVP for a distributed compute marketplace where users can contribute their compute resources and earn rewards. Built with FastAPI.",
     "tags": [
       "Python",
       "FastAPI"
     ],
     "live_url": null,
     "local": true,
-    "last_updated": "2026-04-28",
+    "last_updated": "2026-06-20",
     "github_remote": "git@github.com:sdachary/karma.git"
   },
   {
@@ -93,11 +87,16 @@
     "slug": "kubera",
     "status": "Open Source",
     "status_key": "open-source",
-    "description": "Personal finance OS \u2014 self-hosted, open-source tool for tracking wealth, investments, and financial goals.",
-    "tags": [],
+    "description": "Personal finance OS — self-hosted, open-source tool for tracking wealth, investments, and financial goals. Takes you from debt to zero to wealth.",
+    "tags": [
+      "Ruby",
+      "Rails",
+      "PostgreSQL",
+      "Docker"
+    ],
     "live_url": "https://sdachary.github.io/kubera",
     "local": true,
-    "last_updated": "2026-05-10",
+    "last_updated": "2026-06-20",
     "github_remote": "git@github.com:sdachary/kubera.git",
     "github_url": "https://github.com/sdachary/kubera"
   },
@@ -106,11 +105,16 @@
     "slug": "mcp-hub",
     "status": "Local / Standalone",
     "status_key": "local",
-    "description": "Central MCP Hub orchestrating AI agents and skills across the ecosystem via standardized Model Context Protocol.",
-    "tags": [],
+    "description": "Unified AI Agent Orchestration Platform — 120+ tools, 55 skills, 22 agents via SSE transport on port 3000. Routes AI requests through a multi-provider router.",
+    "tags": [
+      "Python",
+      "FastAPI",
+      "SQLite",
+      "MCP"
+    ],
     "live_url": null,
     "local": true,
-    "last_updated": "2026-05-08",
+    "last_updated": "2026-06-26",
     "github_remote": "git@github.com:sdachary/devendra.git"
   },
   {
@@ -118,25 +122,42 @@
     "slug": "open-design",
     "status": "Local / Standalone",
     "status_key": "local",
-    "description": "<p align=\"center\"> <img src=\"docs/assets/banner.png\" alt=\"Open Design \u2014 editorial cover: design with the agent on your laptop\" width=\"100%\" />",
+    "description": "The open-source alternative to Claude Design. Local-first, web-deployable, BYOK at every layer — 16 coding-agent CLIs, 31 composable Skills, and 72 brand-grade Design Systems.",
     "tags": [
-      "TypeScript"
+      "TypeScript",
+      "Next.js",
+      "React"
     ],
     "live_url": null,
     "local": true,
-    "last_updated": "2026-05-08",
+    "last_updated": "2026-06-20",
     "github_remote": "https://github.com/nexu-io/open-design"
+  },
+  {
+    "name": "SARKARIALERT",
+    "slug": "sarkarialert",
+    "status": "Local / Standalone",
+    "status_key": "local",
+    "description": "Production-grade, fully automated Government Jobs portal for India. Auto-synced via GitHub Actions, PWA with search, bookmarks, dark mode, and WCAG AA accessibility.",
+    "tags": [
+      "PWA",
+      "GitHub Actions",
+      "JavaScript"
+    ],
+    "live_url": null,
+    "local": true,
+    "last_updated": null,
+    "github_remote": null
   },
   {
     "name": "SOCIAL-BLUEPRINT-AI",
     "slug": "social-blueprint-ai",
     "status": "Local / Standalone",
     "status_key": "local",
-    "description": "AI-powered social media audit and growth strategy tool built with React + Vite (frontend) and Cloudflare Workers + D1 (backend)",
+    "description": "AI-powered social media audit and growth strategy tool. React + Vite frontend with Cloudflare Workers + D1 backend. Google Gemini-powered content analysis.",
     "tags": [
       "React",
       "Vite",
-      "Express",
       "Hono",
       "Tailwind",
       "TypeScript",
@@ -144,7 +165,7 @@
     ],
     "live_url": null,
     "local": true,
-    "last_updated": "2026-04-27",
+    "last_updated": "2026-06-10",
     "github_remote": "https://github.com/sdachary/social-blueprint-ai"
   },
   {
@@ -152,7 +173,7 @@
     "slug": "unnati",
     "status": "Live",
     "status_key": "live",
-    "description": "AI-powered job search assistant that automates tedious parts of job hunting while keeping you in control",
+    "description": "AI-powered job search assistant that automates tedious parts of job hunting while keeping you in control. Multi-AI-provider with BYOK model.",
     "tags": [
       "Next.js",
       "React",
@@ -163,7 +184,7 @@
     ],
     "live_url": "https://unnati-70z.pages.dev/",
     "local": true,
-    "last_updated": "2026-05-02",
+    "last_updated": "2026-06-23",
     "github_remote": "git@github.com:sdachary/unnati.git"
   },
   {
@@ -171,11 +192,15 @@
     "slug": "vishwakarma",
     "status": "Live",
     "status_key": "live",
-    "description": "Vishwakarma is a simplified provisioning portal for non-technical users. It enables a \"Guided Form\" workflow where clients can request cloud resources with a single click, while the backend handles al...",
-    "tags": [],
+    "description": "Simplified provisioning portal for non-technical users. Guided Form workflow for requesting cloud resources; backend handles Terraform and OCI orchestration automatically.",
+    "tags": [
+      "Cloudflare Pages",
+      "Supabase",
+      "JavaScript"
+    ],
     "live_url": "https://vishwakarma.pages.dev/",
     "local": true,
-    "last_updated": "2026-04-27",
+    "last_updated": "2026-06-26",
     "github_remote": "git@github.com:sdachary/vishwakarma.git"
   }
 ]
