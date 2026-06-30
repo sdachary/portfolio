@@ -11,6 +11,13 @@ export default function Hero() {
     let W, H, particles = []
     const mouse = { x: -1000, y: -1000 }
 
+    function onMove(e) {
+      const rect = canvas.getBoundingClientRect()
+      mouse.x = e.clientX - rect.left
+      mouse.y = e.clientY - rect.top
+    }
+    canvas.addEventListener('mousemove', onMove)
+
     class Particle {
       constructor() { this.reset() }
       reset() {
@@ -23,6 +30,15 @@ export default function Hero() {
         this.color = Math.random() > 0.8 ? '#c8922a' : '#f0ece4'
       }
       update() {
+        const dx = this.x - mouse.x
+        const dy = this.y - mouse.y
+        const d = Math.sqrt(dx * dx + dy * dy)
+        if (d < 120) {
+          const force = (120 - d) / 120 * 0.5
+          this.vx += (dx / d) * force
+          this.vy += (dy / d) * force
+        }
+        this.vx *= 0.98; this.vy *= 0.98
         this.x += this.vx; this.y += this.vy
         if (this.x < 0 || this.x > W || this.y < 0 || this.y > H) this.reset()
       }
@@ -109,6 +125,7 @@ export default function Hero() {
     return () => {
       cancelAnimationFrame(RAF.current)
       window.removeEventListener('resize', resize)
+      canvas.removeEventListener('mousemove', onMove)
     }
   }, [])
 
