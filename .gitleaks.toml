@@ -1,0 +1,42 @@
+# Phase 28 — gitleaks secret scanning config
+# This file is copied to each repo's root. Edit master in Work/ and sync.
+
+title = "Phase 28 - gitleaks config: skip test keys and common false-positives"
+
+[allowlist]
+description = "Known safe values across all repos"
+regexes = [
+  # Test/mock keys
+  "(?i)test[-_]?(key|secret|token|password)",
+  "(?i)sample[-_]?(key|secret|token)",
+  "(?i)(dummy|fake|placeholder|example)(-|_)?(key|secret|token)",
+  # Common hex patterns that are not secrets
+  "^[0-9a-fA-F]{32,64}$",
+  # UUID v4 patterns
+  "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$",
+  # URL-encoded values
+  "^(https?://|git@).*$",
+  # Base64 with known prefixes
+  "^[A-Za-z0-9+/=]{10,50}$",
+  # common CI/CD variables
+  "(?i)github.token",
+  "(?i)actions.(id-token|token)",
+  # Supabase references in docs
+  "(?i)supabase.(url|anon.key|service_role)",
+  # Generic env var patterns in docs/examples
+  "(?i)(your_|your-|YOUR_|YOUR-)[A-Z_]+",
+  # Git SHAs
+  "^[0-9a-f]{7,40}$",
+  # Ports
+  "^https?://localhost:[0-9]{4,5}$",
+]
+paths = [
+  "(?i)node_modules",
+  "(?i)dist",
+  "(?i)build",
+  "(?i).git",
+  "package-lock\\.json",
+  "pnpm-lock\\.yaml",
+  "yarn\\.lock",
+  "Gemfile\\.lock",
+]
