@@ -1,21 +1,38 @@
 import { useState } from 'react'
 import { motion } from 'framer-motion'
 
-const links = [
+const links: { href: string; label: string }[] = [
   { href: 'mailto:deepakachary246@gmail.com', label: '✉ deepakachary246@gmail.com' },
   { href: 'https://www.linkedin.com/in/sdeepakachary/', label: '⟶ LinkedIn' },
   { href: 'https://x.com/sdeepakachary', label: '⟶ Twitter/X' },
   { href: 'https://github.com/sdachary', label: '⟶ GitHub' },
 ]
 
+const inputStyle: React.CSSProperties = {
+  fontFamily: 'var(--font-mono)', fontSize: '0.75rem',
+  color: 'var(--white)', background: 'transparent',
+  border: '1px solid var(--line)', padding: '0.8rem 1rem',
+  outline: 'none', transition: 'border-color 0.3s',
+  letterSpacing: '0.05em',
+}
+
+const btnStyle: React.CSSProperties = {
+  fontFamily: 'var(--font-mono)', fontSize: '0.7rem',
+  color: 'var(--white)', textDecoration: 'none',
+  letterSpacing: '0.2em', textTransform: 'uppercase',
+  padding: '0.8rem 1.5rem', border: '1px solid var(--amber)',
+  background: 'rgba(200,146,42,0.1)',
+  cursor: 'pointer', transition: 'background 0.3s, border-color 0.3s',
+}
+
 export default function Contact() {
   const year = new Date().getFullYear()
-  const [status, setStatus] = useState('idle')
+  const [status, setStatus] = useState<'idle' | 'sending' | 'success' | 'error'>('idle')
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     setStatus('sending')
-    const form = e.target
+    const form = e.currentTarget
     const data = new FormData(form)
     try {
       const res = await fetch('https://formspree.io/f/xjgzzkrl', {
@@ -94,8 +111,8 @@ export default function Contact() {
                     display: 'flex', alignItems: 'center', gap: '0.5rem',
                     transition: 'color 0.3s, border-color 0.3s',
                   }}
-                  onMouseEnter={e => { e.target.style.color = 'var(--amber)'; e.target.style.borderColor = 'var(--amber)' }}
-                  onMouseLeave={e => { e.target.style.color = 'var(--muted)'; e.target.style.borderColor = 'var(--line)' }}
+                  onMouseEnter={(e: React.MouseEvent<HTMLAnchorElement>) => { e.currentTarget.style.color = 'var(--amber)'; e.currentTarget.style.borderColor = 'var(--amber)' }}
+                  onMouseLeave={(e: React.MouseEvent<HTMLAnchorElement>) => { e.currentTarget.style.color = 'var(--muted)'; e.currentTarget.style.borderColor = 'var(--line)' }}
                 >
                   {l.label}
                 </motion.a>
@@ -143,8 +160,8 @@ export default function Contact() {
                 style={{ ...inputStyle, resize: 'vertical', minHeight: 100 }}
               />
               <button type="submit" disabled={status === 'sending'} style={btnStyle}
-                onMouseEnter={e => { if (status !== 'sending') { e.target.style.background = 'rgba(200,146,42,0.2)'; e.target.style.borderColor = '#c8922a' } }}
-                onMouseLeave={e => { if (status !== 'sending') { e.target.style.background = 'rgba(200,146,42,0.1)'; e.target.style.borderColor = 'var(--amber)' } }}
+                onMouseEnter={(e: React.MouseEvent<HTMLButtonElement>) => { if (status !== 'sending') { e.currentTarget.style.background = 'rgba(200,146,42,0.2)'; e.currentTarget.style.borderColor = '#c8922a' } }}
+                onMouseLeave={(e: React.MouseEvent<HTMLButtonElement>) => { if (status !== 'sending') { e.currentTarget.style.background = 'rgba(200,146,42,0.1)'; e.currentTarget.style.borderColor = 'var(--amber)' } }}
               >
                 {status === 'sending' ? 'Sending...' : 'Send Message \u2192'}
               </button>
@@ -182,21 +199,4 @@ export default function Contact() {
       </div>
     </section>
   )
-}
-
-const inputStyle = {
-  fontFamily: 'var(--font-mono)', fontSize: '0.75rem',
-  color: 'var(--white)', background: 'transparent',
-  border: '1px solid var(--line)', padding: '0.8rem 1rem',
-  outline: 'none', transition: 'border-color 0.3s',
-  letterSpacing: '0.05em',
-}
-
-const btnStyle = {
-  fontFamily: 'var(--font-mono)', fontSize: '0.7rem',
-  color: 'var(--white)', textDecoration: 'none',
-  letterSpacing: '0.2em', textTransform: 'uppercase',
-  padding: '0.8rem 1.5rem', border: '1px solid var(--amber)',
-  background: 'rgba(200,146,42,0.1)',
-  cursor: 'pointer', transition: 'background 0.3s, border-color 0.3s',
 }

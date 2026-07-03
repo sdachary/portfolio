@@ -1,9 +1,10 @@
 import { useEffect, useRef, useState, useCallback } from 'react'
 import { motion } from 'framer-motion'
+import type { Project } from '../data/types'
 
 const AUTOPLAY_MS = 4000
 
-function getState(idx, current, total) {
+function getState(idx: number, current: number, total: number): 'active' | 'next' | 'next2' | 'prev' | 'prev2' | 'hidden' {
   const wrap = ((idx - current) % total + total) % total
   if (wrap === 0) return 'active'
   if (wrap === 1) return 'next'
@@ -14,10 +15,10 @@ function getState(idx, current, total) {
 }
 
 export default function Projects() {
-  const [projects, setProjects] = useState([])
+  const [projects, setProjects] = useState<Project[]>([])
   const [current, setCurrent] = useState(0)
-  const timerRef = useRef(null)
-  const stageRef = useRef(null)
+  const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+  const stageRef = useRef<HTMLDivElement | null>(null)
 
   useEffect(() => {
     fetch(import.meta.env.BASE_URL + 'projects.json')
@@ -28,9 +29,9 @@ export default function Projects() {
 
   const total = projects.length
 
-  const goTo = useCallback((idx) => {
+  const goTo = useCallback((idx: number) => {
     setCurrent((idx + total) % total)
-    clearTimeout(timerRef.current)
+    if (timerRef.current) clearTimeout(timerRef.current)
   }, [total])
 
   const next = useCallback(() => goTo(current + 1), [current, goTo])
@@ -41,11 +42,11 @@ export default function Projects() {
     timerRef.current = setTimeout(() => {
       setCurrent(c => (c + 1) % total)
     }, AUTOPLAY_MS)
-    return () => clearTimeout(timerRef.current)
+    return () => { if (timerRef.current) clearTimeout(timerRef.current) }
   }, [current, total])
 
   useEffect(() => {
-    const onKey = (e) => {
+    const onKey = (e: KeyboardEvent) => {
       const rect = document.getElementById('projects')?.getBoundingClientRect()
       if (!rect || rect.top > window.innerHeight || rect.bottom < 0) return
       if (e.key === 'ArrowRight') { e.preventDefault(); next() }
@@ -59,8 +60,8 @@ export default function Projects() {
     const stage = stageRef.current
     if (!stage) return
     let touchStartX = 0
-    const onTouch = (e) => { touchStartX = e.touches[0].clientX }
-    const onEnd = (e) => {
+    const onTouch = (e: TouchEvent) => { touchStartX = e.touches[0].clientX }
+    const onEnd = (e: TouchEvent) => {
       const dx = e.changedTouches[0].clientX - touchStartX
       if (Math.abs(dx) > 40) dx < 0 ? next() : prev()
     }
@@ -111,6 +112,37 @@ export default function Projects() {
             const tags = (p.tags || []).slice(0, 5)
             const statusClass = `status-${p.status_key || 'local'}`
 
+            const activeStyle: React.CSSProperties = state === 'active' ? {
+              transform: 'translateX(0) scale(1) rotateY(0deg)',
+              opacity: 1,
+              borderColor: 'rgba(200,146,42,0.3)',
+              boxShadow: '0 0 80px rgba(200,146,42,0.08), 0 40px 80px rgba(0,0,0,0.6)',
+            } : state === 'prev' ? {
+              transform: 'translateX(-62%) scale(0.82) rotateY(12deg)',
+              opacity: 0.38,
+              borderColor: 'var(--line)',
+              boxShadow: 'none',
+            } : state === 'prev2' ? {
+              transform: 'translateX(-110%) scale(0.68) rotateY(18deg)',
+              opacity: 0.15,
+              borderColor: 'var(--line)',
+              boxShadow: 'none',
+            } : state === 'next' ? {
+              transform: 'translateX(62%) scale(0.82) rotateY(-12deg)',
+              opacity: 0.38,
+              borderColor: 'var(--line)',
+              boxShadow: 'none',
+            } : state === 'next2' ? {
+              transform: 'translateX(110%) scale(0.68) rotateY(-18deg)',
+              opacity: 0.15,
+              borderColor: 'var(--line)',
+              boxShadow: 'none',
+            } : {
+              transform: 'translateX(0) scale(0.5)',
+              opacity: 0,
+              boxShadow: 'none',
+            }
+
             return (
               <div
                 key={p.slug || i}
@@ -133,36 +165,7 @@ export default function Projects() {
                   cursor: 'pointer',
                   zIndex: state === 'active' ? 10 : state === 'hidden' ? 0 : 5,
                   pointerEvents: state === 'hidden' ? 'none' : 'auto',
-                  ...(state === 'active' ? {
-                    transform: 'translateX(0) scale(1) rotateY(0deg)',
-                    opacity: 1,
-                    borderColor: 'rgba(200,146,42,0.3)',
-                    boxShadow: '0 0 80px rgba(200,146,42,0.08), 0 40px 80px rgba(0,0,0,0.6)',
-                  } : state === 'prev' ? {
-                    transform: 'translateX(-62%) scale(0.82) rotateY(12deg)',
-                    opacity: 0.38,
-                    borderColor: 'var(--line)',
-                    boxShadow: 'none',
-                  } : state === 'prev2' ? {
-                    transform: 'translateX(-110%) scale(0.68) rotateY(18deg)',
-                    opacity: 0.15,
-                    borderColor: 'var(--line)',
-                    boxShadow: 'none',
-                  } : state === 'next' ? {
-                    transform: 'translateX(62%) scale(0.82) rotateY(-12deg)',
-                    opacity: 0.38,
-                    borderColor: 'var(--line)',
-                    boxShadow: 'none',
-                  } : state === 'next2' ? {
-                    transform: 'translateX(110%) scale(0.68) rotateY(-18deg)',
-                    opacity: 0.15,
-                    borderColor: 'var(--line)',
-                    boxShadow: 'none',
-                  } : {
-                    transform: 'translateX(0) scale(0.5)',
-                    opacity: 0,
-                    boxShadow: 'none',
-                  }),
+                  ...activeStyle,
                 }}
               >
                 <div>
@@ -223,8 +226,8 @@ export default function Projects() {
                         paddingBottom: '0.3rem',
                         transition: 'gap 0.3s, border-color 0.3s',
                       }}
-                      onMouseEnter={e => { e.target.style.gap = '1rem'; e.target.style.borderColor = 'var(--amber)' }}
-                      onMouseLeave={e => { e.target.style.gap = '0.5rem'; e.target.style.borderColor = 'rgba(200,146,42,0.3)' }}
+                      onMouseEnter={(e: React.MouseEvent<HTMLAnchorElement>) => { e.currentTarget.style.gap = '1rem'; e.currentTarget.style.borderColor = 'var(--amber)' }}
+                      onMouseLeave={(e: React.MouseEvent<HTMLAnchorElement>) => { e.currentTarget.style.gap = '0.5rem'; e.currentTarget.style.borderColor = 'rgba(200,146,42,0.3)' }}
                     >
                       {p.live_url ? 'Visit Live →' : 'View Source →'}
                     </a>
@@ -236,7 +239,6 @@ export default function Projects() {
         </div>
       </motion.div>
 
-      {/* Controls */}
       <div style={{
         display: 'flex', alignItems: 'center', justifyContent: 'center',
         gap: '2rem', padding: '2.5rem 0 0',
@@ -248,8 +250,8 @@ export default function Projects() {
           cursor: 'pointer', fontSize: '1.1rem', fontFamily: 'var(--font-mono)',
           flexShrink: 0, transition: 'all 0.3s',
         }}
-          onMouseEnter={e => { e.target.style.borderColor = 'var(--amber)'; e.target.style.color = 'var(--amber)'; e.target.style.background = 'rgba(200,146,42,0.05)' }}
-          onMouseLeave={e => { e.target.style.borderColor = 'var(--line)'; e.target.style.color = 'var(--muted)'; e.target.style.background = 'transparent' }}
+          onMouseEnter={(e: React.MouseEvent<HTMLButtonElement>) => { e.currentTarget.style.borderColor = 'var(--amber)'; e.currentTarget.style.color = 'var(--amber)'; e.currentTarget.style.background = 'rgba(200,146,42,0.05)' }}
+          onMouseLeave={(e: React.MouseEvent<HTMLButtonElement>) => { e.currentTarget.style.borderColor = 'var(--line)'; e.currentTarget.style.color = 'var(--muted)'; e.currentTarget.style.background = 'transparent' }}
         >&#8592;</button>
 
         <div style={{ display: 'flex', gap: '0.6rem', alignItems: 'center' }}>
@@ -279,12 +281,11 @@ export default function Projects() {
           cursor: 'pointer', fontSize: '1.1rem', fontFamily: 'var(--font-mono)',
           flexShrink: 0, transition: 'all 0.3s',
         }}
-          onMouseEnter={e => { e.target.style.borderColor = 'var(--amber)'; e.target.style.color = 'var(--amber)'; e.target.style.background = 'rgba(200,146,42,0.05)' }}
-          onMouseLeave={e => { e.target.style.borderColor = 'var(--line)'; e.target.style.color = 'var(--muted)'; e.target.style.background = 'transparent' }}
+          onMouseEnter={(e: React.MouseEvent<HTMLButtonElement>) => { e.currentTarget.style.borderColor = 'var(--amber)'; e.currentTarget.style.color = 'var(--amber)'; e.currentTarget.style.background = 'rgba(200,146,42,0.05)' }}
+          onMouseLeave={(e: React.MouseEvent<HTMLButtonElement>) => { e.currentTarget.style.borderColor = 'var(--line)'; e.currentTarget.style.color = 'var(--muted)'; e.currentTarget.style.background = 'transparent' }}
         >&#8594;</button>
       </div>
 
-      {/* Progress bar */}
       <div style={{
         margin: '1.5rem 3rem 0', height: 1,
         background: 'var(--line)', position: 'relative', overflow: 'hidden',

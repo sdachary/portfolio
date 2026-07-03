@@ -1,4 +1,6 @@
-const experience = [
+import type { Experience } from './types'
+
+const experience: Experience[] = [
   {
     company: 'Lloyds Technology Center',
     role: 'Data Analyst',

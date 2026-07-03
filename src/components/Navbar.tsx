@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 
-const links = [
+const links: { href: string; label: string }[] = [
   { href: '#about', label: 'Origin' },
   { href: '#dual', label: 'Identity' },
   { href: '#services', label: 'Services' },
@@ -53,8 +53,8 @@ export default function Navbar() {
                   letterSpacing: '0.15em', textTransform: 'uppercase',
                   transition: 'color 0.3s',
                 }}
-                  onMouseEnter={e => e.target.style.color = 'var(--white)'}
-                  onMouseLeave={e => e.target.style.color = 'var(--muted)'}
+                  onMouseEnter={(e: React.MouseEvent<HTMLAnchorElement>) => { e.currentTarget.style.color = 'var(--white)' }}
+                  onMouseLeave={(e: React.MouseEvent<HTMLAnchorElement>) => { e.currentTarget.style.color = 'var(--muted)' }}
                 >{l.label}</a>
               </li>
             ))}

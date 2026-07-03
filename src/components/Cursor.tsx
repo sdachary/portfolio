@@ -1,26 +1,26 @@
 import { useEffect, useRef } from 'react'
 
 export default function Cursor() {
-  const cursorRef = useRef(null)
-  const ringRef = useRef(null)
+  const cursorRef = useRef<HTMLDivElement | null>(null)
+  const ringRef = useRef<HTMLDivElement | null>(null)
   const pos = useRef({ mx: -100, my: -100 })
   const ring = useRef({ x: -100, y: -100 })
 
   useEffect(() => {
     const isTouch = 'ontouchstart' in window || navigator.maxTouchPoints > 0
     if (isTouch) return
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
 
-    const onMove = (e) => {
+    const onMove = (e: MouseEvent) => {
       pos.current.mx = e.clientX
       pos.current.my = e.clientY
     }
     document.addEventListener('mousemove', onMove)
 
-    const el = cursorRef.current
-    const ringEl = ringRef.current
+    const el = cursorRef.current!
+    const ringEl = ringRef.current!
 
     function animate() {
-      if (!el || !ringEl) return
       el.style.left = pos.current.mx + 'px'
       el.style.top = pos.current.my + 'px'
       ring.current.x += (pos.current.mx - ring.current.x) * 0.12
@@ -42,7 +42,7 @@ export default function Cursor() {
       ringEl.style.borderColor = 'rgba(200,146,42,0.4)'
     }
 
-    const interactives = document.querySelectorAll('a, button, .skill-card, .project-frame, .exp-item')
+    const interactives = document.querySelectorAll<HTMLElement>('a, button, .skill-card, .project-frame, .exp-item')
     interactives.forEach(el => { el.addEventListener('mouseenter', expand); el.addEventListener('mouseleave', shrink) })
 
     return () => {

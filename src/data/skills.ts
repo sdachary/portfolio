@@ -1,4 +1,6 @@
-const skills = [
+import type { Skill } from './types'
+
+const skills: Skill[] = [
   { category: 'Analytics', name: 'Python' },
   { category: 'Analytics', name: 'SQL / BigQuery' },
   { category: 'Analytics', name: 'Power BI' },

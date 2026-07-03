@@ -1,6 +1,7 @@
 import { motion } from 'framer-motion'
+import type { DualCardData } from '../data/types'
 
-const day = {
+const day: DualCardData = {
   eyebrow: 'By Day',
   title: 'Senior<br>Data Analyst',
   items: [
@@ -13,7 +14,7 @@ const day = {
   ],
 }
 
-const night = {
+const night: DualCardData = {
   eyebrow: 'By Night',
   title: 'AI Architect<br>& Builder',
   items: [
@@ -26,7 +27,7 @@ const night = {
   ],
 }
 
-function Card({ data, side, accent }) {
+function Card({ data, side, accent }: { data: DualCardData; side: 'left' | 'right'; accent: string }) {
   return (
     <motion.div
       initial={{ opacity: 0, y: 40 }}

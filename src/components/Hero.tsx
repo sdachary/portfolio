@@ -2,16 +2,19 @@ import { useEffect, useRef } from 'react'
 import { motion } from 'framer-motion'
 
 export default function Hero() {
-  const canvasRef = useRef(null)
-  const RAF = useRef(null)
+  const canvasRef = useRef<HTMLCanvasElement | null>(null)
+  const RAF = useRef<number | null>(null)
 
   useEffect(() => {
+    if (typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
     const canvas = canvasRef.current
-    const ctx = canvas.getContext('2d')
-    let W, H, particles = []
+    if (!canvas) return
+    const ctx = canvas.getContext('2d')!
+    let W: number = 0, H: number = 0
+    let particles: Particle[] = []
     const mouse = { x: -1000, y: -1000 }
 
-    function onMove(e) {
+    function onMove(e: MouseEvent) {
       const rect = canvas.getBoundingClientRect()
       mouse.x = e.clientX - rect.left
       mouse.y = e.clientY - rect.top
@@ -19,6 +22,13 @@ export default function Hero() {
     canvas.addEventListener('mousemove', onMove)
 
     class Particle {
+      x!: number
+      y!: number
+      size!: number
+      vx!: number
+      vy!: number
+      opacity!: number
+      color!: string
       constructor() { this.reset() }
       reset() {
         this.x = Math.random() * W
@@ -53,7 +63,7 @@ export default function Hero() {
       }
     }
 
-    function drawAtmosphere(t) {
+    function drawAtmosphere(t: number) {
       const grad = ctx.createRadialGradient(
         W * 0.3 + Math.sin(t * 0.0003) * 100,
         H * 0.4 + Math.cos(t * 0.0002) * 80,
@@ -88,7 +98,7 @@ export default function Hero() {
       for (let i = 0; i < 120; i++) particles.push(new Particle())
     }
 
-    function animate(t) {
+    function animate(t: number) {
       ctx.clearRect(0, 0, W, H)
       ctx.fillStyle = '#080808'
       ctx.fillRect(0, 0, W, H)
@@ -123,7 +133,7 @@ export default function Hero() {
     window.addEventListener('resize', () => { resize(); initParticles() })
 
     return () => {
-      cancelAnimationFrame(RAF.current)
+      if (RAF.current) cancelAnimationFrame(RAF.current)
       window.removeEventListener('resize', resize)
       canvas.removeEventListener('mousemove', onMove)
     }
@@ -201,8 +211,8 @@ export default function Hero() {
             background: 'rgba(200,146,42,0.1)',
             transition: 'background 0.3s, border-color 0.3s',
           }}
-            onMouseEnter={e => { e.target.style.background = 'rgba(200,146,42,0.2)'; e.target.style.borderColor = '#c8922a' }}
-            onMouseLeave={e => { e.target.style.background = 'rgba(200,146,42,0.1)'; e.target.style.borderColor = 'var(--amber)' }}
+            onMouseEnter={(e: React.MouseEvent<HTMLAnchorElement>) => { e.currentTarget.style.background = 'rgba(200,146,42,0.2)'; e.currentTarget.style.borderColor = '#c8922a' }}
+            onMouseLeave={(e: React.MouseEvent<HTMLAnchorElement>) => { e.currentTarget.style.background = 'rgba(200,146,42,0.1)'; e.currentTarget.style.borderColor = 'var(--amber)' }}
           >
             {'\u2193'} Download Resume
           </a>
@@ -213,8 +223,8 @@ export default function Hero() {
             borderBottom: '1px solid var(--line)', paddingBottom: '0.3rem',
             transition: 'color 0.3s, border-color 0.3s',
           }}
-            onMouseEnter={e => { e.target.style.color = 'var(--white)'; e.target.style.borderColor = 'var(--white)' }}
-            onMouseLeave={e => { e.target.style.color = 'var(--muted)'; e.target.style.borderColor = 'var(--line)' }}
+            onMouseEnter={(e: React.MouseEvent<HTMLAnchorElement>) => { e.currentTarget.style.color = 'var(--white)'; e.currentTarget.style.borderColor = 'var(--white)' }}
+            onMouseLeave={(e: React.MouseEvent<HTMLAnchorElement>) => { e.currentTarget.style.color = 'var(--muted)'; e.currentTarget.style.borderColor = 'var(--line)' }}
           >
             Work With Me {'\u2192'}
           </a>

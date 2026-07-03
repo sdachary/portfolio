@@ -1,6 +1,7 @@
 import { motion } from 'framer-motion'
+import type { WorkTrack } from '../data/types'
 
-const tracks = [
+const tracks: WorkTrack[] = [
   {
     role: 'Hire Me',
     subtitle: 'Senior Data Analyst',
@@ -21,7 +22,7 @@ const tracks = [
   },
 ]
 
-function Card({ data, side, accent }) {
+function Card({ data, side, accent }: { data: WorkTrack; side: 'left' | 'right'; accent: string }) {
   return (
     <motion.div
       initial={{ opacity: 0, y: 40 }}
@@ -67,8 +68,8 @@ function Card({ data, side, accent }) {
         transition: 'gap 0.3s, border-color 0.3s',
         display: 'inline-flex', alignItems: 'center', gap: '0.5rem',
       }}
-        onMouseEnter={e => { e.target.style.gap = '1rem'; e.target.style.borderColor = accent }}
-        onMouseLeave={e => { e.target.style.gap = '0.5rem'; e.target.style.borderColor = 'rgba(200,146,42,0.3)' }}
+        onMouseEnter={(e: React.MouseEvent<HTMLAnchorElement>) => { e.currentTarget.style.gap = '1rem'; e.currentTarget.style.borderColor = accent }}
+        onMouseLeave={(e: React.MouseEvent<HTMLAnchorElement>) => { e.currentTarget.style.gap = '0.5rem'; e.currentTarget.style.borderColor = 'rgba(200,146,42,0.3)' }}
       >
         {data.cta}
       </a>

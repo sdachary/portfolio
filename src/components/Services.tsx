@@ -1,6 +1,7 @@
 import { motion } from 'framer-motion'
+import type { Service } from '../data/types'
 
-const services = [
+const services: Service[] = [
   {
     num: '01',
     title: 'Data Analytics & BI',
