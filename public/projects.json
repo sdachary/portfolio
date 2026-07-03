@@ -22,7 +22,7 @@
     "slug": "chitragupta",
     "status": "Live",
     "status_key": "live",
-    "description": "Multi-tenant business ledger for partnerships. Tracks income, expenses, investments, withdrawals; auto-calculates settlements; generates GST/TDS compliance reports.",
+    "description": "Multi-tenant business ledger for partnerships. Tracks income, expenses, investments, withdrawals; auto-calculates settlements; generates GST/TDS compliance reports. Built on Cloudflare Pages + Hono +...",
     "tags": [
       "Vite",
       "Hono",
@@ -32,15 +32,34 @@
     ],
     "live_url": "https://chitragupta.pages.dev/",
     "local": true,
-    "last_updated": "2026-06-20",
+    "last_updated": "2026-07-02",
     "github_remote": "git@github.com:sdachary/chitragupta.git"
+  },
+  {
+    "name": "DARPAN",
+    "slug": "darpan",
+    "status": "Local / Standalone",
+    "status_key": "local",
+    "description": "AI-powered social media audit and growth strategy tool. Profile analysis, AI content plans, brand kits, and competitor tracking \u2014 built with React + Vite frontend and Cloudflare Workers + D1 backend.",
+    "tags": [
+      "React",
+      "Vite",
+      "Hono",
+      "Tailwind",
+      "TypeScript",
+      "Cloudflare Pages"
+    ],
+    "live_url": null,
+    "local": true,
+    "last_updated": "2026-07-03",
+    "github_remote": "git@github.com:sdachary/darpan.git"
   },
   {
     "name": "INDRA",
     "slug": "indra",
     "status": "Local / Standalone",
     "status_key": "local",
-    "description": "High-performance automation backbone for the ecosystem. Powered by n8n, it orchestrates complex multi-service workflows, webhook triggers, and real-time state synchronization.",
+    "description": "High-performance automation backbone for the ecosystem. Powered by n8n, orchestrates complex multi-service workflows, webhook triggers, and real-time state sync across all business units.",
     "tags": [
       "n8n",
       "Docker",
@@ -48,7 +67,7 @@
     ],
     "live_url": null,
     "local": true,
-    "last_updated": "2026-06-20",
+    "last_updated": "2026-07-02",
     "github_remote": "git@github.com:sdachary/indra.git"
   },
   {
@@ -56,7 +75,7 @@
     "slug": "kanak",
     "status": "Live",
     "status_key": "live",
-    "description": "Jewellery retail management SaaS. Real-time dashboard for inventory, gold rate tracking, sales, purchases, customer ledger, billing, and financial settlement.",
+    "description": "Jewellery retail management SaaS. Real-time dashboard for inventory, gold rate tracking, sales, customer ledger, billing, and financial settlement.",
     "tags": [
       "Cloudflare Pages",
       "Supabase",
@@ -72,14 +91,14 @@
     "slug": "karma",
     "status": "Local / Standalone",
     "status_key": "local",
-    "description": "Production-ready MVP for a distributed compute marketplace where users can contribute their compute resources and earn rewards. Built with FastAPI.",
+    "description": "Production-ready MVP for a distributed compute marketplace. Users contribute compute resources and earn rewards. Track tasks, nodes, and earnings via a FastAPI agent runtime.",
     "tags": [
       "Python",
       "FastAPI"
     ],
     "live_url": null,
     "local": true,
-    "last_updated": "2026-06-20",
+    "last_updated": "2026-07-02",
     "github_remote": "git@github.com:sdachary/karma.git"
   },
   {
@@ -87,7 +106,7 @@
     "slug": "kubera",
     "status": "Open Source",
     "status_key": "open-source",
-    "description": "Personal finance OS — self-hosted, open-source tool for tracking wealth, investments, and financial goals. Takes you from debt to zero to wealth.",
+    "description": "Personal finance OS \u2014 self-hosted, open-source tool for tracking wealth, investments, and financial goals. From debt to zero to wealth.",
     "tags": [
       "Ruby",
       "Rails",
@@ -96,7 +115,7 @@
     ],
     "live_url": "https://sdachary.github.io/kubera",
     "local": true,
-    "last_updated": "2026-06-20",
+    "last_updated": "2026-07-01",
     "github_remote": "git@github.com:sdachary/kubera.git",
     "github_url": "https://github.com/sdachary/kubera"
   },
@@ -105,7 +124,7 @@
     "slug": "mcp-hub",
     "status": "Local / Standalone",
     "status_key": "local",
-    "description": "Unified AI Agent Orchestration Platform — 120+ tools, 55 skills, 22 agents via SSE transport on port 3000. Routes AI requests through a multi-provider router.",
+    "description": "Unified AI Agent Orchestration Platform \u2014 120+ tools, 55 skills, 22 agents via SSE transport on port 3000. Multi-provider AI routing, DAG workflow engine, skill evolution system, and memory-augmented agents.",
     "tags": [
       "Python",
       "FastAPI",
@@ -114,15 +133,15 @@
     ],
     "live_url": null,
     "local": true,
-    "last_updated": "2026-06-26",
+    "last_updated": "2026-07-03",
     "github_remote": "git@github.com:sdachary/devendra.git"
   },
   {
-    "name": "OPEN-DESIGN",
-    "slug": "open-design",
+    "name": "SRI",
+    "slug": "sri",
     "status": "Local / Standalone",
     "status_key": "local",
-    "description": "The open-source alternative to Claude Design. Local-first, web-deployable, BYOK at every layer — 16 coding-agent CLIs, 31 composable Skills, and 72 brand-grade Design Systems.",
+    "description": "Open-source design toolkit and the alternative to Claude Design. Local-first, web-deployable \u2014 16 coding-agent CLIs, 31 composable Skills, 72 brand-grade Design Systems. Built with Next.js + TypeScript.",
     "tags": [
       "TypeScript",
       "Next.js",
@@ -130,61 +149,25 @@
     ],
     "live_url": null,
     "local": true,
-    "last_updated": "2026-06-20",
-    "github_remote": "https://github.com/nexu-io/open-design"
-  },
-  {
-    "name": "SARKARIALERT",
-    "slug": "sarkarialert",
-    "status": "Local / Standalone",
-    "status_key": "local",
-    "description": "Production-grade, fully automated Government Jobs portal for India. Auto-synced via GitHub Actions, PWA with search, bookmarks, dark mode, and WCAG AA accessibility.",
-    "tags": [
-      "PWA",
-      "GitHub Actions",
-      "JavaScript"
-    ],
-    "live_url": null,
-    "local": true,
-    "last_updated": null,
-    "github_remote": null
-  },
-  {
-    "name": "SOCIAL-BLUEPRINT-AI",
-    "slug": "social-blueprint-ai",
-    "status": "Local / Standalone",
-    "status_key": "local",
-    "description": "AI-powered social media audit and growth strategy tool. React + Vite frontend with Cloudflare Workers + D1 backend. Google Gemini-powered content analysis.",
-    "tags": [
-      "React",
-      "Vite",
-      "Hono",
-      "Tailwind",
-      "TypeScript",
-      "Cloudflare Pages"
-    ],
-    "live_url": null,
-    "local": true,
-    "last_updated": "2026-06-10",
-    "github_remote": "https://github.com/sdachary/social-blueprint-ai"
+    "last_updated": "2026-07-02",
+    "github_remote": "git@github.com:sdachary/sri.git"
   },
   {
     "name": "UNNATI",
     "slug": "unnati",
     "status": "Live",
     "status_key": "live",
-    "description": "AI-powered job search assistant that automates tedious parts of job hunting while keeping you in control. Multi-AI-provider with BYOK model.",
+    "description": "AI-powered job search assistant that automates tedious parts of job hunting while keeping you in control",
     "tags": [
       "Next.js",
       "React",
       "Tailwind",
       "TypeScript",
-      "Cloudflare Pages",
       "Supabase"
     ],
     "live_url": "https://unnati-70z.pages.dev/",
     "local": true,
-    "last_updated": "2026-06-23",
+    "last_updated": "2026-07-02",
     "github_remote": "git@github.com:sdachary/unnati.git"
   },
   {
@@ -192,7 +175,7 @@
     "slug": "vishwakarma",
     "status": "Live",
     "status_key": "live",
-    "description": "Simplified provisioning portal for non-technical users. Guided Form workflow for requesting cloud resources; backend handles Terraform and OCI orchestration automatically.",
+    "description": "One-click cloud provisioning portal. Guided form workflow for requesting cloud resources while the backend handles Terraform and OCI orchestration automatically.",
     "tags": [
       "Cloudflare Pages",
       "Supabase",

@@ -1,33 +1,43 @@
 {
-  "vishwakarma": {
-    "live_url": "https://vishwakarma.pages.dev/"
+  "bepara": {
+    "live_url": "https://bepara.pages.dev/",
+    "description": "GST-compliant billing, inventory, and e-way bill management for Indian businesses. Built with Next.js + Supabase + Cloudflare Pages."
   },
   "chitragupta": {
     "live_url": "https://chitragupta.pages.dev/"
   },
-  "unnati": {
-    "live_url": "https://unnati-70z.pages.dev/"
+  "darpan": {
+    "description": "AI-powered social media audit and growth strategy tool. Profile analysis, AI content plans, brand kits, and competitor tracking — built with React + Vite frontend and Cloudflare Workers + D1 backend."
+  },
+  "indra": {
+    "description": "High-performance automation backbone for the ecosystem. Powered by n8n, orchestrates complex multi-service workflows, webhook triggers, and real-time state sync across all business units.",
+    "tags": ["n8n", "Docker", "PostgreSQL"]
   },
   "kanak": {
-    "live_url": "https://kanak-dj5.pages.dev/"
+    "live_url": "https://kanak-dj5.pages.dev/",
+    "description": "Jewellery retail management SaaS. Real-time dashboard for inventory, gold rate tracking, sales, customer ledger, billing, and financial settlement.",
+    "tags": ["Cloudflare Pages", "Supabase", "JavaScript"]
   },
-  "bepara": {
-    "live_url": "https://bepara.pages.dev/",
-    "description": "GST-compliant billing, inventory, and e-way bill management for Indian businesses. Built with Next.js + Supabase + Cloudflare Pages."
+  "karma": {
+    "description": "Production-ready MVP for a distributed compute marketplace. Users contribute compute resources and earn rewards. Track tasks, nodes, and earnings via a FastAPI agent runtime."
   },
   "kubera": {
     "live_url": "https://sdachary.github.io/kubera",
     "github_url": "https://github.com/sdachary/kubera",
     "status": "open-source",
-    "description": "Personal finance OS — self-hosted, open-source tool for tracking wealth, investments, and financial goals."
+    "description": "Personal finance OS — self-hosted, open-source tool for tracking wealth, investments, and financial goals. From debt to zero to wealth.",
+    "tags": ["Ruby", "Rails", "PostgreSQL", "Docker"]
   },
-  "mcp-hub": {
-    "description": "Unified AI Agent Orchestration Platform — 120+ tools, 55 skills, 22 agents via SSE transport on port 3000."
+  "sri": {
+    "description": "Open-source design toolkit and the alternative to Claude Design. Local-first, web-deployable — 16 coding-agent CLIs, 31 composable Skills, 72 brand-grade Design Systems. Built with Next.js + TypeScript.",
+    "tags": ["TypeScript", "Next.js", "React"]
   },
-  "open-design": {
-    "description": "The open-source alternative to Claude Design. Local-first, web-deployable, BYOK at every layer — 16 coding-agent CLIs, 31 composable Skills, and 72 brand-grade Design Systems."
+  "unnati": {
+    "live_url": "https://unnati-70z.pages.dev/"
   },
-  "sarkarialert": {
-    "description": "Production-grade, fully automated Government Jobs portal for India. Auto-synced via GitHub Actions, PWA with search, bookmarks, dark mode, and WCAG AA accessibility."
+  "vishwakarma": {
+    "live_url": "https://vishwakarma.pages.dev/",
+    "description": "One-click cloud provisioning portal. Guided form workflow for requesting cloud resources while the backend handles Terraform and OCI orchestration automatically.",
+    "tags": ["Cloudflare Pages", "Supabase", "JavaScript"]
   }
 }
