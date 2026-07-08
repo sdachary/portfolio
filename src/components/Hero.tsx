@@ -7,8 +7,9 @@ export default function Hero() {
 
   useEffect(() => {
     if (typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
-    const canvas = canvasRef.current
-    if (!canvas) return
+    const cvs = canvasRef.current
+    if (!cvs) return
+    const canvas: HTMLCanvasElement = cvs
     const ctx = canvas.getContext('2d')!
     let W: number = 0, H: number = 0
     let particles: Particle[] = []

@@ -142,6 +142,7 @@ export default function Contact() {
               <input
                 name="name"
                 placeholder="Your Name"
+                aria-label="Your Name"
                 required
                 style={inputStyle}
               />
@@ -149,12 +150,14 @@ export default function Contact() {
                 name="email"
                 type="email"
                 placeholder="Your Email"
+                aria-label="Your Email"
                 required
                 style={inputStyle}
               />
               <textarea
                 name="message"
                 placeholder="Tell me about your project, idea, or opportunity..."
+                aria-label="Your Message"
                 required
                 rows={5}
                 style={{ ...inputStyle, resize: 'vertical', minHeight: 100 }}

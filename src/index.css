@@ -38,6 +38,14 @@ body::before {
   opacity: 0.4;
 }
 
+.skip-link {
+  position: fixed; top: -100%; left: 1rem; z-index: 100000;
+  padding: 0.5rem 1rem; background: var(--amber); color: var(--bg);
+  font: 0.7rem var(--font-mono); text-decoration: none;
+  letter-spacing: 0.15em; text-transform: uppercase;
+}
+.skip-link:focus { top: 1rem; }
+
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
     animation-duration: 0.01ms !important;

@@ -1,13 +1,32 @@
 # Portfolio
 
-Personal portfolio site built with Vite + React. Static site hosted on GitHub Pages.
+> Personal portfolio site — Vite + React, deployed to Cloudflare Pages.
 
-## Compliance
+## Stack
 
-This project complies with the **DPDP Act 2023 (India)** and **GDPR (EEA)**.
+| Layer | Technology |
+|-------|-----------|
+| Runtime | Node.js |
+| Framework | Vite + React + TypeScript |
+| Database | — |
+| Deploy | Cloudflare Pages |
 
-- **Data Protection Officer**: Deepak Achary — [dpo@kubera.app](mailto:dpo@kubera.app)
-- **Privacy Policy**: See [`docs/PRIVACY_POLICY.md`](./docs/PRIVACY_POLICY.md)
-- **Data Localization**: All personal data stored within India.
-- **Note**: This is a static portfolio site. No user data is collected, processed, or stored.
-- **Grievance Redressal**: Unresolved grievances may be escalated to the [Data Protection Board of India](https://complaints.dpbi.gov.in).
+## Quick Start
+
+```bash
+cp .env.example .env
+npm install
+npm run dev
+```
+
+## Commands
+
+| Command | Action |
+|---------|--------|
+| `npm test` | Run tests (vitest) |
+| `npm run build` | Build for production |
+| `npm run lint` | Check code style |
+
+## Env Vars
+
+See `.env.example` for all required variables.

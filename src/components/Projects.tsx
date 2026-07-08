@@ -215,7 +215,7 @@ export default function Projects() {
                     </div>
                   )}
                   {(p.live_url || p.github_url) && (
-                    <a href={p.live_url || p.github_url} target="_blank" rel="noreferrer"
+                    <a href={p.live_url || p.github_url || ''} target="_blank" rel="noreferrer"
                       style={{
                         fontFamily: 'var(--font-mono)', fontSize: '0.62rem',
                         color: 'var(--amber)', textDecoration: 'none',

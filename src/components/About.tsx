@@ -1,10 +1,10 @@
 import { motion } from 'framer-motion'
 
-const paragraphs: string[] = [
-  'Started as an <strong>HR professional</strong>. Pivoted hard into data. Taught myself Python at nights, SQL on weekends. Shipped my first analytics dashboard before anyone asked me to.',
-  'Spent 9 years turning <strong>raw, messy data</strong> into decisions that moved businesses — from financial investment algorithms to retail sales intelligence. Building systems that scale.',
-  'But the day job wasn\'t enough. So I built an <strong>entire ecosystem from scratch</strong> — AI agents, cloud provisioners, financial engines, compute marketplaces. A second brain that thinks so I don\'t have to.',
-  'The mission: <strong>sovereign, India-resident infrastructure</strong>. No foreign dependencies. No vendor lock-in. Just systems that last.',
+const paragraphs: React.ReactNode[] = [
+  <>Started as an <strong>HR professional</strong>. Pivoted hard into data. Taught myself Python at nights, SQL on weekends. Shipped my first analytics dashboard before anyone asked me to.</>,
+  <>Spent 9 years turning <strong>raw, messy data</strong> into decisions that moved businesses — from financial investment algorithms to retail sales intelligence. Building systems that scale.</>,
+  <>But the day job wasn't enough. So I built an <strong>entire ecosystem from scratch</strong> — AI agents, cloud provisioners, financial engines, compute marketplaces. A second brain that thinks so I don't have to.</>,
+  <>The mission: <strong>sovereign, India-resident infrastructure</strong>. No foreign dependencies. No vendor lock-in. Just systems that last.</>,
 ]
 
 export default function About() {
@@ -59,13 +59,12 @@ export default function About() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.7, delay: i * 0.1, ease: 'easeOut' }}
-            dangerouslySetInnerHTML={{ __html: p }}
             style={{
               fontFamily: 'var(--font-body)', fontSize: 'clamp(1.1rem, 2vw, 1.5rem)',
               fontWeight: 300, lineHeight: 1.6, color: 'var(--white)',
               marginBottom: '2.5rem',
             }}
-          />
+          >{p}</motion.p>
         ))}
       </div>
     </section>
