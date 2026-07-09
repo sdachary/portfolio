@@ -25,11 +25,11 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 22
           cache: npm
       - run: npm ci
       - name: gitleaks
-        run: npx gitleaks@latest detect
+        run: docker run -v ${{ github.workspace }}:/repo ghcr.io/gitleaks/gitleaks:latest detect -s /repo
         continue-on-error: true
       - run: npm run lint
       - run: npm run typecheck
