@@ -15,7 +15,7 @@ const services: Service[] = [
   {
     num: '03', audience: 'both',
     title: 'Cloud Architecture & DevOps',
-    desc: 'Zero-trust infrastructure on GCP, Cloudflare, and Supabase. Terraform, WireGuard, CI/CD pipelines. Sovereign, India-resident infrastructure with no foreign dependencies.',
+    desc: 'Zero-trust infrastructure on GCP, Cloudflare, and Supabase. Terraform, WireGuard, CI/CD pipelines. Sovereign, India-resident infrastructure.',
   },
   {
     num: '04', audience: 'client',
@@ -24,29 +24,44 @@ const services: Service[] = [
   },
 ]
 
+const ease = [0.32, 0.72, 0, 1] as const
+
 export default function Services() {
   return (
     <section id="services" className="section section-divider">
       <div className="section-header">
-        <h2 className="section-title">SERVICES</h2>
-        <span className="section-number">What I Build</span>
+        <h2 className="section-title">Services</h2>
       </div>
 
-      <div className="card-grid card-grid-2">
-        {services.map((s, i) => (
-          <motion.div
-            key={i}
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6, delay: i * 0.1, ease: 'easeOut' }}
-            className="card"
-          >
-            <div className="card-outlined-num">{s.num}</div>
-            <h3 className="card-title">{s.title}</h3>
-            <p className="card-desc">{s.desc}</p>
-          </motion.div>
-        ))}
+      <div className="card-grid card-grid-asymmetric">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6, ease }}
+          className="card"
+        >
+          <div className="card-outlined-num">{services[0].num}</div>
+          <h3 className="card-title">{services[0].title}</h3>
+          <p className="card-desc">{services[0].desc}</p>
+        </motion.div>
+
+        <div className="card-grid" style={{ gap: '1rem' }}>
+          {services.slice(1).map((s, i) => (
+            <motion.div
+              key={i}
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, delay: 0.1 + i * 0.08, ease }}
+              className="card"
+            >
+              <div className="card-outlined-num">{s.num}</div>
+              <h3 className="card-title">{s.title}</h3>
+              <p className="card-desc">{s.desc}</p>
+            </motion.div>
+          ))}
+        </div>
       </div>
     </section>
   )

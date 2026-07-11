@@ -2,6 +2,8 @@ import { useEffect, useState } from 'react'
 import { motion } from 'framer-motion'
 import type { Project } from '../data/types'
 
+const ease = [0.32, 0.72, 0, 1] as const
+
 export default function Projects() {
   const [projects, setProjects] = useState<Project[]>([])
 
@@ -17,15 +19,14 @@ export default function Projects() {
   return (
     <section id="projects" className="section section-alt" style={{ overflow: 'hidden' }}>
       <div className="section-header">
-        <h2 className="section-title">PROJECTS</h2>
-        <span className="section-number">04 / 06</span>
+        <h2 className="section-title">Projects</h2>
       </div>
 
       <motion.div
         initial={{ opacity: 0 }}
         whileInView={{ opacity: 1 }}
         viewport={{ once: true }}
-        transition={{ duration: 0.6 }}
+        transition={{ duration: 0.6, ease }}
         className="projects-grid"
       >
         {projects.map((p, i) => {
@@ -39,14 +40,12 @@ export default function Projects() {
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: i * 0.06, ease: 'easeOut' }}
+              transition={{ duration: 0.5, delay: i * 0.05, ease }}
               className="project-card"
             >
               <div>
                 <div className="project-num">{idx}</div>
-                <div className={`status-badge ${statusClass}`}>
-                  {p.status}
-                </div>
+                <div className={`status-badge ${statusClass}`}>{p.status}</div>
                 <h3 className="project-name">{p.name}</h3>
                 <p className="project-desc">{p.description}</p>
               </div>
@@ -59,8 +58,8 @@ export default function Projects() {
                   </div>
                 )}
                 {(p.live_url || p.github_url) && (
-                  <a href={p.live_url || p.github_url || ''} target="_blank" rel="noreferrer" className="project-link" style={{ marginTop: '1.2rem' }}>
-                    {p.live_url ? 'Visit Live →' : 'View Source →'}
+                  <a href={p.live_url || p.github_url || ''} target="_blank" rel="noreferrer" className="project-link" style={{ marginTop: '1rem' }}>
+                    {p.live_url ? 'Visit Live' : 'View Source'} →
                   </a>
                 )}
               </div>

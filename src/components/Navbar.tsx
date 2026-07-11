@@ -8,7 +8,7 @@ const links = [
   { href: '#skills', label: 'Stack' },
   { href: '#projects', label: 'Projects' },
   { href: '#experience', label: 'Experience' },
-  { href: '#work', label: 'Work With Me' },
+  { href: '#work', label: 'Work' },
   { href: '#contact', label: 'Contact' },
 ]
 
@@ -28,22 +28,24 @@ export default function Navbar() {
   return (
     <AnimatePresence>
       {visible && (
-        <motion.nav
+        <motion.div
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -20 }}
-          transition={{ duration: 0.5, ease: 'easeOut' }}
-          className="navbar"
+          transition={{ duration: 0.5, ease: [0.32, 0.72, 0, 1] }}
+          className="nav-wrap"
         >
-          <div className="navbar-brand">SDA ✦ Portfolio</div>
-          <ul className="navbar-links">
-            {links.map(l => (
-              <li key={l.href}>
-                <a href={l.href} className="navbar-link">{l.label}</a>
-              </li>
-            ))}
-          </ul>
-        </motion.nav>
+          <nav className="navbar">
+            <div className="navbar-brand">SDA</div>
+            <ul className="navbar-links">
+              {links.map(l => (
+                <li key={l.href}>
+                  <a href={l.href} className="navbar-link">{l.label}</a>
+                </li>
+              ))}
+            </ul>
+          </nav>
+        </motion.div>
       )}
     </AnimatePresence>
   )

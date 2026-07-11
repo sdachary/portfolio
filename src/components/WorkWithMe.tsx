@@ -22,6 +22,8 @@ const tracks: WorkTrack[] = [
   },
 ]
 
+const ease = [0.32, 0.72, 0, 1] as const
+
 function Card({ data, side, accent }: { data: WorkTrack; side: 'left' | 'right'; accent: string }) {
   const borderColor = accent === 'var(--accent)' ? 'rgba(201,100,66,0.3)' : 'rgba(45,125,106,0.3)'
   return (
@@ -29,16 +31,16 @@ function Card({ data, side, accent }: { data: WorkTrack; side: 'left' | 'right';
       initial={{ opacity: 0, y: 40 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
-      transition={{ duration: 0.7, delay: side === 'left' ? 0 : 0.2, ease: 'easeOut' }}
+      transition={{ duration: 0.7, delay: side === 'left' ? 0 : 0.2, ease }}
     >
       <div className="dual-badge" style={{ color: accent, borderColor }}>
         For {data.target}
       </div>
       <h2 className="dual-title">{data.role}</h2>
-      <div className="card-period" style={{ color: accent, fontSize: '0.8rem', letterSpacing: '0.1em', marginBottom: '2rem' }}>
+      <div className="card-period" style={{ color: accent, fontSize: '0.75rem', letterSpacing: '0.1em', marginBottom: '1.5rem' }}>
         {data.subtitle}
       </div>
-      <p className="card-desc" style={{ marginBottom: '2.5rem', fontSize: '1rem' }}>
+      <p className="card-desc" style={{ marginBottom: '2rem', fontSize: '0.95rem' }}>
         {data.desc}
       </p>
       <a href={data.href} className="project-link" style={{ borderColor, color: accent }}>
@@ -51,7 +53,9 @@ function Card({ data, side, accent }: { data: WorkTrack; side: 'left' | 'right';
 export default function WorkWithMe() {
   return (
     <section id="work" className="section section-alt section-divider-both">
-      <div className="section-eyebrow">How I Can Help</div>
+      <div className="section-header">
+        <h2 className="section-title">How I Can Help</h2>
+      </div>
 
       <div className="dual-grid">
         <Card data={tracks[0]} side="left" accent="var(--accent)" />
