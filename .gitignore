@@ -28,6 +28,12 @@ dist-ssr
 *.sln
 *.sw?
 
+# Python cache
+__pycache__/
+
+# AI tool cache
+.superpowers/
+
 # Build artifacts
 scan.log
 portfolio/.gitignore
