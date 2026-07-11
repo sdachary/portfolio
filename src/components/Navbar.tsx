@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 
-const links: { href: string; label: string }[] = [
+const links = [
   { href: '#about', label: 'Origin' },
   { href: '#dual', label: 'Identity' },
   { href: '#services', label: 'Services' },
@@ -33,29 +33,13 @@ export default function Navbar() {
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -20 }}
           transition={{ duration: 0.5, ease: 'easeOut' }}
-          style={{
-            position: 'fixed', top: 0, left: 0, right: 0,
-            zIndex: 1000, padding: '1.5rem 3rem',
-            display: 'flex', justifyContent: 'space-between', alignItems: 'center',
-            background: 'linear-gradient(to bottom, rgba(8,8,8,0.9) 0%, transparent 100%)',
-            backdropFilter: 'blur(8px)',
-          }}
+          className="navbar"
         >
-          <div style={{ fontFamily: 'var(--font-mono)', fontSize: '0.75rem', color: 'var(--amber)', letterSpacing: '0.2em', textTransform: 'uppercase' }}>
-            SDA ✦ Portfolio
-          </div>
-          <ul style={{ display: 'flex', gap: '2.5rem', listStyle: 'none' }}>
+          <div className="navbar-brand">SDA ✦ Portfolio</div>
+          <ul className="navbar-links">
             {links.map(l => (
               <li key={l.href}>
-                <a href={l.href} style={{
-                  fontFamily: 'var(--font-mono)', fontSize: '0.7rem',
-                  color: 'var(--muted)', textDecoration: 'none',
-                  letterSpacing: '0.15em', textTransform: 'uppercase',
-                  transition: 'color 0.3s',
-                }}
-                  onMouseEnter={(e: React.MouseEvent<HTMLAnchorElement>) => { e.currentTarget.style.color = 'var(--white)' }}
-                  onMouseLeave={(e: React.MouseEvent<HTMLAnchorElement>) => { e.currentTarget.style.color = 'var(--muted)' }}
-                >{l.label}</a>
+                <a href={l.href} className="navbar-link">{l.label}</a>
               </li>
             ))}
           </ul>

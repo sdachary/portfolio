@@ -28,6 +28,7 @@ const night: DualCardData = {
 }
 
 function Card({ data, side, accent }: { data: DualCardData; side: 'left' | 'right'; accent: string }) {
+  const borderColor = accent === 'var(--accent)' ? 'rgba(201,100,66,0.3)' : 'rgba(45,125,106,0.3)'
   return (
     <motion.div
       initial={{ opacity: 0, y: 40 }}
@@ -35,22 +36,14 @@ function Card({ data, side, accent }: { data: DualCardData; side: 'left' | 'righ
       viewport={{ once: true }}
       transition={{ duration: 0.7, delay: side === 'left' ? 0 : 0.2, ease: 'easeOut' }}
     >
-      <div style={{
-        fontFamily: 'var(--font-mono)', fontSize: '0.6rem',
-        letterSpacing: '0.3em', textTransform: 'uppercase',
-        marginBottom: '1.2rem', padding: '0.3rem 0.8rem', display: 'inline-block',
-        border: '1px solid', color: accent, borderColor: accent.replace(')', ',0.3)').replace('rgb', 'rgba'),
-      }}>
+      <div className="dual-badge" style={{ color: accent, borderColor: borderColor }}>
         {data.eyebrow}
       </div>
       <h2
         dangerouslySetInnerHTML={{ __html: data.title }}
-        style={{
-          fontFamily: 'var(--font-display)', fontSize: 'clamp(2.5rem, 4vw, 4.5rem)',
-          lineHeight: 1, marginBottom: '2rem', color: 'var(--white)',
-        }}
+        className="dual-title"
       />
-      <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: '0.8rem' }}>
+      <ul className="dual-list">
         {data.items.map((item, i) => (
           <motion.li
             key={i}
@@ -58,13 +51,9 @@ function Card({ data, side, accent }: { data: DualCardData; side: 'left' | 'righ
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.4, delay: 0.3 + i * 0.08 }}
-            style={{
-              fontFamily: 'var(--font-mono)', fontSize: '0.78rem',
-              color: 'var(--muted)', letterSpacing: '0.05em',
-              display: 'flex', alignItems: 'flex-start', gap: '0.8rem', lineHeight: 1.5,
-            }}
+            className="dual-item"
           >
-            <span style={{ color: accent, flexShrink: 0, marginTop: '0.1em' }}>→</span>
+            <span className="dual-arrow" style={{ color: accent }}>→</span>
             {item}
           </motion.li>
         ))}
@@ -75,27 +64,13 @@ function Card({ data, side, accent }: { data: DualCardData; side: 'left' | 'righ
 
 export default function DualIdentity() {
   return (
-    <section id="dual" style={{
-      background: 'var(--bg2)', padding: '8rem 3rem',
-      borderTop: '1px solid var(--line)', borderBottom: '1px solid var(--line)',
-    }}>
-      <div style={{
-        fontFamily: 'var(--font-mono)', fontSize: '0.65rem',
-        color: 'var(--muted)', letterSpacing: '0.3em', textTransform: 'uppercase',
-        marginBottom: '5rem', display: 'flex', alignItems: 'center', gap: '1rem',
-      }}>
-        <span style={{ width: 40, height: 1, background: 'var(--muted)' }} />
-        The Two Modes
-      </div>
+    <section id="dual" className="section section-alt section-divider-both">
+      <div className="section-eyebrow">The Two Modes</div>
 
-      <div style={{
-        display: 'grid',
-        gridTemplateColumns: '1fr 1px 1fr',
-        gap: '4rem', alignItems: 'start',
-      }}>
-        <Card data={day} side="left" accent="var(--amber)" />
-        <div style={{ background: 'var(--line)', height: '100%', minHeight: 400 }} />
-        <Card data={night} side="right" accent="var(--rust)" />
+      <div className="dual-grid">
+        <Card data={day} side="left" accent="var(--accent)" />
+        <div className="dual-vr" />
+        <Card data={night} side="right" accent="var(--accent2)" />
       </div>
     </section>
   )

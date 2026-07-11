@@ -1,4 +1,3 @@
-import Cursor from './components/Cursor'
 import Navbar from './components/Navbar'
 import Hero from './components/Hero'
 import About from './components/About'
@@ -9,12 +8,10 @@ import Projects from './components/Projects'
 import Experience from './components/Experience'
 import WorkWithMe from './components/WorkWithMe'
 import Contact from './components/Contact'
-import Preloader from './components/Preloader'
 
 export default function App() {
   return (
-    <Preloader>
-      <Cursor />
+    <>
       <Navbar />
       <Hero />
       <About />
@@ -25,6 +22,6 @@ export default function App() {
       <Experience />
       <WorkWithMe />
       <Contact />
-    </Preloader>
+    </>
   )
 }
