@@ -4,6 +4,10 @@ import type { Project } from '../data/types'
 
 const ease = [0.32, 0.72, 0, 1] as const
 
+function isFeatured(p: Project) {
+  return p.status_key === 'live' || p.status_key === 'open-source'
+}
+
 export default function Projects() {
   const [projects, setProjects] = useState<Project[]>([])
 
@@ -16,6 +20,12 @@ export default function Projects() {
 
   if (projects.length === 0) return null
 
+  const sorted = [...projects].sort((a, b) => {
+    if (isFeatured(a) && !isFeatured(b)) return -1
+    if (!isFeatured(a) && isFeatured(b)) return 1
+    return 0
+  })
+
   return (
     <section id="projects" className="section section-alt" style={{ overflow: 'hidden' }}>
       <div className="section-header">
@@ -27,10 +37,10 @@ export default function Projects() {
         whileInView={{ opacity: 1 }}
         viewport={{ once: true }}
         transition={{ duration: 0.6, ease }}
-        className="projects-grid"
+        className="projects-bento"
       >
-        {projects.map((p, i) => {
-          const idx = String(i + 1).padStart(2, '0')
+        {sorted.map((p, i) => {
+          const featured = isFeatured(p)
           const statusClass = `status-${p.status_key || 'local'}`
           const tags = (p.tags || []).slice(0, 5)
 
@@ -40,11 +50,10 @@ export default function Projects() {
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: i * 0.05, ease }}
-              className="project-card"
+              transition={{ duration: 0.5, delay: i * 0.04, ease }}
+              className={`project-card${featured ? ' featured' : ''}`}
             >
               <div>
-                <div className="project-num">{idx}</div>
                 <div className={`status-badge ${statusClass}`}>{p.status}</div>
                 <h3 className="project-name">{p.name}</h3>
                 <p className="project-desc">{p.description}</p>

@@ -1,0 +1,16 @@
+import type { ActivityEntry } from './types'
+
+const activity: ActivityEntry[] = [
+  { phase: 'Phase 53', project: 'Portfolio', description: 'Redesign with Recent Activity section and bento project grid', date: '2026-07-13', status: 'active' },
+  { phase: 'Phase 52', project: 'PACA', description: 'Deep integration: Paca MCP protocol, session tracking, webhook GitHub plugin, 14 repos linked', date: '2026-07-13', status: 'completed' },
+  { phase: 'Phase 51', project: 'PACA', description: 'Rollout: 7 Docker containers, MCP server wiring, GitHub plugin install, acharylab workspace', date: '2026-07-12', status: 'completed' },
+  { phase: 'Phase 50', project: 'Chitragupta', description: 'Auth redirect fix — dynamic origin resolution, removed hardcoded URLs', date: '2026-07-11', status: 'completed' },
+  { phase: 'Phase 50', project: 'Kanak', description: 'Auth redirect fix — dynamic origin resolution, removed hardcoded URLs', date: '2026-07-11', status: 'completed' },
+  { phase: 'Phase 49', project: 'Bepara', description: 'Password toggle + forgot/reset flow', date: '2026-07-10', status: 'completed' },
+  { phase: 'Phase 49', project: 'Unnati', description: 'Password toggle + forgot/reset flow', date: '2026-07-10', status: 'completed' },
+  { phase: 'Phase 49', project: 'Vishwakarma', description: 'Password toggle + forgot/reset flow', date: '2026-07-10', status: 'completed' },
+  { phase: 'Phase 49', project: 'Darpan', description: 'Password toggle + forgot/reset flow', date: '2026-07-10', status: 'completed' },
+  { phase: 'Phase 49', project: 'Karma', description: 'Password toggle + forgot/reset flow', date: '2026-07-10', status: 'completed' },
+]
+
+export default activity

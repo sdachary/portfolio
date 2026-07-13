@@ -46,3 +46,11 @@ export interface WorkTrack {
   href: string
   accent: string
 }
+
+export interface ActivityEntry {
+  phase: string
+  project: string
+  description: string
+  date: string
+  status: 'active' | 'completed' | 'blocked'
+}
