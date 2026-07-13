@@ -25,7 +25,7 @@ const tracks: WorkTrack[] = [
 const ease = [0.32, 0.72, 0, 1] as const
 
 function Card({ data, side, accent }: { data: WorkTrack; side: 'left' | 'right'; accent: string }) {
-  const borderColor = accent === 'var(--accent)' ? 'rgba(201,100,66,0.3)' : 'rgba(45,125,106,0.3)'
+  const borderColor = accent === 'var(--accent)' ? 'rgba(200,146,42,0.3)' : 'rgba(184,76,42,0.3)'
   return (
     <motion.div
       initial={{ opacity: 0, y: 40 }}
