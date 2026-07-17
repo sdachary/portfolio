@@ -1,7 +1,7 @@
 @echo off
 setlocal enabledelayedexpansion
 title PC Cleanup Tool
-color 0B
+color 0A
 cd /d "%~dp0"
 
 where powershell >nul 2>nul || (echo Missing PowerShell.&pause&exit /b)
@@ -11,7 +11,7 @@ if errorlevel 1 (
     echo   PLEASE RUN AS ADMINISTRATOR
     echo ============================================
     echo.
-    echo Right-click this file -^> "Run as Administrator"
+    echo Right-click this file -> "Run as Administrator"
     pause
     exit /b
 )
@@ -31,125 +31,20 @@ echo.
 choice /c SQ /n /m "  Select: "
 if errorlevel 2 exit /b
 
-:: Write the PowerShell scanner to a temp file using a here-string
-set PSFILE=%TEMP%\pc_cleaner.ps1
-powershell -Command "@'
-$log = [Environment]::GetFolderPath('Desktop') + '\cleanup_log.txt'
-$items = @()
-
-Write-Host ''; Write-Host '  [1/5] Scanning processes...' -ForegroundColor Cyan
-Get-Process | Where-Object { $_.Path } | ForEach-Object {
-    $p = $_; $path = $p.Path; $mem = [math]::Round($p.WorkingSet64 / 1MB, 0)
-    $flag = 0
-    if ($path -match '\\Temp\\' -or $path -match '\\AppData\\' -or $path -match '\\Local\\Temp\\') { $flag = 1 }
-    try { $s = (Get-AuthenticodeSignature $path -EA Stop).Status; if ($s -ne 'Valid') { $flag = 1 } } catch { $flag = 1 }
-    if ($flag) { $items += [PSCustomObject]@{Type='Process';Name=$p.ProcessName+'.exe';Path=$path;Mem=$mem;Pid=$p.Id} }
-}
-
-Write-Host '  [2/5] Scanning startup entries...' -ForegroundColor Cyan
-Get-CimInstance Win32_StartupCommand -EA SilentlyContinue | ForEach-Object {
-    $items += [PSCustomObject]@{Type='Startup';Name=if($_.Caption){$_.Caption}else{$_.Name};Path=$_.Command;Mem=0;Pid=0} }
-
-Write-Host '  [3/5] Scanning script hosts...' -ForegroundColor Cyan
-$scriptHosts = @('wscript.exe','cscript.exe','mshta.exe','powershell.exe','pwsh.exe','python.exe','python3.exe','node.exe')
-Get-CimInstance Win32_Process -EA 0 | Where-Object { $_.Name -in $scriptHosts -and $_.CommandLine } | ForEach-Object {
-    $cl = $_.CommandLine; $mem = [math]::Round($_.WorkingSetSize / 1MB, 0); $sp = ''
-    if ($cl -match '\"([^\"]+\.(?:ps1|vbs|js|jse|hta|py|bat|cmd))\"') { $sp = $matches[1] }
-    elseif ($cl -match '([^\s]+\.(?:ps1|vbs|js|jse|hta|py|bat|cmd))') { $sp = $matches[1] }
-    if ($sp -and ($sp -match '\\Temp\\' -or $sp -match '\\AppData\\') -and (Test-Path $sp)) {
-        $items += [PSCustomObject]@{Type='Script';Name=$_.Name;Path=$sp;Mem=$mem;Pid=$_.ProcessId} }
-}
-
-Write-Host '  [4/5] Scanning for script files...' -ForegroundColor Cyan
-$scriptDirs = @($env:TEMP, ($env:LOCALAPPDATA+'\Temp'), $env:APPDATA)
-$scriptExts = @('*.ps1','*.vbs','*.js','*.jse','*.hta','*.py')
-foreach ($dir in $scriptDirs) {
-    if (Test-Path $dir) {
-        foreach ($ext in $scriptExts) {
-            Get-ChildItem -Path $dir -Filter $ext -Depth 0 -EA 0 | Where-Object { $_.Length -gt 100 } | ForEach-Object {
-                $size = if ($_.Length -gt 1MB) { [math]::Round($_.Length/1MB,1).ToString()+'MB' } else { [math]::Round($_.Length/1KB,0).ToString()+'KB' }
-                $items += [PSCustomObject]@{Type='ScriptFile';Name=$_.Name;Path=$_.FullName;Mem=$size;Pid=0} }
-}}}
-
-Write-Host '  [5/5] Scanning registry run keys...' -ForegroundColor Cyan
-foreach ($rp in @('HKLM:\Software\Microsoft\Windows\CurrentVersion\Run','HKCU:\Software\Microsoft\Windows\CurrentVersion\Run')) {
-    $vals = Get-ItemProperty -Path $rp -EA 0
-    if ($vals) { $vals.PSObject.Properties | Where-Object { $_.Name -notin @('PSPath','PSParentPath','PSChildName','PSDrive','PSProvider') } | ForEach-Object {
-        $items += [PSCustomObject]@{Type='RunKey';Name=$_.Name;Path=$_.Value;Mem=0;Pid=0} }}
-}
-
-# Display results
-if ($items.Count -eq 0) {
-    Write-Host ''; Write-Host '  No suspicious items found. Your system looks clean.' -ForegroundColor Green
-    cmd /c pause | out-null; exit 0
-}
-
-$removed = 0
-do {
-    cls
-    Write-Host ('='*45)
-    Write-Host ('  PC CLEANUP TOOL - {0} item(s) found' -f $items.Count)
-    Write-Host ('='*45)
-    Write-Host ('{0,3}  {1,-8} {2,-28} {3,6}  Path' -f '#','Type','Name','Mem')
-    Write-Host ('-'*75)
-    for ($i = 0; $i -lt $items.Count; $i++) {
-        $it = $items[$i]
-        $ms = if ($it.Mem -is [string]) { (' '+$it.Mem).PadRight(5) } elseif ($it.Mem -gt 0) { (' '+$it.Mem.ToString()+'MB').PadRight(5) } else { '     -' }
-        $n = $it.Name; if ($n.Length -gt 27) { $n = $n.Substring(0,24)+'...' }
-        $p = $it.Path; if ($p.Length -gt 38) { $p = '...'+$p.Substring($p.Length-35) }
-        Write-Host ('{0,3}  {1,-8} {2,-28} {3,6}  {4}' -f ($i+1),$it.Type,$n,$ms,$p) }
-    Write-Host ''; Write-Host '  [0] Quit' -ForegroundColor Cyan
-    $input = Read-Host '  Enter number (or 0 to quit)'
-    if ($input -eq '0' -or $input -eq '' -or $input -eq 'q' -or $input -eq 'Q') { break }
-    $n = 0
-    if (![int]::TryParse($input,[ref]$n) -or $n -lt 1 -or $n -gt $items.Count) {
-        Write-Host '  Invalid.' -ForegroundColor Yellow; Start-Sleep 1; continue }
-    $it = $items[$n-1]; Write-Host ('  Removing: {0}' -f $it.Name) -ForegroundColor Yellow
-    switch ($it.Type) {
-        'Process' {
-            taskkill /F /PID $it.Pid 2>&1 | Out-Null; Start-Sleep -Milliseconds 300
-            if (Test-Path $it.Path) { takeown /f $it.Path /A /r 2>&1 | Out-Null; icacls $it.Path /grant Administrators:F /t /q 2>&1 | Out-Null
-                Remove-Item -Path $it.Path -Force -Recurse -EA 0 }
-            if (Test-Path $it.Path) { Write-Host '  FAILED' -ForegroundColor Red } else { Write-Host '  Done.' -ForegroundColor Green; $removed++; Add-Content $log ('Removed: '+$it.Name+' | '+$it.Path) } }
-        'Startup' {
-            $exe = if ($it.Path -match '^\"(.+?)\"') { $matches[1] } elseif ($it.Path -match '^([^ ]+)') { $matches[1] } else { $it.Path }
-            if (Test-Path $exe) { Remove-Item -Path $exe -Force -Recurse -EA 0 }
-            reg delete 'HKCU\Software\Microsoft\Windows\CurrentVersion\Run' /v ($it.Name -replace '\.lnk$','') /f 2>&1 | Out-Null
-            reg delete 'HKLM\Software\Microsoft\Windows\CurrentVersion\Run' /v ($it.Name -replace '\.lnk$','') /f 2>&1 | Out-Null
-            Write-Host '  Done.' -ForegroundColor Green; $removed++; Add-Content $log ('Removed startup: '+$it.Name) }
-        'RunKey' {
-            reg delete 'HKCU\Software\Microsoft\Windows\CurrentVersion\Run' /v $it.Name /f 2>&1 | Out-Null
-            reg delete 'HKLM\Software\Microsoft\Windows\CurrentVersion\Run' /v $it.Name /f 2>&1 | Out-Null
-            $exe = if ($it.Path -match '^\"(.+?)\"') { $matches[1] } elseif ($it.Path -match '^([^ ]+)') { $matches[1] } else { $it.Path }
-            if (Test-Path $exe) { Remove-Item -Path $exe -Force -Recurse -EA 0 }
-            Write-Host '  Done.' -ForegroundColor Green; $removed++; Add-Content $log ('Removed runkey: '+$it.Name) }
-        'Script' {
-            taskkill /F /PID $it.Pid 2>&1 | Out-Null; Start-Sleep -Milliseconds 300
-            if ($it.Path -and (Test-Path $it.Path)) {
-                takeown /f $it.Path /A /r 2>&1 | Out-Null; icacls $it.Path /grant Administrators:F /t /q 2>&1 | Out-Null
-                Remove-Item -Path $it.Path -Force -Recurse -EA 0 }
-            if ($it.Path -and (Test-Path $it.Path)) { Write-Host '  FAILED' -ForegroundColor Red } else { Write-Host '  Done.' -ForegroundColor Green; $removed++; Add-Content $log ('Removed script: '+$it.Name) } }
-        'ScriptFile' {
-            if (Test-Path $it.Path) { takeown /f $it.Path /A /r 2>&1 | Out-Null; icacls $it.Path /grant Administrators:F /t /q 2>&1 | Out-Null
-                Remove-Item -Path $it.Path -Force -Recurse -EA 0 }
-            if (Test-Path $it.Path) { Write-Host '  FAILED' -ForegroundColor Red } else { Write-Host '  Done.' -ForegroundColor Green; $removed++; Add-Content $log ('Removed script: '+$it.Name+' | '+$it.Path) } }
-    }
-    $items = @($items | Where-Object { $_ -ne $it })
-    Start-Sleep 1
-} while ($items.Count -gt 0)
-
-if ($removed -gt 0) { Write-Host ''; Write-Host ('  Removed {0} item(s). Log saved to Desktop\cleanup_log.txt' -f $removed) -ForegroundColor Green }
-cmd /c pause | out-null
-'@ | Out-File -FilePath "%PSFILE%" -Encoding ASCII
-)
-
-:: Run the scanner
 cls
 echo ============================================
 echo   PC CLEANUP TOOL — Scanning...
 echo ============================================
 echo.
-powershell -NoProfile -ExecutionPolicy Bypass -File "%PSFILE%"
-del "%PSFILE%" 2>nul
+
+set B64F=%TEMP%\pc_cleaner.b64
+>%B64F% echo JGxvZyA9IFtFbnZpcm9ubWVudF06OkdldEZvbGRlclBhdGgoJ0Rlc2t0b3AnKSArICdcY2xlYW51cF9sb2cudHh0JwokaXRlbXMgPSBAKCkKCldyaXRlLUhvc3QgJyc7IFdyaXRlLUhvc3QgJyAgWzEvNV0gU2Nhbm5pbmcgcHJvY2Vzc2VzLi4uJyAtRm9yZWdyb3VuZENvbG9yIEN5YW4KR2V0LVByb2Nlc3MgfCBXaGVyZS1PYmplY3QgeyAkXy5QYXRoIH0gfCBGb3JFYWNoLU9iamVjdCB7CiAgICAkcCA9ICRfOyAkcGF0aCA9ICRwLlBhdGg7ICRtZW0gPSBbbWF0aF06OlJvdW5kKCRwLldvcmtpbmdTZXQ2NCAvIDFNQiwgMCkKICAgICRmbGFnID0gMAogICAgaWYgKCRwYXRoIC1tYXRjaCAnXFxUZW1wXFwnIC1vciAkcGF0aCAtbWF0Y2ggJ1xcQXBwRGF0YVxcJyAtb3IgJHBhdGggLW1hdGNoICdcXExvY2FsXFxUZW1wXFwnKSB7ICRmbGFnID0gMSB9CiAgICB0cnkgeyAkcyA9IChHZXQtQXV0aGVudGljb2RlU2lnbmF0dXJlICRwYXRoIC1FQSBTdG9wKS5TdGF0dXM7IGlmICgkcyAtbmUgJ1ZhbGlkJykgeyAkZmxhZyA9IDEgfSB9IGNhdGNoIHsgJGZsYWcgPSAxIH0KICAgIGlmICgkZmxhZykgeyAkaXRlbXMgKz0gW1BTQ3VzdG9tT2JqZWN0XUB7VHlwZT0nUHJvY2Vzcyc7TmFtZT0kcC5Qcm9jZXNzTmFtZSsnLmV4ZSc7UGF0aD0kcGF0aDtNZW09JG1lbTtQaWQ9JHAuSWR9IH0KfQoKV3JpdGUtSG9zdCAnICBbMi81XSBTY2FubmluZyBzdGFydHVwIGVudHJpZXMuLi4nIC1Gb3JlZ3JvdW5kQ29sb3IgQ3lhbgpHZXQtQ2ltSW5zdGFuY2UgV2luMzJfU3RhcnR1cENvbW1hbmQgLUVBIFNpbGVudGx5Q29udGludWUgfCBGb3JFYWNoLU9iamVjdCB7CiAgICAkaXRlbXMgKz0gW1BTQ3VzdG9tT2JqZWN0XUB7VHlwZT0nU3RhcnR1cCc7TmFtZT1pZigkXy5DYXB0aW9uKXskXy5DYXB0aW9ufWVsc2V7JF8uTmFtZX07UGF0aD0kXy5Db21tYW5kO01lbT0wO1BpZD0wfSB9CgpXcml0ZS1Ib3N0ICcgIFszLzVdIFNjYW5uaW5nIHNjcmlwdCBob3N0cy4uLicgLUZvcmVncm91bmRDb2xvciBDeWFuCiRzY3JpcHRIb3N0cyA9IEAoJ3dzY3JpcHQuZXhlJywnY3NjcmlwdC5leGUnLCdtc2h0YS5leGUnLCdwb3dlcnNoZWxsLmV4ZScsJ3B3c2guZXhlJywncHl0aG9uLmV4ZScsJ3B5dGhvbjMuZXhlJywnbm9kZS5leGUnKQpHZXQtQ2ltSW5zdGFuY2UgV2luMzJfUHJvY2VzcyAtRUEgMCB8IFdoZXJlLU9iamVjdCB7ICRfLk5hbWUgLWluICRzY3JpcHRIb3N0cyAtYW5kICRfLkNvbW1hbmRMaW5lIH0gfCBGb3JFYWNoLU9iamVjdCB7CiAgICAkY2wgPSAkXy5Db21tYW5kTGluZTsgJG1lbSA9IFttYXRoXTo6Um91bmQoJF8uV29ya2luZ1NldFNpemUgLyAxTUIsIDApOyAkc3AgPSAnJwogICAgaWYgKCRjbCAtbWF0Y2ggJyhbXlxzXStcLig/OnBzMXx2YnN8anN8anNlfGh0YXxweXxiYXR8Y21kKSknKSB7ICRzcCA9ICRtYXRjaGVzWzFdIH0KICAgIGlmICgkc3AgLWFuZCAoJHNwIC1tYXRjaCAnXFxUZW1wXFwnIC1vciAkc3AgLW1hdGNoICdcXEFwcERhdGFcXCcpIC1hbmQgKFRlc3QtUGF0aCAkc3ApKSB7CiAgICAgICAgJGl0ZW1zICs9IFtQU0N1c3RvbU9iamVjdF1Ae1R5cGU9J1NjcmlwdCc7TmFtZT0kXy5OYW1lO1BhdGg9JHNwO01lbT0kbWVtO1BpZD0kXy5Qcm9jZXNzSWR9IH0KfQoKV3JpdGUtSG9zdCAnICBbNC81XSBTY2FubmluZyBmb3Igc2NyaXB0IGZpbGVzLi4uJyAtRm9yZWdyb3VuZENvbG9yIEN5YW4KZm9yZWFjaCAoJGRpciBpbiBAKCRlbnY6VEVNUCwgKCRlbnY6TE9D
+>>%B64F% echo QUxBUFBEQVRBKydcVGVtcCcpLCAkZW52OkFQUERBVEEpKSB7CiAgICBpZiAoVGVzdC1QYXRoICRkaXIpIHsKICAgICAgICBmb3JlYWNoICgkZXh0IGluIEAoJyoucHMxJywnKi52YnMnLCcqLmpzJywnKi5qc2UnLCcqLmh0YScsJyoucHknKSkgewogICAgICAgICAgICBHZXQtQ2hpbGRJdGVtIC1QYXRoICRkaXIgLUZpbHRlciAkZXh0IC1EZXB0aCAwIC1FQSAwIHwgV2hlcmUtT2JqZWN0IHsgJF8uTGVuZ3RoIC1ndCAxMDAgfSB8IEZvckVhY2gtT2JqZWN0IHsKICAgICAgICAgICAgICAgICRzaXplID0gaWYgKCRfLkxlbmd0aCAtZ3QgMU1CKSB7IFttYXRoXTo6Um91bmQoJF8uTGVuZ3RoLzFNQiwxKS5Ub1N0cmluZygpKydNQicgfSBlbHNlIHsgW21hdGhdOjpSb3VuZCgkXy5MZW5ndGgvMUtCLDApLlRvU3RyaW5nKCkrJ0tCJyB9CiAgICAgICAgICAgICAgICAkaXRlbXMgKz0gW1BTQ3VzdG9tT2JqZWN0XUB7VHlwZT0nU2NyaXB0RmlsZSc7TmFtZT0kXy5OYW1lO1BhdGg9JF8uRnVsbE5hbWU7TWVtPSRzaXplO1BpZD0wfSB9Cn19fQoKV3JpdGUtSG9zdCAnICBbNS81XSBTY2FubmluZyByZWdpc3RyeSBydW4ga2V5cy4uLicgLUZvcmVncm91bmRDb2xvciBDeWFuCmZvcmVhY2ggKCRycCBpbiBAKCdIS0xNOlxTb2Z0d2FyZVxNaWNyb3NvZnRcV2luZG93c1xDdXJyZW50VmVyc2lvblxSdW4nLCdIS0NVOlxTb2Z0d2FyZVxNaWNyb3NvZnRcV2luZG93c1xDdXJyZW50VmVyc2lvblxSdW4nKSkgewogICAgJHZhbHMgPSBHZXQtSXRlbVByb3BlcnR5IC1QYXRoICRycCAtRUEgMAogICAgaWYgKCR2YWxzKSB7ICR2YWxzLlBTT2JqZWN0LlByb3BlcnRpZXMgfCBXaGVyZS1PYmplY3QgeyAkXy5OYW1lIC1ub3RpbiBAKCdQU1BhdGgnLCdQU1BhcmVudFBhdGgnLCdQU0NoaWxkTmFtZScsJ1BTRHJpdmUnLCdQU1Byb3ZpZGVyJykgfSB8IEZvckVhY2gtT2JqZWN0IHsKICAgICAgICAkaXRlbXMgKz0gW1BTQ3VzdG9tT2JqZWN0XUB7VHlwZT0nUnVuS2V5JztOYW1lPSRfLk5hbWU7UGF0aD0kXy5WYWx1ZTtNZW09MDtQaWQ9MH0gfX0KfQoKaWYgKCRpdGVtcy5Db3VudCAtZXEgMCkgewogICAgV3JpdGUtSG9zdCAnJzsgV3JpdGUtSG9zdCAnICBObyBzdXNwaWNpb3VzIGl0ZW1zIGZvdW5kLiBZb3VyIHN5c3RlbSBsb29rcyBjbGVhbi4nIC1Gb3JlZ3JvdW5kQ29sb3IgR3JlZW4KICAgIGNtZCAvYyBwYXVzZSB8IG91dC1udWxsOyBleGl0IDAKfQoKJHJlbW92ZWQgPSAwCmRvIHsKICAgIGNscwogICAgV3JpdGUtSG9zdCAoJz0nKjQ1KQogICAgV3JpdGUtSG9zdCAoJyAgUEMgQ0xFQU5VUCBUT09MIC0gezB9IGl0ZW0ocykgZm91bmQnIC1mICRpdGVtcy5Db3VudCkKICAgIFdyaXRlLUhvc3QgKCc9Jyo0NSkKICAgIFdyaXRlLUhvc3QgKCd7MCwzfSAgezEsLTh9IHsyLC0yOH0gezMsNn0gIFBhdGgnIC1mICcjJywnVHlwZScsJ05hbWUnLCdNZW0nKQogICAgV3JpdGUtSG9zdCAoJy0nKjc1KQogICAgZm9yICgkaSA9IDA7ICRpIC1sdCAkaXRlbXMuQ291bnQ7ICRpKyspIHsKICAgICAgICAkaXQgPSAkaXRlbXNbJGldCiAgICAgICAgJG1zID0gaWYgKCRpdC5NZW0gLWlzIFtzdHJpbmddKSB7ICgnICcrJGl0Lk1lbSkuUGFkUmlnaHQoNSkgfSBlbHNlaWYgKCRpdC5NZW0gLWd0IDApIHsgKCcgJyskaXQuTWVtLlRvU3RyaW5nKCkrJ01CJykuUGFkUmlnaHQoNSkgfSBlbHNlIHsgJyAgICAgLScgfQogICAgICAgICRuID0gJGl0Lk5hbWU7IGlmICgkbi5MZW5ndGggLWd0IDI3KSB7
+>>%B64F% echo ICRuID0gJG4uU3Vic3RyaW5nKDAsMjQpKycuLi4nIH0KICAgICAgICAkcCA9ICRpdC5QYXRoOyBpZiAoJHAuTGVuZ3RoIC1ndCAzOCkgeyAkcCA9ICcuLi4nKyRwLlN1YnN0cmluZygkcC5MZW5ndGgtMzUpIH0KICAgICAgICBXcml0ZS1Ib3N0ICgnezAsM30gIHsxLC04fSB7MiwtMjh9IHszLDZ9ICB7NH0nIC1mICgkaSsxKSwkaXQuVHlwZSwkbiwkbXMsJHApIH0KICAgIFdyaXRlLUhvc3QgJyc7IFdyaXRlLUhvc3QgJyAgWzBdIFF1aXQnIC1Gb3JlZ3JvdW5kQ29sb3IgQ3lhbgogICAgJGlucHV0ID0gUmVhZC1Ib3N0ICcgIEVudGVyIG51bWJlciAob3IgMCB0byBxdWl0KScKICAgIGlmICgkaW5wdXQgLWVxICcwJyAtb3IgJGlucHV0IC1lcSAnJyAtb3IgJGlucHV0IC1lcSAncScgLW9yICRpbnB1dCAtZXEgJ1EnKSB7IGJyZWFrIH0KICAgICRuID0gMAogICAgaWYgKCFbaW50XTo6VHJ5UGFyc2UoJGlucHV0LFtyZWZdJG4pIC1vciAkbiAtbHQgMSAtb3IgJG4gLWd0ICRpdGVtcy5Db3VudCkgewogICAgICAgIFdyaXRlLUhvc3QgJyAgSW52YWxpZC4nIC1Gb3JlZ3JvdW5kQ29sb3IgWWVsbG93OyBTdGFydC1TbGVlcCAxOyBjb250aW51ZSB9CiAgICAkaXQgPSAkaXRlbXNbJG4tMV07IFdyaXRlLUhvc3QgKCcgIFJlbW92aW5nOiB7MH0nIC1mICRpdC5OYW1lKSAtRm9yZWdyb3VuZENvbG9yIFllbGxvdwogICAgc3dpdGNoICgkaXQuVHlwZSkgewogICAgICAgICdQcm9jZXNzJyB7CiAgICAgICAgICAgIHRhc2traWxsIC9GIC9QSUQgJGl0LlBpZCAyPiYxIHwgT3V0LU51bGw7IFN0YXJ0LVNsZWVwIC1NaWxsaXNlY29uZHMgMzAwCiAgICAgICAgICAgIGlmIChUZXN0LVBhdGggJGl0LlBhdGgpIHsgdGFrZW93biAvZiAkaXQuUGF0aCAvQSAvciAyPiYxIHwgT3V0LU51bGw7IGljYWNscyAkaXQuUGF0aCAvZ3JhbnQgQWRtaW5pc3RyYXRvcnM6RiAvdCAvcSAyPiYxIHwgT3V0LU51bGwKICAgICAgICAgICAgICAgIFJlbW92ZS1JdGVtIC1QYXRoICRpdC5QYXRoIC1Gb3JjZSAtUmVjdXJzZSAtRUEgMCB9CiAgICAgICAgICAgIGlmIChUZXN0LVBhdGggJGl0LlBhdGgpIHsgV3JpdGUtSG9zdCAnICBGQUlMRUQnIC1Gb3JlZ3JvdW5kQ29sb3IgUmVkIH0gZWxzZSB7IFdyaXRlLUhvc3QgJyAgRG9uZS4nIC1Gb3JlZ3JvdW5kQ29sb3IgR3JlZW47ICRyZW1vdmVkKys7IEFkZC1Db250ZW50ICRsb2cgKCdSZW1vdmVkOiAnKyRpdC5OYW1lKycgfCAnKyRpdC5QYXRoKSB9IH0KICAgICAgICAnU3RhcnR1cCcgewogICAgICAgICAgICAkYyA9ICRpdC5QYXRoCiAgICAgICAgICAgIGlmIChUZXN0LVBhdGggJGMpIHsgUmVtb3ZlLUl0ZW0gLVBhdGggJGMgLUZvcmNlIC1SZWN1cnNlIC1FQSAwIH0KICAgICAgICAgICAgcmVnIGRlbGV0ZSAnSEtDVVxTb2Z0d2FyZVxNaWNyb3NvZnRcV2luZG93c1xDdXJyZW50VmVyc2lvblxSdW4nIC92ICgkaXQuTmFtZSAtcmVwbGFjZSAnXC5sbmskJywnJykgL2YgMj4mMSB8IE91dC1OdWxsCiAgICAgICAgICAgIHJlZyBkZWxldGUgJ0hLTE1cU29mdHdhcmVcTWljcm9zb2Z0XFdpbmRvd3NcQ3VycmVudFZlcnNpb25cUnVuJyAvdiAoJGl0Lk5hbWUgLXJlcGxhY2UgJ1wubG5rJCcsJycpIC9mIDI+JjEgfCBPdXQtTnVsbAogICAgICAgICAgICBXcml0ZS1Ib3N0ICcgIERvbmUuJyAtRm9yZWdyb3VuZENvbG9yIEdyZWVuOyAkcmVtb3ZlZCsrOyBBZGQtQ29udGVudCAkbG9nICgnUmVtb3ZlZCBzdGFydHVwOiAnKyRpdC5OYW1lKSB9CiAgICAg
+>>%B64F% echo ICAgJ1J1bktleScgewogICAgICAgICAgICByZWcgZGVsZXRlICdIS0NVXFNvZnR3YXJlXE1pY3Jvc29mdFxXaW5kb3dzXEN1cnJlbnRWZXJzaW9uXFJ1bicgL3YgJGl0Lk5hbWUgL2YgMj4mMSB8IE91dC1OdWxsCiAgICAgICAgICAgIHJlZyBkZWxldGUgJ0hLTE1cU29mdHdhcmVcTWljcm9zb2Z0XFdpbmRvd3NcQ3VycmVudFZlcnNpb25cUnVuJyAvdiAkaXQuTmFtZSAvZiAyPiYxIHwgT3V0LU51bGwKICAgICAgICAgICAgJGMgPSAkaXQuUGF0aAogICAgICAgICAgICBpZiAoVGVzdC1QYXRoICRjKSB7IFJlbW92ZS1JdGVtIC1QYXRoICRjIC1Gb3JjZSAtUmVjdXJzZSAtRUEgMCB9CiAgICAgICAgICAgIFdyaXRlLUhvc3QgJyAgRG9uZS4nIC1Gb3JlZ3JvdW5kQ29sb3IgR3JlZW47ICRyZW1vdmVkKys7IEFkZC1Db250ZW50ICRsb2cgKCdSZW1vdmVkIHJ1bmtleTogJyskaXQuTmFtZSkgfQogICAgICAgICdTY3JpcHQnIHsKICAgICAgICAgICAgdGFza2tpbGwgL0YgL1BJRCAkaXQuUGlkIDI+JjEgfCBPdXQtTnVsbDsgU3RhcnQtU2xlZXAgLU1pbGxpc2Vjb25kcyAzMDAKICAgICAgICAgICAgaWYgKCRpdC5QYXRoIC1hbmQgKFRlc3QtUGF0aCAkaXQuUGF0aCkpIHsKICAgICAgICAgICAgICAgIHRha2Vvd24gL2YgJGl0LlBhdGggL0EgL3IgMj4mMSB8IE91dC1OdWxsOyBpY2FjbHMgJGl0LlBhdGggL2dyYW50IEFkbWluaXN0cmF0b3JzOkYgL3QgL3EgMj4mMSB8IE91dC1OdWxsCiAgICAgICAgICAgICAgICBSZW1vdmUtSXRlbSAtUGF0aCAkaXQuUGF0aCAtRm9yY2UgLVJlY3Vyc2UgLUVBIDAgfQogICAgICAgICAgICBpZiAoJGl0LlBhdGggLWFuZCAoVGVzdC1QYXRoICRpdC5QYXRoKSkgeyBXcml0ZS1Ib3N0ICcgIEZBSUxFRCcgLUZvcmVncm91bmRDb2xvciBSZWQgfSBlbHNlIHsgV3JpdGUtSG9zdCAnICBEb25lLicgLUZvcmVncm91bmRDb2xvciBHcmVlbjsgJHJlbW92ZWQrKzsgQWRkLUNvbnRlbnQgJGxvZyAoJ1JlbW92ZWQgc2NyaXB0OiAnKyRpdC5OYW1lKSB9IH0KICAgICAgICAnU2NyaXB0RmlsZScgewogICAgICAgICAgICBpZiAoVGVzdC1QYXRoICRpdC5QYXRoKSB7IHRha2Vvd24gL2YgJGl0LlBhdGggL0EgL3IgMj4mMSB8IE91dC1OdWxsOyBpY2FjbHMgJGl0LlBhdGggL2dyYW50IEFkbWluaXN0cmF0b3JzOkYgL3QgL3EgMj4mMSB8IE91dC1OdWxsCiAgICAgICAgICAgICAgICBSZW1vdmUtSXRlbSAtUGF0aCAkaXQuUGF0aCAtRm9yY2UgLVJlY3Vyc2UgLUVBIDAgfQogICAgICAgICAgICBpZiAoVGVzdC1QYXRoICRpdC5QYXRoKSB7IFdyaXRlLUhvc3QgJyAgRkFJTEVEJyAtRm9yZWdyb3VuZENvbG9yIFJlZCB9IGVsc2UgeyBXcml0ZS1Ib3N0ICcgIERvbmUuJyAtRm9yZWdyb3VuZENvbG9yIEdyZWVuOyAkcmVtb3ZlZCsrOyBBZGQtQ29udGVudCAkbG9nICgnUmVtb3ZlZCBzY3JpcHQ6ICcrJGl0Lk5hbWUrJyB8ICcrJGl0LlBhdGgpIH0gfQogICAgfQogICAgJGl0ZW1zID0gQCgkaXRlbXMgfCBXaGVyZS1PYmplY3QgeyAkXyAtbmUgJGl0IH0pCiAgICBTdGFydC1TbGVlcCAxCn0gd2hpbGUgKCRpdGVtcy5Db3VudCAtZ3QgMCkKCmlmICgkcmVtb3ZlZCAtZ3QgMCkgeyBXcml0ZS1Ib3N0ICcnOyBXcml0ZS1Ib3N0ICgnICBSZW1vdmVkIHswfSBpdGVtKHMpLiBMb2cgc2F2ZWQgdG8gRGVza3RvcFxjbGVhbnVwX2xvZy50eHQnIC1mICRyZW1vdmVkKSAtRm9yZWdyb3VuZENvbG9yIEdyZWVuIH0KY21kIC9jIHBhdXNlIHwgb3V0LW51bGwK
+
+powershell -NoProfile -ExecutionPolicy Bypass -Command "$b=[IO.File]::ReadAllText('%B64F%');[Text.Encoding]::UTF8.GetString([Convert]::FromBase64String($b.Trim()))|iex"
+
+del "%B64F%" 2>nul
 echo.
 pause
