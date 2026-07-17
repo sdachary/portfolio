@@ -1,10 +1,10 @@
+import { useEffect, useState } from 'react'
 import { motion } from 'framer-motion'
-import activity from '../data/activity'
+import type { ActivityEntry } from '../data/types'
 
 const ease = [0.32, 0.72, 0, 1] as const
 
-const statusLabel = { active: 'Active', completed: 'Done', blocked: 'Blocked' }
-
+const statusLabel: Record<string, string> = { active: 'Active', completed: 'Done', blocked: 'Blocked' }
 const statusClass: Record<string, string> = {
   active: 'status-progress',
   completed: 'status-live',
@@ -12,7 +12,17 @@ const statusClass: Record<string, string> = {
 }
 
 export default function RecentActivity() {
+  const [activity, setActivity] = useState<ActivityEntry[]>([])
+
+  useEffect(() => {
+    fetch(import.meta.env.BASE_URL + 'activity.json')
+      .then(r => r.ok ? r.json() : [])
+      .then(setActivity)
+      .catch(() => console.error('Failed to load activity'))
+  }, [])
+
   if (activity.length === 0) return null
+
   return (
     <section id="activity" className="section section-alt section-divider">
       <div className="section-header">
@@ -36,8 +46,8 @@ export default function RecentActivity() {
               <div className="activity-meta">
                 <span className="activity-project">{item.project}</span>
                 <span className="activity-phase">{item.phase}</span>
-                <span className={`status-badge ${statusClass[item.status]}`}>
-                  {statusLabel[item.status]}
+                <span className={`status-badge ${statusClass[item.status] || ''}`}>
+                  {statusLabel[item.status] || item.status}
                 </span>
               </div>
               <p className="activity-desc">{item.description}</p>

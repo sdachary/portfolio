@@ -15,7 +15,7 @@ export default function Projects() {
     fetch(import.meta.env.BASE_URL + 'projects.json')
       .then(r => r.json())
       .then(setProjects)
-      .catch(() => {})
+      .catch(() => console.error('Failed to load projects'))
   }, [])
 
   if (projects.length === 0) return null
