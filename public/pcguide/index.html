@@ -42,6 +42,14 @@ body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--t
 .step-b .img{background:var(--surface-hover);border:1px solid var(--border);border-radius:8px;padding:20px;text-align:center;color:var(--text-muted);font-size:.78rem;margin:8px 0}
 .step-b .img i{font-size:.9rem;display:block;margin-bottom:4px}
 
+/* Download Button */
+.dl-btn{display:flex;align-items:center;gap:16px;padding:18px 22px;margin:0 auto 28px;max-width:440px;border-radius:var(--radius);border:2px solid var(--accent);background:var(--accent-dim);color:var(--accent);text-decoration:none;transition:all .25s;cursor:pointer}
+.dl-btn:hover{border-color:#7babff;background:rgba(91,138,245,0.2);transform:translateY(-2px)}
+.dl-btn:active{transform:translateY(0)}
+.dl-icon{font-size:1.6rem;flex-shrink:0}
+.dl-text{display:flex;flex-direction:column;gap:2px}
+.dl-l1{font-size:1rem;font-weight:700;letter-spacing:-.01em}
+.dl-l2{font-size:.72rem;color:var(--text-secondary)}
 /* Button */
 .btn{display:block;width:100%;padding:14px;border-radius:var(--radius);border:1px solid var(--border);background:var(--surface);color:var(--text);font-family:inherit;font-size:.9rem;font-weight:600;cursor:pointer;transition:all .2s;text-align:center;margin-top:28px}
 .btn:hover{border-color:var(--accent);background:var(--accent-dim);color:var(--accent)}
@@ -63,10 +71,19 @@ body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--t
 <div class="wrap">
   <div class="hed">
     <div class="icon">🛡️</div>
-    <h1>PC Cleanup Guide</h1>
-    <p>Follow these 5 steps to clean your laptop.<br>No technical knowledge needed.</p>
-    <div class="badge">⚠️ Do steps 1 → 2 → 3 → 4 → 5 in order</div>
+    <h1>PC Cleanup Tool</h1>
+    <p>Clean your compromised Windows laptop — no tech knowledge needed.</p>
+    <div class="badge">⚠️ Do not skip steps</div>
   </div>
+
+  <a class="dl-btn" href="cleanpc.bat" download>
+    <span class="dl-icon">⬇</span>
+    <span class="dl-text">
+      <span class="dl-l1">Download Cleanup Tool</span>
+      <span class="dl-l2">Right-click → Run as Administrator</span>
+    </span>
+  </a>
+  <p style="text-align:center;color:var(--text-muted);font-size:.78rem;margin:-8px 0 32px">Or follow the steps below manually.</p>
 
   <div class="step open" id="s1">
     <div class="step-h" onclick="toggle(this)">
