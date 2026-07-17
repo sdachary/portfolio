@@ -2,191 +2,143 @@
 setlocal enabledelayedexpansion
 title PC Cleanup Tool
 color 0B
+cd /d "%~dp0"
 
-set LOG=%USERPROFILE%\Desktop\cleanup_log.txt
-echo ============================================ > "%LOG%"
-echo   PC Cleanup Tool - %date% %time% >> "%LOG%"
-echo ============================================ >> "%LOG%"
-echo.
+:: Check PowerShell
+where powershell >nul 2>nul || (echo Missing PowerShell&pause&exit /b)
 
-:menu
-cls
-echo ============================================
-echo       PC CLEANUP TOOL
-echo ============================================
-echo  1. Quick Scan + View Suspicious Items
-echo  2. Run Windows Defender Full Scan (slow)
-echo  3. Remove Selected Item (by PID / name)
-echo  4. Clean Startup & Temp Files
-echo  5. Enable Defender Real-Time Protection
-echo  6. View Log
-echo  7. Exit
-echo ============================================
-choice /c 1234567 /n /m "Select [1-7]: "
-if %errorlevel%==7 exit /b
-if %errorlevel%==6 goto viewlog
-if %errorlevel%==5 goto enable_defender
-if %errorlevel%==4 goto clean_temp
-if %errorlevel%==3 goto remove_item
-if %errorlevel%==2 goto defender_full
-if %errorlevel%==1 goto scan
-
-:scan
-cls
-echo [1/5] Scanning running processes...
-
-echo.
-echo === RUNNING PROCESSES (suspicious patterns) ===
-echo.
-echo  PID | Name | Path
-echo ----------------------------------------
-wmic process get processid,name,executablepath /format:csv 2>nul | findstr /i "temp tmp appdata" > "%TEMP%\sus_procs.txt"
-type "%TEMP%\sus_procs.txt" | findstr /n . >nul
+:: Elevation check
+net session >nul 2>nul
 if errorlevel 1 (
-    echo  (none flagged from temp/appdata paths)
-) else (
-    type "%TEMP%\sus_procs.txt"
+    echo ============================================
+    echo   PLEASE RUN AS ADMINISTRATOR
+    echo ============================================
+    echo Right-click this file -^> "Run as Administrator"
+    pause
+    exit /b
 )
+
+cls
+echo ============================================
+echo   PC CLEANUP TOOL — Scanning...
+echo ============================================
 echo.
 
-echo [2/5] Checking startup programs...
-echo.
-echo === STARTUP PROGRAMS ===
-echo.
-wmic startup get caption,command /format:list 2>nul
-echo.
+powershell -NoProfile -ExecutionPolicy Bypass -Command "
+$log = [Environment]::GetFolderPath('Desktop') + '\cleanup_log.txt'
 
-echo [3/5] Checking scheduled tasks...
-echo.
-echo === SCHEDULED TASKS (last 7 days) ===
-echo.
-schtasks /query /fo list /v 2>nul | findstr /i "TaskName TaskToRun" | more
-echo.
+# ─── Scan suspicious processes ───
+$items = @()
+Get-Process | Where-Object { $_.Path -ne $null } | ForEach-Object {
+    $p = $_; $path = $p.Path; $mem = [math]::Round($p.WorkingSet64 / 1MB, 0)
+    $flag = 0
+    if ($path -match '\\Temp\\' -or $path -match '\\AppData\\Roaming\\[^\\]+\\[^\\]+\.exe$' -or
+        $path -match '\\Local\\Temp\\') { $flag = 1 }
+    try { $s = (Get-AuthenticodeSignature $path -EA Stop).Status
+        if ($s -eq 'NotSigned' -or $s -eq 'HashMismatch') { $flag = 1 } } catch { $flag = 1 }
+    if ($flag) { $items += [PSCustomObject]@{Type='Process';Name=$p.ProcessName+'.exe';Path=$path;Mem=$mem;Pid=$p.Id} }
+}
 
-echo [4/5] Checking services...
-echo.
-echo === NON-MICROSOFT RUNNING SERVICES ===
-echo.
-sc query type= service state= all 2>nul | findstr /i "SERVICE_NAME DISPLAY_NAME" > "%TEMP%\svc.txt"
-rem Filter out common MS services (rough filter)
-findstr /v /i "Windows Microsoft Sysmain" "%TEMP%\svc.txt" 2>nul
-echo.
+# ─── Scan startup entries ───
+Get-CimInstance Win32_StartupCommand -EA SilentlyContinue | ForEach-Object {
+    $items += [PSCustomObject]@{Type='Startup';Name=if($_.Caption){$_.Caption}else{$_.Name};Path=$_.Command;Mem=0;Pid=0}
+}
 
-echo [5/5] Running Windows Defender quick scan...
-echo.
-echo This may take 5-10 minutes. Please wait...
-echo (progress shown below)
-echo.
-"%PROGRAMFILES%\Windows Defender\MpCmdRun.exe" -Scan -ScanType 1 2>&1 | findstr /i /v "starting"
-echo.
-echo Scan complete. Check Windows Security app for full results.
-echo.
-echo Log saved to: %LOG%
-echo.
-echo Type any process name/PID to kill, or press enter to return to menu.
-set /p KILL="Kill process (name/PID) or leave blank: "
-if defined KILL (
-    taskkill /F /IM "%KILL%" 2>nul || taskkill /F /PID %KILL% 2>nul && echo Killed %KILL% >> "%LOG%"
-    if errorlevel 1 echo Could not kill "%KILL%" - try option 3
+# ─── Check common run keys ───
+$runPaths = @(
+    'HKLM:\Software\Microsoft\Windows\CurrentVersion\Run',
+    'HKCU:\Software\Microsoft\Windows\CurrentVersion\Run'
 )
-pause
-goto menu
+foreach ($rp in $runPaths) {
+    Get-ItemProperty -Path $rp -EA 0 | Select-Object -ExpandProperty PSPath -EA 0 | Out-Null
+    $vals = Get-ItemProperty -Path $rp -EA 0
+    if ($vals) { $vals.PSObject.Properties | Where-Object { $_.Name -notin @('PSPath','PSParentPath','PSChildName','PSDrive','PSProvider') } | ForEach-Object {
+        $items += [PSCustomObject]@{Type='RunKey';Name=$_.Name;Path=$_.Value;Mem=0;Pid=0}
+    }}
+}
 
-:defender_full
+# ─── Display ───
+$total = $items.Count
+if ($total -eq 0) {
+    Write-Host ''; Write-Host '  No suspicious items found.' -ForegroundColor Green
+    Write-Host '  Your system looks clean.' -ForegroundColor Green; Start-Sleep 2; exit 0
+}
+
+$removed = 0
+do {
+    cls
+    Write-Host ('='*45)
+    Write-Host ('  PC CLEANUP TOOL — {0} item(s) found' -f $items.Count)
+    Write-Host ('='*45)
+    Write-Host ''
+    Write-Host ('{0,3}  {1,-8} {2,-28} {3,6}  Path' -f '#','Type','Name','Mem')
+    Write-Host ('-'*75)
+    for ($i = 0; $i -lt $items.Count; $i++) {
+        $it = $items[$i]
+        $ms = if ($it.Mem -gt 0) { (' ' + $it.Mem.ToString() + 'MB') } else { '     -' }
+        $n = $it.Name; if ($n.Length -gt 27) { $n = $n.Substring(0,24) + '...' }
+        $p = $it.Path; if ($p.Length -gt 40) { $p = '...' + $p.Substring($p.Length-37) }
+        Write-Host ('{0,3}  {1,-8} {2,-28} {3,6}  {4}' -f ($i+1), $it.Type, $n, $ms, $p)
+    }
+    Write-Host ''; Write-Host '  [0] Exit'; Write-Host ''
+    $input = Read-Host '  Enter number to remove'
+    if ($input -eq '0' -or $input -eq '') { break }
+    
+    $n = 0
+    if (![int]::TryParse($input, [ref]$n) -or $n -lt 1 -or $n -gt $items.Count) {
+        Write-Host '  Invalid.' -ForegroundColor Yellow; Start-Sleep 1; continue
+    }
+    
+    $it = $items[$n-1]
+    Write-Host ('  Removing: {0}' -f $it.Name) -ForegroundColor Yellow
+    
+    switch ($it.Type) {
+        'Process' {
+            taskkill /F /PID $it.Pid 2>&1 | Out-Null; Start-Sleep -Milliseconds 300
+            if (Test-Path $it.Path) {
+                takeown /f $it.Path /A /r 2>&1 | Out-Null
+                icacls $it.Path /grant Administrators:F /t /q 2>&1 | Out-Null
+                Remove-Item -Path $it.Path -Force -Recurse -EA 0
+            }
+            if (Test-Path $it.Path) { Write-Host '  FAILED' -ForegroundColor Red }
+            else { Write-Host '  Removed.' -ForegroundColor Green; $removed++; Add-Content $log ('Removed: ' + $it.Name + ' | ' + $it.Path) }
+        }
+        'Startup' {
+            $exe = if ($it.Path -match '^\"(.+?)\"') { $matches[1] } elseif ($it.Path -match '^([^ ]+)') { $matches[1] } else { $it.Path }
+            if (Test-Path $exe) { Remove-Item -Path $exe -Force -Recurse -EA 0 }
+            $n2 = $it.Name -replace '\.lnk$',''
+            reg delete 'HKCU\Software\Microsoft\Windows\CurrentVersion\Run' /v $n2 /f 2>&1 | Out-Null
+            reg delete 'HKLM\Software\Microsoft\Windows\CurrentVersion\Run' /v $n2 /f 2>&1 | Out-Null
+            Remove-Item -Path ([Environment]::GetFolderPath('Startup')+'\'+$it.Name) -Force -EA 0
+            Write-Host '  Removed.' -ForegroundColor Green; $removed++; Add-Content $log ('Removed startup: '+$it.Name)
+        }
+        'RunKey' {
+            reg delete 'HKCU\Software\Microsoft\Windows\CurrentVersion\Run' /v $it.Name /f 2>&1 | Out-Null
+            reg delete 'HKLM\Software\Microsoft\Windows\CurrentVersion\Run' /v $it.Name /f 2>&1 | Out-Null
+            $exe = if ($it.Path -match '^\"(.+?)\"') { $matches[1] } elseif ($it.Path -match '^([^ ]+)') { $matches[1] } else { $it.Path }
+            if (Test-Path $exe) { Remove-Item -Path $exe -Force -Recurse -EA 0 }
+            Write-Host '  Removed.' -ForegroundColor Green; $removed++; Add-Content $log ('Removed runkey: '+$it.Name)
+        }
+    }
+    
+    $items = @($items | Where-Object { $_ -ne $it })
+    Start-Sleep 1
+} while ($items.Count -gt 0)
+
+if ($removed -gt 0) { Write-Host ''; Write-Host ('  Removed {0} item(s). Log: Desktop\cleanup_log.txt' -f $removed) -ForegroundColor Green }
+Start-Sleep 2
+"
+
+:: Final message
 cls
 echo ============================================
-echo   Windows Defender Offline Scan
-echo ============================================
-echo This will schedule a scan that runs BEFORE
-echo Windows starts next reboot (catches rootkits).
-echo.
-echo The PC will restart AUTOMATICALLY.
-echo.
-choice /c YN /n /m "Continue? (Y/N): "
-if errorlevel 2 goto menu
-"%PROGRAMFILES%\Windows Defender\MpCmdRun.exe" -Scan -ScanType 2
-echo.
-echo Offline scan scheduled. Reboot to execute, or run:
-echo   "%PROGRAMFILES%\Windows Defender\MpCmdRun.exe" -Scan -ScanType 2
-pause
-goto menu
-
-:remove_item
-cls
-echo ============================================
-echo   Manual Removal
-echo ============================================
-echo Enter the FULL path or process name to remove.
-echo Example: C:\Users\user\AppData\Roaming\bad.exe
-echo.
-set /p TARGET="Path or process name: "
-if not defined TARGET goto menu
-
-echo Attempting to kill process...
-taskkill /F /IM "%TARGET%" 2>nul
-taskkill /F /PID %TARGET% 2>nul
-
-echo Attempting to delete file/folder...
-takeown /f "%TARGET%" /r /d y 2>nul
-icacls "%TARGET%" /grant Administrators:F /t /q 2>nul
-del /f /s /q "%TARGET%" 2>nul
-rmdir /s /q "%TARGET%" 2>nul
-
-if exist "%TARGET%" (
-    echo FAILED: Could not remove "%TARGET%"
-    echo Try booting in Safe Mode and retrying.
-) else (
-    echo REMOVED: "%TARGET%" >> "%LOG%"
-    echo REMOVED successfully.
-)
-pause
-goto menu
-
-:clean_temp
-cls
-echo ============================================
-echo   Cleaning Temp Files
+echo   CLEANUP COMPLETE
 echo ============================================
 echo.
-echo Deleting temporary files...
-del /f /s /q "%TEMP%\*" 2>nul
-del /f /s /q "C:\Windows\Temp\*" 2>nul
-echo Done.
+echo Log saved to Desktop\cleanup_log.txt
 echo.
-echo === Empty RUN keys that point to deleted files ===
-echo HKLM\Software\Microsoft\Windows\CurrentVersion\Run
-reg query HKLM\Software\Microsoft\Windows\CurrentVersion\Run 2>nul
-echo.
-echo HKCU\Software\Microsoft\Windows\CurrentVersion\Run
-reg query HKCU\Software\Microsoft\Windows\CurrentVersion\Run 2>nul
-echo.
-echo Review the entries above. To remove one:
-echo   reg delete HKLM\...Run /v BadEntry /f
-pause
-goto menu
-
-:enable_defender
-cls
-echo ============================================
-echo   Enabling Windows Defender
-echo ============================================
-echo.
-reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows Defender" /v DisableAntiSpyware /t REG_DWORD /d 0 /f 2>nul
-reg delete "HKLM\SOFTWARE\Policies\Microsoft\Windows Defender" /v DisableAntiSpyware /f 2>nul
-powershell -command "Set-MpPreference -DisableRealtimeMonitoring $false" 2>nul
-powershell -command "Set-MpPreference -DisableBehaviorMonitoring $false" 2>nul
-echo Defender real-time protection enabled.
-echo.
-echo Running quick scan now...
-"%PROGRAMFILES%\Windows Defender\MpCmdRun.exe" -Scan -ScanType 1
-echo Done.
-pause
-goto menu
-
-:viewlog
-cls
-type "%LOG%" 2>nul
-if errorlevel 1 echo No log yet.
+echo Still worried? Run Windows Defender Offline Scan:
+echo   Windows Security -^> Virus & threat protection
+echo   -^> Scan options -^> Microsoft Defender Offline Scan
 echo.
 pause
-goto menu
