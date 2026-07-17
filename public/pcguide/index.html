@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>PC Cleanup Guide</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#0a0a0b;--surface:#141416;--surface-hover:#1c1c1f;--border:#222226;--border-accent:#333338;--text:#e8e8ed;--text-secondary:#888891;--text-muted:#5c5c66;--accent:#5b8af5;--accent-dim:rgba(91,138,245,0.12);--success:#34d399;--success-dim:rgba(52,211,153,0.12);--warning:#fbbf24;--warning-dim:rgba(251,191,36,0.12);--radius:16px}
+body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--text);line-height:1.6}
+.wrap{max-width:680px;margin:0 auto;padding:40px 24px 80px}
+
+/* Header */
+.hed{text-align:center;margin-bottom:44px}
+.hed .icon{font-size:2.4rem;margin-bottom:12px}
+.hed h1{font-size:1.8rem;font-weight:800;letter-spacing:-.03em;margin-bottom:8px}
+.hed p{color:var(--text-secondary);font-size:.95rem}
+.hed .badge{display:inline-block;margin-top:14px;padding:4px 14px;border-radius:100px;font-size:.7rem;font-weight:600;background:var(--warning-dim);color:var(--warning);text-transform:uppercase;letter-spacing:.05em}
+
+/* Step cards */
+.step{margin-bottom:20px;border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;transition:border-color .2s}
+.step:hover{border-color:var(--border-accent)}
+.step-h{display:flex;align-items:center;gap:14px;padding:16px 18px;background:var(--surface);cursor:pointer;user-select:none}
+.step-num{width:30px;height:30px;border-radius:8px;background:var(--accent-dim);color:var(--accent);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.85rem;flex-shrink:0}
+.step-h h2{font-size:.95rem;font-weight:600;flex:1}
+.step-h .toggle{color:var(--text-muted);font-size:.75rem;transition:transform .2s}
+.step.open .step-h .toggle{transform:rotate(180deg)}
+.step-b{padding:0 18px;max-height:0;overflow:hidden;transition:max-height .3s,padding .3s;background:var(--surface);border-top:1px solid transparent}
+.step.open .step-b{max-height:600px;padding:0 18px 18px;border-top-color:var(--border)}
+
+/* Step body content */
+.step-b ol,.step-b ul{padding-left:20px;color:var(--text-secondary);font-size:.88rem}
+.step-b li{margin-bottom:6px}
+.step-b li:last-child{margin-bottom:0}
+.step-b code{display:inline-block;background:rgba(255,255,255,0.06);padding:1px 8px;border-radius:5px;font-size:.82rem;color:var(--accent)}
+.step-b .ti{display:block;font-size:.72rem;text-transform:uppercase;letter-spacing:.08em;color:var(--text-muted);margin-top:12px;margin-bottom:6px;font-weight:600}
+.step-b .box{background:rgba(255,255,255,0.03);border:1px solid var(--border);border-radius:10px;padding:12px 14px;margin:8px 0;font-size:.84rem;color:var(--text-secondary)}
+.step-b .box strong{color:var(--text)}
+.step-b .warn{background:var(--warning-dim);border-color:rgba(251,191,36,0.15);color:var(--warning);font-size:.82rem;padding:10px 14px;border-radius:10px;margin:8px 0;display:flex;align-items:flex-start;gap:8px}
+.step-b .done{background:var(--success-dim);border-color:rgba(52,211,153,0.15);color:var(--success);font-size:.82rem;padding:10px 14px;border-radius:10px;margin:8px 0;display:flex;align-items:flex-start;gap:8px}
+.step-b .img{background:var(--surface-hover);border:1px solid var(--border);border-radius:8px;padding:20px;text-align:center;color:var(--text-muted);font-size:.78rem;margin:8px 0}
+.step-b .img i{font-size:.9rem;display:block;margin-bottom:4px}
+
+/* Button */
+.btn{display:block;width:100%;padding:14px;border-radius:var(--radius);border:1px solid var(--border);background:var(--surface);color:var(--text);font-family:inherit;font-size:.9rem;font-weight:600;cursor:pointer;transition:all .2s;text-align:center;margin-top:28px}
+.btn:hover{border-color:var(--accent);background:var(--accent-dim);color:var(--accent)}
+
+/* Status bar at bottom */
+.status{text-align:center;color:var(--text-muted);font-size:.75rem;margin-top:36px}
+.status span{margin:0 10px}
+
+@media(max-width:480px){
+  .wrap{padding:24px 16px 60px}
+  .hed h1{font-size:1.4rem}
+  .step-h{padding:14px 14px}
+  .step-b{padding:0 14px}
+  .step.open .step-b{padding:0 14px 14px}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="hed">
+    <div class="icon">🛡️</div>
+    <h1>PC Cleanup Guide</h1>
+    <p>Follow these 5 steps to clean your laptop.<br>No technical knowledge needed.</p>
+    <div class="badge">⚠️ Do steps 1 → 2 → 3 → 4 → 5 in order</div>
+  </div>
+
+  <div class="step open" id="s1">
+    <div class="step-h" onclick="toggle(this)">
+      <div class="step-num">1</div>
+      <h2>Windows Defender Offline Scan</h2>
+      <span class="toggle">▼</span>
+    </div>
+    <div class="step-b">
+      <div class="warn">⏳ This takes 15-30 minutes. Your PC will restart. Don't turn it off mid-scan.</div>
+      <ol>
+        <li>Press the <strong>Windows key</strong> on your keyboard</li>
+        <li>Type <strong>Windows Security</strong> and open it</li>
+        <li>Click <strong>Virus &amp; threat protection</strong></li>
+        <li>Click <strong>Scan options</strong> (below the scan button)</li>
+        <li>Select <strong>Microsoft Defender Offline Scan</strong></li>
+        <li>Click <strong>Scan now</strong></li>
+      </ol>
+      <div class="img"><i>🖥️</i>Your PC will restart and scan before Windows loads</div>
+      <div class="done">✅ After restart, check Windows Security → Protection history for what was found</div>
+    </div>
+  </div>
+
+  <div class="step" id="s2">
+    <div class="step-h" onclick="toggle(this)">
+      <div class="step-num">2</div>
+      <h2>Remove Unknown Programs</h2>
+      <span class="toggle">▼</span>
+    </div>
+    <div class="step-b">
+      <ol>
+        <li>Press <strong>Windows key + I</strong> (Settings opens)</li>
+        <li>Click <strong>Apps</strong> → <strong>Installed apps</strong> (or Apps &amp; features)</li>
+        <li>Click <strong>Sort by</strong> → <strong>Install date</strong></li>
+        <li>Look at the most recently installed programs</li>
+        <li>For anything you <strong>don't recognize</strong>: click the three dots (⋮) → <strong>Uninstall</strong></li>
+      </ol>
+      <div class="box"><strong>Safe to remove:</strong> Toolbars, "PC Optimizer", "Speed Booster", unknown game launchers, random PDF converters</div>
+      <div class="warn">⚠️ Don't uninstall things like: Chrome, Zoom, Spotify, Adobe Reader — only remove things you never installed</div>
+    </div>
+  </div>
+
+  <div class="step" id="s3">
+    <div class="step-h" onclick="toggle(this)">
+      <div class="step-num">3</div>
+      <h2>Disable Suspicious Startup Apps</h2>
+      <span class="toggle">▼</span>
+    </div>
+    <div class="step-b">
+      <ol>
+        <li>Press <strong>Ctrl + Shift + Esc</strong> (Task Manager opens)</li>
+        <li>If you see "More details" at the bottom — <strong>click it</strong></li>
+        <li>Click the <strong>Startup apps</strong> tab</li>
+        <li>Look at the list. For anything you <strong>don't recognize</strong>: right-click it → <strong>Disable</strong></li>
+      </ol>
+      <div class="box"><strong>Keep enabled:</strong> OneDrive (if you use it), antivirus, your audio driver — disable only suspicious-looking entries</div>
+    </div>
+  </div>
+
+  <div class="step" id="s4">
+    <div class="step-h" onclick="toggle(this)">
+      <div class="step-num">4</div>
+      <h2>Reset Your Browser</h2>
+      <span class="toggle">▼</span>
+    </div>
+    <div class="step-b">
+      <div class="ti">For Chrome</div>
+      <ol>
+        <li>Open Chrome → click the three dots (⋮) top-right</li>
+        <li>Click <strong>Settings</strong></li>
+        <li>Click <strong>Reset settings</strong> in the left menu</li>
+        <li>Click <strong>Restore settings to original defaults</strong></li>
+        <li>Click <strong>Reset settings</strong></li>
+      </ol>
+      <div class="ti">For Edge</div>
+      <ol>
+        <li>Open Edge → click the three dots (⋯) top-right</li>
+        <li>Click <strong>Settings</strong> → <strong>Reset settings</strong></li>
+        <li>Click <strong>Restore settings to their default values</strong></li>
+        <li>Click <strong>Reset</strong></li>
+      </ol>
+      <div class="done">✅ This removes hijacked homepage, fake extensions, search redirects</div>
+    </div>
+  </div>
+
+  <div class="step" id="s5">
+    <div class="step-h" onclick="toggle(this)">
+      <div class="step-num">5</div>
+      <h2>Change Passwords (from your Phone)</h2>
+      <span class="toggle">▼</span>
+    </div>
+    <div class="step-b">
+      <div class="warn">⚠️ Do this from your phone, not the laptop. The laptop might still be compromised.</div>
+      <p style="color:var(--text-secondary);font-size:.88rem">Change passwords for:</p>
+      <ul>
+        <li><strong>Email</strong> (Gmail, Outlook, Yahoo — this is most important)</li>
+        <li><strong>Instagram / Facebook / Social media</strong></li>
+        <li><strong>Banking apps</strong> (do this from the app on your phone)</li>
+        <li><strong>Amazon / Flipkart / Shopping</strong></li>
+        <li>Any other account you use on the laptop</li>
+      </ul>
+      <div class="box"><strong>Tip:</strong> Use a different password for each account. Write them in a notebook if you'll forget.</div>
+    </div>
+  </div>
+
+  <button class="btn" onclick="expandAll()">▼ Expand All Steps</button>
+
+  <div class="status">
+    <span>💻 Windows 11</span>
+    <span>🛡️ No installs needed</span>
+    <span>⏱️ ~40 minutes total</span>
+  </div>
+</div>
+
+<script>
+function toggle(el){
+  el.parentElement.classList.toggle('open')
+}
+function expandAll(){
+  document.querySelectorAll('.step').forEach(s=>s.classList.add('open'))
+}
+// Auto-expand first step
+document.getElementById('s1').classList.add('open')
+</script>
+</body>
+</html>
