@@ -55,6 +55,41 @@ Get-CimInstance Win32_StartupCommand -EA SilentlyContinue | ForEach-Object {
     $items += [PSCustomObject]@{Type='Startup';Name=if($_.Caption){$_.Caption}else{$_.Name};Path=$_.Command;Mem=0;Pid=0}
 }
 
+# ─── Scan script host processes ───
+$scriptHosts = @('wscript.exe','cscript.exe','mshta.exe','powershell.exe','pwsh.exe','python.exe','python3.exe','node.exe')
+Get-CimInstance Win32_Process -EA 0 | Where-Object { $_.Name -in $scriptHosts -and $_.CommandLine -ne $null } | ForEach-Object {
+    $cl = $_.CommandLine; $mem = [math]::Round($_.WorkingSetSize / 1MB, 0)
+    # Extract script path from command line
+    $scriptPath = ''
+    if ($cl -match '\"([^\"]+\.(ps1|vbs|js|jse|hta|py|bat|cmd))\"') { $scriptPath = $matches[1] }
+    elseif ($cl -match '([^\"]+\.(ps1|vbs|js|jse|hta|py|bat|cmd))') { $scriptPath = $matches[1] }
+    if ($scriptPath -and $scriptPath -match '\\Temp\\|\\AppData\\|\\Users\\[^\\]+\\[^\\]+\.') {
+        $items += [PSCustomObject]@{Type='Script';Name=$_.Name;Path=$scriptPath.Trim();Mem=$mem;Pid=$_.ProcessId}
+    }
+}
+
+# ─── Scan for script files in temp/appdata ───
+$scriptDirs = @(
+    [Environment]::GetFolderPath('InternetCache'),
+    $env:TEMP,
+    $env:LOCALAPPDATA + '\Temp',
+    $env:APPDATA
+)
+$scriptExts = @('*.ps1','*.vbs','*.js','*.jse','*.hta','*.py')
+foreach ($dir in $scriptDirs) {
+    if (Test-Path $dir) {
+        foreach ($ext in $scriptExts) {
+            Get-ChildItem -Path $dir -Filter $ext -Depth 1 -EA 0 | Where-Object { $_.Length -gt 100 } | ForEach-Object {
+                $already = $items | Where-Object { $_.Path -eq $_.FullName }
+                if (-not $already) {
+                    $size = if ($_.Length -gt 1MB) { [math]::Round($_.Length/1MB,1).ToString()+'MB' } else { [math]::Round($_.Length/1KB,0).ToString()+'KB' }
+                $items += [PSCustomObject]@{Type='ScriptFile';Name=$_.Name;Path=$_.FullName;Mem=$size;Pid=0}
+                }
+            }
+        }
+    }
+}
+
 # ─── Check common run keys ───
 $runPaths = @(
     'HKLM:\Software\Microsoft\Windows\CurrentVersion\Run',
@@ -86,7 +121,7 @@ do {
     Write-Host ('-'*75)
     for ($i = 0; $i -lt $items.Count; $i++) {
         $it = $items[$i]
-        $ms = if ($it.Mem -gt 0) { (' ' + $it.Mem.ToString() + 'MB') } else { '     -' }
+        $ms = if ($it.Mem -is [string]) { (' ' + $it.Mem).PadRight(5) } elseif ($it.Mem -gt 0) { (' ' + $it.Mem.ToString() + 'MB') } else { '     -' }
         $n = $it.Name; if ($n.Length -gt 27) { $n = $n.Substring(0,24) + '...' }
         $p = $it.Path; if ($p.Length -gt 40) { $p = '...' + $p.Substring($p.Length-37) }
         Write-Host ('{0,3}  {1,-8} {2,-28} {3,6}  {4}' -f ($i+1), $it.Type, $n, $ms, $p)
@@ -129,6 +164,28 @@ do {
             $exe = if ($it.Path -match '^\"(.+?)\"') { $matches[1] } elseif ($it.Path -match '^([^ ]+)') { $matches[1] } else { $it.Path }
             if (Test-Path $exe) { Remove-Item -Path $exe -Force -Recurse -EA 0 }
             Write-Host '  Removed.' -ForegroundColor Green; $removed++; Add-Content $log ('Removed runkey: '+$it.Name)
+        }
+        'Script' {
+            taskkill /F /PID $it.Pid 2>&1 | Out-Null; Start-Sleep -Milliseconds 300
+            # Extract script path from command line
+            $sp = ''
+            if ($it.Path -match '\"([^\"]+\.(ps1|vbs|js|jse|hta|py|bat|cmd))\"') { $sp = $matches[1] }
+            elseif ($it.Path -match '([^\"]+\.(ps1|vbs|js|jse|hta|py|bat|cmd))') { $sp = $matches[1].Trim() }
+            if ($sp -and (Test-Path $sp)) {
+                takeown /f $sp /A /r 2>&1 | Out-Null; icacls $sp /grant Administrators:F /t /q 2>&1 | Out-Null
+                Remove-Item -Path $sp -Force -Recurse -EA 0
+            }
+            if ($sp -and (Test-Path $sp)) { Write-Host '  FAILED' -ForegroundColor Red }
+            else { Write-Host '  Removed.' -ForegroundColor Green; $removed++; Add-Content $log ('Removed script: '+$it.Name) }
+        }
+        'ScriptFile' {
+            $fp = $it.Path
+            if (Test-Path $fp) {
+                takeown /f $fp /A /r 2>&1 | Out-Null; icacls $fp /grant Administrators:F /t /q 2>&1 | Out-Null
+                Remove-Item -Path $fp -Force -Recurse -EA 0
+            }
+            if (Test-Path $fp) { Write-Host '  FAILED' -ForegroundColor Red }
+            else { Write-Host '  Removed.' -ForegroundColor Green; $removed++; Add-Content $log ('Removed script file: '+$it.Name+' | '+$fp) }
         }
     }
     
