@@ -20,6 +20,17 @@ if errorlevel 1 (
 
 cls
 echo ============================================
+echo   PC CLEANUP TOOL
+echo ============================================
+echo.
+echo  This will scan for suspicious processes,
+echo  startup entries, and registry run keys.
+echo.
+choice /c SQ /n /m "  [S] Scan now   [Q] Quit "
+if errorlevel 2 exit /b
+
+cls
+echo ============================================
 echo   PC CLEANUP TOOL — Scanning...
 echo ============================================
 echo.
@@ -80,9 +91,9 @@ do {
         $p = $it.Path; if ($p.Length -gt 40) { $p = '...' + $p.Substring($p.Length-37) }
         Write-Host ('{0,3}  {1,-8} {2,-28} {3,6}  {4}' -f ($i+1), $it.Type, $n, $ms, $p)
     }
-    Write-Host ''; Write-Host '  [0] Exit'; Write-Host ''
-    $input = Read-Host '  Enter number to remove'
-    if ($input -eq '0' -or $input -eq '') { break }
+    Write-Host ''; Write-Host '  [0] Quit' -ForegroundColor Cyan; Write-Host ''
+    $input = Read-Host '  Enter number (or 0 to quit)'
+    if ($input -eq '0' -or $input -eq '' -or $input -eq 'q' -or $input -eq 'Q') { break }
     
     $n = 0
     if (![int]::TryParse($input, [ref]$n) -or $n -lt 1 -or $n -gt $items.Count) {
