@@ -1,0 +1,51 @@
+name: Sync Activity
+
+on:
+  schedule:
+    - cron: '0 6 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: |
+          curl -sf "https://api.github.com/users/sdachary/events/public?per_page=60" > events.json
+
+          node -e '
+          const fs = require("fs");
+          const events = JSON.parse(fs.readFileSync("events.json","utf8"));
+          const existing = JSON.parse(fs.readFileSync("public/activity.json","utf8"));
+
+          const seen = new Set(existing.map(e => e.date+"|"+e.project+"|"+e.description));
+          const since = new Date(Date.now() - 7*864e5);
+
+          const pushEvents = events.filter(e => e.type === "PushEvent" && new Date(e.created_at) > since);
+
+          const entries = [];
+          for (const ev of pushEvents) {
+            const repo = ev.repo.name.replace("sdachary/","").toUpperCase();
+            const date = ev.created_at.split("T")[0];
+            for (const c of (ev.payload.commits || [])) {
+              const msg = c.message.split("\n")[0];
+              if (!msg || msg.startsWith("Merge") || msg.startsWith("chore:") || msg.startsWith("WIP")) continue;
+              const key = date+"|"+repo+"|"+msg;
+              if (seen.has(key)) continue;
+              seen.add(key);
+              entries.push({ phase: "", project: repo, description: msg, date, status: "completed" });
+            }
+          }
+
+          entries.sort((a,b) => b.date.localeCompare(a.date));
+          const merged = [...entries, ...existing].slice(0, 30);
+          fs.writeFileSync("public/activity.json", JSON.stringify(merged, null, 2) + "\n");
+          '
+
+          git config user.name "github-actions"
+          git config user.email "actions@github.com"
+          git add public/activity.json
+          git diff --staged --quiet || (git commit -m "chore: sync activity [skip ci]" && git push)

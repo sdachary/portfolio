@@ -20,9 +20,11 @@ export default function Contact() {
     const form = e.currentTarget
     const data = new FormData(form)
     try {
-      const res = await fetch('https://formspree.io/f/xjgzzkrl', {
-        method: 'POST', body: data,
-        headers: { Accept: 'application/json' },
+      const body = Object.fromEntries(data.entries())
+      const res = await fetch('https://portfolio-contact.sdachary.workers.dev', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(body),
       })
       if (res.ok) { setStatus('success'); form.reset() }
       else setStatus('error')

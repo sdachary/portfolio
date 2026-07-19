@@ -113,7 +113,7 @@
       "PostgreSQL",
       "Docker"
     ],
-    "live_url": "https://sdachary.github.io/kubera",
+    "live_url": "https://kubera-d4k.pages.dev",
     "local": true,
     "last_updated": "2026-07-01",
     "github_remote": "git@github.com:sdachary/kubera.git",

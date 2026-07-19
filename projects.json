@@ -95,7 +95,7 @@
     "status_key": "open-source",
     "description": "Personal finance OS \u2014 self-hosted, open-source tool for tracking wealth, investments, and financial goals.",
     "tags": [],
-    "live_url": "https://sdachary.github.io/kubera",
+    "live_url": "https://kubera-d4k.pages.dev",
     "local": true,
     "last_updated": "2026-06-03",
     "github_remote": "git@github.com:sdachary/kubera.git",
