@@ -1,0 +1,72 @@
+name: Standard CI (Node.js)
+on:
+  workflow_call:
+    inputs:
+      node-version:
+        type: string
+        default: '22'
+      install-cmd:
+        type: string
+        default: 'npm ci'
+      lint-cmd:
+        type: string
+        default: 'npm run lint'
+      typecheck-cmd:
+        type: string
+        default: 'npx tsc --noEmit'
+      test-cmd:
+        type: string
+        default: 'npm test'
+      build-cmd:
+        type: string
+        default: ''
+      build-env:
+        type: string
+        default: '{}'
+      deploy-cmd:
+        type: string
+        default: ''
+      gitleaks-npx:
+        type: boolean
+        default: false
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  ci:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v6
+        with:
+          node-version: ${{ inputs.node-version }}
+          cache: npm
+      - run: ${{ inputs.install-cmd }}
+
+      - if: ${{ !inputs.gitleaks-npx }}
+        name: Gitleaks
+        run: docker run -v ${{ github.workspace }}:/repo ghcr.io/gitleaks/gitleaks:latest detect -c /repo/.gitleaks.toml -s /repo
+        continue-on-error: true
+
+      - if: ${{ inputs.gitleaks-npx }}
+        name: Gitleaks
+        run: npx gitleaks@latest detect
+        continue-on-error: true
+
+      - if: ${{ inputs.lint-cmd != '' }}
+        run: ${{ inputs.lint-cmd }}
+
+      - if: ${{ inputs.typecheck-cmd != '' }}
+        run: ${{ inputs.typecheck-cmd }}
+
+      - if: ${{ inputs.test-cmd != '' }}
+        run: ${{ inputs.test-cmd }}
+
+      - if: ${{ inputs.build-cmd != '' }}
+        run: ${{ inputs.build-cmd }}
+        env: ${{ fromJSON(inputs.build-env) }}
+
+      - if: ${{ inputs.deploy-cmd != '' && github.event_name == 'push' }}
+        run: ${{ inputs.deploy-cmd }}
