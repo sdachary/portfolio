@@ -10,13 +10,31 @@ function isFeatured(p: Project) {
 
 export default function Projects() {
   const [projects, setProjects] = useState<Project[]>([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState(false)
 
   useEffect(() => {
     fetch(import.meta.env.BASE_URL + 'projects.json')
-      .then(r => r.json())
-      .then(setProjects)
-      .catch(() => console.error('Failed to load projects'))
+      .then(r => r.ok ? r.json() : [])
+      .then(d => { setProjects(d); setLoading(false) })
+      .catch(() => { setError(true); setLoading(false) })
   }, [])
+
+  if (loading) return (
+    <section id="projects" className="section section-alt">
+      <div className="section-header"><h2 className="section-title">Projects</h2></div>
+      <div className="projects-bento">
+        {[1,2,3].map(i => <div key={i} className="project-card" style={{ opacity: 0.3, height: 180 }} />)}
+      </div>
+    </section>
+  )
+
+  if (error) return (
+    <section id="projects" className="section section-alt">
+      <div className="section-header"><h2 className="section-title">Projects</h2></div>
+      <p className="activity-desc">Failed to load projects.</p>
+    </section>
+  )
 
   if (projects.length === 0) return null
 

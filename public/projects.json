@@ -120,6 +120,22 @@
     "github_url": "https://github.com/sdachary/kubera"
   },
   {
+    "name": "NARAD",
+    "slug": "narad",
+    "status": "Live",
+    "status_key": "live",
+    "description": "Standalone browser utilities — WebRTC file transfer (Sandesh), read-only file scanner (Drishti), and PC cleanup guide (Shuddhi). Zero build, zero backend.",
+    "tags": [
+      "Cloudflare Pages",
+      "WebRTC",
+      "JavaScript"
+    ],
+    "live_url": "https://narad-7hc.pages.dev/",
+    "local": true,
+    "last_updated": "2026-07-21",
+    "github_remote": "git@github.com:sdachary/narad.git"
+  },
+  {
     "name": "MCP-HUB",
     "slug": "mcp-hub",
     "status": "Local / Standalone",
@@ -151,6 +167,22 @@
     "local": true,
     "last_updated": "2026-07-02",
     "github_remote": "git@github.com:sdachary/sri.git"
+  },
+  {
+    "name": "SARASWATI",
+    "slug": "saraswati",
+    "status": "Live",
+    "status_key": "live",
+    "description": "Kids coding education platform — interactive games (Snake Ladder, Color Game) that teach Python concepts through play.",
+    "tags": [
+      "Cloudflare Pages",
+      "JavaScript",
+      "HTML"
+    ],
+    "live_url": "https://saraswati-7v3.pages.dev/",
+    "local": true,
+    "last_updated": "2026-07-21",
+    "github_remote": "git@github.com:sdachary/saraswati.git"
   },
   {
     "name": "UNNATI",

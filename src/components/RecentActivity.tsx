@@ -13,13 +13,34 @@ const statusClass: Record<string, string> = {
 
 export default function RecentActivity() {
   const [activity, setActivity] = useState<ActivityEntry[]>([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState(false)
 
   useEffect(() => {
     fetch(import.meta.env.BASE_URL + 'activity.json')
       .then(r => r.ok ? r.json() : [])
-      .then(setActivity)
-      .catch(() => console.error('Failed to load activity'))
+      .then(d => { setActivity(d); setLoading(false) })
+      .catch(() => { setError(true); setLoading(false) })
   }, [])
+
+  if (loading) return (
+    <section id="activity" className="section section-alt section-divider">
+      <div className="section-header"><h2 className="section-title">Recent Activity</h2></div>
+      <div className="activity-wrap"><div className="activity-rail" />
+        {[1,2].map(i => <div key={i} className="activity-row">
+          <div className="activity-dot" />
+          <div className="activity-card" style={{ opacity: 0.3, height: 60, width: '100%' }} />
+        </div>)}
+      </div>
+    </section>
+  )
+
+  if (error) return (
+    <section id="activity" className="section section-alt section-divider">
+      <div className="section-header"><h2 className="section-title">Recent Activity</h2></div>
+      <p className="activity-desc">Failed to load recent activity.</p>
+    </section>
+  )
 
   if (activity.length === 0) return null
 
