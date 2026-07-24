@@ -1,0 +1,10 @@
+language: en-US
+reviews:
+  request_changes_workflow: false
+  path_instructions: []
+  auto_review:
+    enabled: true
+    base_branches:
+      - main
+chat:
+  auto_reply: true
