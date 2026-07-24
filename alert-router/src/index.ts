@@ -64,4 +64,12 @@ export default {
     const ok = await sendTelegram(text, env)
     return new Response(ok ? 'ok' : 'telegram failed', { status: ok ? 200 : 502 })
   },
+
+  async scheduled(_event: ScheduledEvent, env: Env): Promise<void> {
+    // ponytail: monthly reminder, per-secret warnings if we add a last-rotated store
+    await sendTelegram(
+      `🔄 *Quarterly Secret Rotation Reminder*\n\nIt is time to rotate secrets. See \`wiki/SECRETS.md\` for the full inventory.\n\nKey items: \`CLOUDFLARE_API_TOKEN\`, Supabase anon keys, Sentry DSNs, API keys (Gemini/Claude/NVIDIA), SMTP passwords.\n\nRotation procedure: wiki/SECRETS.md#rotation-procedure`,
+      env,
+    )
+  },
 }
