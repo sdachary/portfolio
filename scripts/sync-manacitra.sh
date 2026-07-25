@@ -33,18 +33,17 @@ async function run() {
 
   const checks = [
     // oradb services — checked via SSH (curl localhost on oradb)
-    { id: 'nginx',       cmd: 'ssh oradb \"curl -sI http://localhost 2>/dev/null | head -1 | grep -q 200\"', ssh: true },
-    { id: 'postgrest',   cmd: 'ssh oradb \"curl -sI http://localhost:3000 2>/dev/null | head -1 | grep -qi OK\"', ssh: true },
-    { id: 'better-auth', cmd: 'ssh oradb \"curl -sI http://localhost:4000/api/auth/health 2>/dev/null | head -1 | grep -qi OK\"', ssh: true },
-    { id: 'mail-relay',  cmd: 'ssh oradb \"curl -sI http://localhost:4001/health 2>/dev/null | head -1 | grep -qi OK\"', ssh: true },
-    { id: 'kubera',      cmd: 'ssh oradb \"curl -sI http://localhost:3002 2>/dev/null | head -1 | grep -q 200\"', ssh: true },
-    { id: 'bepara-api',  cmd: 'ssh oradb \"curl -sI http://localhost:3001/api/health 2>/dev/null | head -1 | grep -qi OK\"', ssh: true },
-    { id: 'unnati-server',cmd:'ssh oradb \"curl -sI http://localhost:4002/api/health 2>/dev/null | head -1 | grep -qi OK\"', ssh: true },
-    { id: 'headroom',    cmd: 'ssh oradb \"curl -sI http://localhost:8787 2>/dev/null | head -1 | grep -q 200\"', ssh: true },
-    { id: 'uptime-kuma', cmd: 'ssh oradb \"curl -sI http://localhost:3003 2>/dev/null | head -1 | grep -q 200\"', ssh: true },
-    // pg16 + redis — check via SSH pg_isready / redis-cli ping
-    { id: 'pg16',        cmd: 'ssh oradb \"pg_isready -q 2>/dev/null\"', ssh: true },
-    { id: 'redis',       cmd: 'ssh oradb \"redis-cli ping 2>/dev/null | grep -q PONG\"', ssh: true },
+    { id: 'nginx',       cmd: 'ssh 140.245.227.176 \"curl -sI http://localhost 2>/dev/null | head -1 | grep -q 200\"', ssh: true },
+    { id: 'postgrest',   cmd: 'ssh 140.245.227.176 \"curl -sI http://localhost:3000 2>/dev/null | head -1 | grep -qi OK\"', ssh: true },
+    { id: 'better-auth', cmd: 'ssh 140.245.227.176 \"curl -sI http://localhost:4000/api/auth/health 2>/dev/null | head -1 | grep -qi OK\"', ssh: true },
+    { id: 'mail-relay',  cmd: 'ssh 140.245.227.176 \"curl -sI http://localhost:4001/health 2>/dev/null | head -1 | grep -qi OK\"', ssh: true },
+    { id: 'kubera',      cmd: 'ssh 140.245.227.176 \"curl -sI http://localhost:3002 2>/dev/null | head -1 | grep -q 200\"', ssh: true },
+    { id: 'bepara-api',  cmd: 'ssh 140.245.227.176 \"curl -sI http://localhost:3001/api/health 2>/dev/null | head -1 | grep -qi OK\"', ssh: true },
+    { id: 'unnati-server',cmd:'ssh 140.245.227.176 \"curl -sI http://localhost:4002/api/health 2>/dev/null | head -1 | grep -qi OK\"', ssh: true },
+    { id: 'headroom',    cmd: 'ssh 140.245.227.176 \"curl -sI http://localhost:8787 2>/dev/null | head -1 | grep -q 200\"', ssh: true },
+    { id: 'uptime-kuma', cmd: 'ssh 140.245.227.176 \"curl -sI http://localhost:3003 2>/dev/null | head -1 | grep -q 200\"', ssh: true },
+    { id: 'pg16',        cmd: 'ssh 140.245.227.176 \"pg_isready -q 2>/dev/null\"', ssh: true },
+    { id: 'redis',       cmd: 'ssh 140.245.227.176 \"redis-cli ping 2>/dev/null | grep -q PONG\"', ssh: true },
     // oradev services — local curl
     { id: 'mcp-hub',     url: 'http://localhost:3000/api/admin/health' },
     { id: 'paca',        url: 'http://localhost:4000' },
@@ -52,7 +51,7 @@ async function run() {
     { id: 'ttyd',        url: 'http://localhost:7681' },
     { id: 'minio',       url: 'http://localhost:9000/minio/health/live' },
     // cloudflared — tunnel check via oradb
-    { id: 'cloudflared', cmd: 'ssh oradb \"curl -sI http://localhost:3002 2>/dev/null | head -1 | grep -q 200\"', ssh: true },
+    { id: 'cloudflared', cmd: 'ssh 140.245.227.176 \"curl -sI http://localhost:3002 2>/dev/null | head -1 | grep -q 200\"', ssh: true },
     // CF Pages — direct HTTP
     { id: 'chitragupta', url: 'https://chitragupta.pages.dev' },
     { id: 'bepara',      url: 'https://bepara.pages.dev' },
