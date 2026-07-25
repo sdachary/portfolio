@@ -56,3 +56,26 @@ else
   git push origin main
   echo "Activity synced"
 fi
+
+echo "=== Build and deploy ==="
+npm ci
+npm run build
+
+DEPLOY_DIR=$(mktemp -d)
+git worktree add --detach "$DEPLOY_DIR"
+cp -r dist/* "$DEPLOY_DIR/"
+cp dist/.vite "$DEPLOY_DIR/.vite" 2>/dev/null || true
+cd "$DEPLOY_DIR"
+
+git add -A
+if git diff --cached --quiet; then
+  echo "No changes to deploy"
+else
+  git commit -m "deploy: $(date +%Y-%m-%d)"
+  git push origin HEAD:refs/heads/gh-pages --force
+  echo "Deployed to gh-pages"
+fi
+
+cd "$REPO_DIR"
+git worktree remove "$DEPLOY_DIR"
+rm -rf "$DEPLOY_DIR"
