@@ -5,8 +5,8 @@ Wants=network-online.target
 
 [Service]
 Type=oneshot
-ExecStart=/home/deepak/Work/portfolio/scripts/sync-manacitra.sh
+ExecStart=/home/ubuntu/portfolio/scripts/sync-manacitra.sh
 User=ubuntu
-WorkingDirectory=/home/deepak/Work/portfolio
+WorkingDirectory=/home/ubuntu/portfolio
 StandardOutput=journal
 StandardError=journal
