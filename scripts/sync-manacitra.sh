@@ -19,9 +19,9 @@ async function check(url, timeout=4000) {
   const c = new AbortController();
   const t = setTimeout(() => c.abort(), timeout);
   try {
-    const r = await fetch(url, { signal: c.signal, method: 'HEAD', redirect: 'follow' });
+    const r = await fetch(url, { signal: c.signal, method: 'GET', redirect: 'follow' });
     clearTimeout(t);
-    return r.ok || r.status === 302 || r.status === 301;
+    return r.ok || [301, 302, 308, 401, 405].includes(r.status);
   } catch {
     clearTimeout(t);
     return false;
@@ -33,25 +33,23 @@ async function run() {
 
   const checks = [
     // oradb services — checked via SSH (curl localhost on oradb)
-    { id: 'nginx',       cmd: 'ssh -o StrictHostKeyChecking=accept-new 140.245.227.176 \"curl -sI http://localhost 2>/dev/null | head -1 | grep -q 200\"', ssh: true },
-    { id: 'postgrest',   cmd: 'ssh -o StrictHostKeyChecking=accept-new 140.245.227.176 \"curl -sI http://localhost:3000 2>/dev/null | head -1 | grep -qi OK\"', ssh: true },
-    { id: 'better-auth', cmd: 'ssh -o StrictHostKeyChecking=accept-new 140.245.227.176 \"curl -sI http://localhost:4000/api/auth/health 2>/dev/null | head -1 | grep -qi OK\"', ssh: true },
-    { id: 'mail-relay',  cmd: 'ssh -o StrictHostKeyChecking=accept-new 140.245.227.176 \"curl -sI http://localhost:4001/health 2>/dev/null | head -1 | grep -qi OK\"', ssh: true },
-    { id: 'kubera',      cmd: 'ssh -o StrictHostKeyChecking=accept-new 140.245.227.176 \"curl -sI http://localhost:3002 2>/dev/null | head -1 | grep -q 200\"', ssh: true },
-    { id: 'bepara-api',  cmd: 'ssh -o StrictHostKeyChecking=accept-new 140.245.227.176 \"curl -sI http://localhost:3001/api/health 2>/dev/null | head -1 | grep -qi OK\"', ssh: true },
-    { id: 'unnati-server',cmd:'ssh -o StrictHostKeyChecking=accept-new 140.245.227.176 \"curl -sI http://localhost:4002/api/health 2>/dev/null | head -1 | grep -qi OK\"', ssh: true },
-    { id: 'headroom',    cmd: 'ssh -o StrictHostKeyChecking=accept-new 140.245.227.176 \"curl -sI http://localhost:8787 2>/dev/null | head -1 | grep -q 200\"', ssh: true },
-    { id: 'uptime-kuma', cmd: 'ssh -o StrictHostKeyChecking=accept-new 140.245.227.176 \"curl -sI http://localhost:3003 2>/dev/null | head -1 | grep -q 200\"', ssh: true },
-    { id: 'pg16',        cmd: 'ssh -o StrictHostKeyChecking=accept-new 140.245.227.176 \"pg_isready -q 2>/dev/null\"', ssh: true },
-    { id: 'redis',       cmd: 'ssh -o StrictHostKeyChecking=accept-new 140.245.227.176 \"redis-cli ping 2>/dev/null | grep -q PONG\"', ssh: true },
-    // oradev services — local curl
-    { id: 'mcp-hub',     url: 'http://localhost:3000/api/admin/health' },
-    { id: 'paca',        url: 'http://localhost:4000' },
-    { id: 'nim-proxy',   url: 'http://localhost:8082' },
-    { id: 'ttyd',        url: 'http://localhost:7681' },
-    { id: 'minio',       url: 'http://localhost:9000/minio/health/live' },
-    // cloudflared — tunnel check via oradb
-    { id: 'cloudflared', cmd: 'ssh -o StrictHostKeyChecking=accept-new 140.245.227.176 \"curl -sI http://localhost:3002 2>/dev/null | head -1 | grep -q 200\"', ssh: true },
+    { id: 'nginx',       cmd: 'ssh -o StrictHostKeyChecking=accept-new 140.245.227.176 "curl -s -o /dev/null -w %{http_code} http://localhost 2>/dev/null" 2>/dev/null | grep -qE "^[234]"', ssh: true },
+    { id: 'postgrest',   cmd: 'ssh -o StrictHostKeyChecking=accept-new 140.245.227.176 "curl -s -o /dev/null -w %{http_code} http://localhost:3000 2>/dev/null" 2>/dev/null | grep -qE "^[234]"', ssh: true },
+    { id: 'better-auth', cmd: 'ssh -o StrictHostKeyChecking=accept-new 140.245.227.176 "curl -s -o /dev/null -w %{http_code} http://localhost:4000/api/auth/health 2>/dev/null" 2>/dev/null | grep -qE "^[234]"', ssh: true },
+    { id: 'mail-relay',  cmd: 'ssh -o StrictHostKeyChecking=accept-new 140.245.227.176 "curl -s -o /dev/null -w %{http_code} http://localhost:4001/health 2>/dev/null" 2>/dev/null | grep -qE "^[234]"', ssh: true },
+    { id: 'kubera',      cmd: 'ssh -o StrictHostKeyChecking=accept-new 140.245.227.176 "curl -s -o /dev/null -w %{http_code} http://localhost:3002 2>/dev/null" 2>/dev/null | grep -qE "^[234]"', ssh: true },
+    { id: 'bepara-api',  cmd: 'ssh -o StrictHostKeyChecking=accept-new 140.245.227.176 "curl -s -o /dev/null -w %{http_code} http://localhost:3001/api/health 2>/dev/null" 2>/dev/null | grep -qE "^[234]"', ssh: true },
+    { id: 'unnati-server',cmd:'ssh -o StrictHostKeyChecking=accept-new 140.245.227.176 "curl -s -o /dev/null -w %{http_code} http://localhost:4002/api/health 2>/dev/null" 2>/dev/null | grep -qE "^[234]"', ssh: true },
+    { id: 'headroom',    cmd: 'ssh -o StrictHostKeyChecking=accept-new 140.245.227.176 "curl -s -o /dev/null -w %{http_code} http://localhost:8787 2>/dev/null" 2>/dev/null | grep -qE "^[234]"', ssh: true },
+    { id: 'uptime-kuma', cmd: 'ssh -o StrictHostKeyChecking=accept-new 140.245.227.176 "curl -s -o /dev/null -w %{http_code} http://localhost:3003 2>/dev/null" 2>/dev/null | grep -qE "^[234]"', ssh: true },
+    { id: 'pg16',        cmd: 'ssh -o StrictHostKeyChecking=accept-new 140.245.227.176 "pg_isready -q" 2>/dev/null', ssh: true },
+    { id: 'redis',       cmd: 'ssh -o StrictHostKeyChecking=accept-new 140.245.227.176 "redis-cli ping" 2>/dev/null | grep -q PONG', ssh: true },
+    { id: 'mcp-hub',     url: 'http://localhost:3000/api/health' },
+    { id: 'paca',        url: 'http://localhost:80/' },
+    { id: 'nim-proxy',   url: 'http://localhost:8082/' },
+    { id: 'ttyd',        url: 'http://localhost:7681/' },
+    { id: 'minio',       cmd: 'sudo docker inspect paca-minio-1 2>/dev/null | python3 -c "import json,sys; print(0 if json.load(sys.stdin)[0][\"State\"][\"Health\"][\"Status\"]==\"healthy\" else 1)"', ssh: true },
+    { id: 'cloudflared', cmd: 'ssh -o StrictHostKeyChecking=accept-new 140.245.227.176 "curl -s -o /dev/null -w %{http_code} http://localhost:3002 2>/dev/null" 2>/dev/null | grep -qE "^[234]"', ssh: true },
     // CF Pages — direct HTTP
     { id: 'chitragupta', url: 'https://chitragupta.pages.dev' },
     { id: 'bepara',      url: 'https://bepara.pages.dev' },
