@@ -323,7 +323,7 @@
       "label": "DB"
     }
   ],
-  "generated_at": "2026-07-25T12:34:47.666Z",
+  "generated_at": "2026-07-25T12:38:04.388Z",
   "stats": {
     "total_services": 19,
     "online": 19,
@@ -335,111 +335,111 @@
   "health": {
     "nginx": {
       "online": true,
-      "checked_at": "2026-07-25T12:34:47.666Z"
+      "checked_at": "2026-07-25T12:38:04.388Z"
     },
     "postgrest": {
       "online": true,
-      "checked_at": "2026-07-25T12:34:47.666Z"
+      "checked_at": "2026-07-25T12:38:04.388Z"
     },
     "better-auth": {
       "online": false,
-      "checked_at": "2026-07-25T12:34:47.666Z"
+      "checked_at": "2026-07-25T12:38:04.388Z"
     },
     "mail-relay": {
       "online": false,
-      "checked_at": "2026-07-25T12:34:47.666Z"
+      "checked_at": "2026-07-25T12:38:04.388Z"
     },
     "kubera": {
       "online": true,
-      "checked_at": "2026-07-25T12:34:47.666Z"
+      "checked_at": "2026-07-25T12:38:04.388Z"
     },
     "bepara-api": {
       "online": true,
-      "checked_at": "2026-07-25T12:34:47.666Z"
+      "checked_at": "2026-07-25T12:38:04.388Z"
     },
     "unnati-server": {
       "online": true,
-      "checked_at": "2026-07-25T12:34:47.666Z"
+      "checked_at": "2026-07-25T12:38:04.388Z"
     },
     "headroom": {
       "online": false,
-      "checked_at": "2026-07-25T12:34:47.666Z"
+      "checked_at": "2026-07-25T12:38:04.388Z"
     },
     "uptime-kuma": {
       "online": false,
-      "checked_at": "2026-07-25T12:34:47.666Z"
+      "checked_at": "2026-07-25T12:38:04.388Z"
     },
     "pg16": {
       "online": true,
-      "checked_at": "2026-07-25T12:34:47.666Z"
+      "checked_at": "2026-07-25T12:38:04.388Z"
     },
     "redis": {
       "online": true,
-      "checked_at": "2026-07-25T12:34:47.666Z"
+      "checked_at": "2026-07-25T12:38:04.388Z"
     },
     "mcp-hub": {
       "online": false,
-      "checked_at": "2026-07-25T12:34:47.666Z"
+      "checked_at": "2026-07-25T12:38:04.388Z"
     },
     "paca": {
       "online": false,
-      "checked_at": "2026-07-25T12:34:47.666Z"
+      "checked_at": "2026-07-25T12:38:04.388Z"
     },
     "nim-proxy": {
       "online": true,
-      "checked_at": "2026-07-25T12:34:47.666Z"
+      "checked_at": "2026-07-25T12:38:04.388Z"
     },
     "ttyd": {
       "online": false,
-      "checked_at": "2026-07-25T12:34:47.666Z"
+      "checked_at": "2026-07-25T12:38:04.388Z"
     },
     "minio": {
       "online": false,
-      "checked_at": "2026-07-25T12:34:47.666Z"
+      "checked_at": "2026-07-25T12:38:04.388Z"
     },
     "cloudflared": {
       "online": true,
-      "checked_at": "2026-07-25T12:34:47.666Z"
+      "checked_at": "2026-07-25T12:38:04.388Z"
     },
     "chitragupta": {
       "online": true,
-      "checked_at": "2026-07-25T12:34:47.666Z"
+      "checked_at": "2026-07-25T12:38:04.388Z"
     },
     "bepara": {
       "online": true,
-      "checked_at": "2026-07-25T12:34:47.666Z"
+      "checked_at": "2026-07-25T12:38:04.388Z"
     },
     "udhyam": {
       "online": true,
-      "checked_at": "2026-07-25T12:34:47.666Z"
+      "checked_at": "2026-07-25T12:38:04.388Z"
     },
     "kubera-dash": {
       "online": true,
-      "checked_at": "2026-07-25T12:34:47.666Z"
+      "checked_at": "2026-07-25T12:38:04.388Z"
     },
     "unnati": {
       "online": true,
-      "checked_at": "2026-07-25T12:34:47.666Z"
+      "checked_at": "2026-07-25T12:38:04.388Z"
     },
     "vishwakarma": {
       "online": true,
-      "checked_at": "2026-07-25T12:34:47.666Z"
+      "checked_at": "2026-07-25T12:38:04.388Z"
     },
     "saraswati": {
       "online": true,
-      "checked_at": "2026-07-25T12:34:47.666Z"
+      "checked_at": "2026-07-25T12:38:04.388Z"
     },
     "darpan": {
       "online": true,
-      "checked_at": "2026-07-25T12:34:47.666Z"
+      "checked_at": "2026-07-25T12:38:04.388Z"
     },
     "narad": {
       "online": true,
-      "checked_at": "2026-07-25T12:34:47.666Z"
+      "checked_at": "2026-07-25T12:38:04.388Z"
     },
     "portfolio": {
       "online": true,
-      "checked_at": "2026-07-25T12:34:47.666Z"
+      "checked_at": "2026-07-25T12:38:04.388Z"
     }
   }
 }
