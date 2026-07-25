@@ -323,115 +323,123 @@
       "label": "DB"
     }
   ],
-  "generated_at": "2026-07-25T12:07:47.777Z",
+  "generated_at": "2026-07-25T12:22:01.879Z",
   "stats": {
-    "total_services": 29,
-    "online": 12,
+    "total_services": 11,
+    "online": 11,
     "islands": 2,
     "floating": 10,
     "connections": 14,
-    "total": 25
+    "total": 27
   },
   "health": {
-    "cloudflared": {
-      "online": false,
-      "checked_at": "2026-07-25T12:07:47.777Z"
-    },
-    "minio": {
-      "online": false,
-      "checked_at": "2026-07-25T12:07:47.777Z"
-    },
-    "paca": {
-      "online": false,
-      "checked_at": "2026-07-25T12:07:47.777Z"
-    },
     "nginx": {
-      "online": true,
-      "checked_at": "2026-07-25T12:07:47.777Z"
-    },
-    "ttyd": {
       "online": false,
-      "checked_at": "2026-07-25T12:07:47.777Z"
-    },
-    "bepara": {
-      "online": true,
-      "checked_at": "2026-07-25T12:07:47.777Z"
-    },
-    "unnati": {
-      "online": true,
-      "checked_at": "2026-07-25T12:07:47.777Z"
-    },
-    "chitragupta": {
-      "online": true,
-      "checked_at": "2026-07-25T12:07:47.777Z"
-    },
-    "udhyam": {
-      "online": true,
-      "checked_at": "2026-07-25T12:07:47.777Z"
-    },
-    "portfolio": {
-      "online": true,
-      "checked_at": "2026-07-25T12:07:47.777Z"
-    },
-    "nim-proxy": {
-      "online": true,
-      "checked_at": "2026-07-25T12:07:47.777Z"
-    },
-    "vishwakarma": {
-      "online": true,
-      "checked_at": "2026-07-25T12:07:47.777Z"
-    },
-    "kubera-dash": {
-      "online": true,
-      "checked_at": "2026-07-25T12:07:47.777Z"
-    },
-    "saraswati": {
-      "online": true,
-      "checked_at": "2026-07-25T12:07:47.777Z"
-    },
-    "narad": {
-      "online": true,
-      "checked_at": "2026-07-25T12:07:47.777Z"
-    },
-    "mcp-hub": {
-      "online": false,
-      "checked_at": "2026-07-25T12:07:47.777Z"
-    },
-    "darpan": {
-      "online": true,
-      "checked_at": "2026-07-25T12:07:47.777Z"
+      "checked_at": "2026-07-25T12:22:01.879Z"
     },
     "postgrest": {
       "online": false,
-      "checked_at": "2026-07-25T12:07:47.777Z"
+      "checked_at": "2026-07-25T12:22:01.879Z"
     },
     "better-auth": {
       "online": false,
-      "checked_at": "2026-07-25T12:07:47.777Z"
+      "checked_at": "2026-07-25T12:22:01.879Z"
     },
     "mail-relay": {
       "online": false,
-      "checked_at": "2026-07-25T12:07:47.777Z"
+      "checked_at": "2026-07-25T12:22:01.879Z"
     },
     "kubera": {
       "online": false,
-      "checked_at": "2026-07-25T12:07:47.777Z"
+      "checked_at": "2026-07-25T12:22:01.879Z"
     },
     "bepara-api": {
       "online": false,
-      "checked_at": "2026-07-25T12:07:47.777Z"
+      "checked_at": "2026-07-25T12:22:01.879Z"
     },
     "unnati-server": {
       "online": false,
-      "checked_at": "2026-07-25T12:07:47.777Z"
+      "checked_at": "2026-07-25T12:22:01.879Z"
     },
     "headroom": {
       "online": false,
-      "checked_at": "2026-07-25T12:07:47.777Z"
+      "checked_at": "2026-07-25T12:22:01.879Z"
     },
     "uptime-kuma": {
       "online": false,
-      "checked_at": "2026-07-25T12:07:47.777Z"
+      "checked_at": "2026-07-25T12:22:01.879Z"
+    },
+    "pg16": {
+      "online": false,
+      "checked_at": "2026-07-25T12:22:01.879Z"
+    },
+    "redis": {
+      "online": false,
+      "checked_at": "2026-07-25T12:22:01.879Z"
+    },
+    "mcp-hub": {
+      "online": false,
+      "checked_at": "2026-07-25T12:22:01.879Z"
+    },
+    "paca": {
+      "online": false,
+      "checked_at": "2026-07-25T12:22:01.879Z"
+    },
+    "nim-proxy": {
+      "online": true,
+      "checked_at": "2026-07-25T12:22:01.879Z"
+    },
+    "ttyd": {
+      "online": false,
+      "checked_at": "2026-07-25T12:22:01.879Z"
+    },
+    "minio": {
+      "online": false,
+      "checked_at": "2026-07-25T12:22:01.879Z"
+    },
+    "cloudflared": {
+      "online": false,
+      "checked_at": "2026-07-25T12:22:01.879Z"
+    },
+    "chitragupta": {
+      "online": true,
+      "checked_at": "2026-07-25T12:22:01.879Z"
+    },
+    "bepara": {
+      "online": true,
+      "checked_at": "2026-07-25T12:22:01.879Z"
+    },
+    "udhyam": {
+      "online": true,
+      "checked_at": "2026-07-25T12:22:01.879Z"
+    },
+    "kubera-dash": {
+      "online": true,
+      "checked_at": "2026-07-25T12:22:01.879Z"
+    },
+    "unnati": {
+      "online": true,
+      "checked_at": "2026-07-25T12:22:01.879Z"
+    },
+    "vishwakarma": {
+      "online": true,
+      "checked_at": "2026-07-25T12:22:01.879Z"
+    },
+    "saraswati": {
+      "online": true,
+      "checked_at": "2026-07-25T12:22:01.879Z"
+    },
+    "darpan": {
+      "online": true,
+      "checked_at": "2026-07-25T12:22:01.879Z"
+    },
+    "narad": {
+      "online": true,
+      "checked_at": "2026-07-25T12:22:01.879Z"
+    },
+    "portfolio": {
+      "online": true,
+      "checked_at": "2026-07-25T12:22:01.879Z"
     }
   }
 }
