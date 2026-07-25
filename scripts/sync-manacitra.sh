@@ -18,7 +18,7 @@ import { execSync } from 'child_process';
 
 const data_file = process.env.MANACITRA_DATA_FILE;
 
-async function check(url, timeout=4000) {
+async function check(url, timeout=8000) {
   const c = new AbortController();
   const t = setTimeout(() => c.abort(), timeout);
   try {
@@ -49,7 +49,7 @@ async function run() {
     { id: 'redis',       cmd: "ssh -o StrictHostKeyChecking=accept-new 140.245.227.176 'redis-cli ping' 2>/dev/null | grep -q PONG", ssh: true },
     { id: 'mcp-hub',     url: 'http://localhost:3000/api/health' },
     { id: 'paca',        url: 'http://localhost:80/' },
-    { id: 'nim-proxy',   url: 'http://localhost:8082/' },
+    { id: 'nim-proxy',   url: 'http://localhost:8082/v1/models' },
     { id: 'ttyd',        url: 'http://localhost:7681/' },
     { id: 'minio',       cmd: "sudo docker inspect --format '{{.State.Health.Status}}' paca-minio-1 2>/dev/null | grep -q healthy", ssh: true },
     { id: 'cloudflared', cmd: "ssh -o StrictHostKeyChecking=accept-new 140.245.227.176 'curl -s -o /dev/null -w %{http_code} http://localhost:3002 2>/dev/null' 2>/dev/null | grep -qE '^[234]'", ssh: true },
