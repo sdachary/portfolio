@@ -3,116 +3,83 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Mānacitra — Infrastructure Map</title>
+<title>Mānacitra — AcharyLab Infrastructure</title>
 <style>
-:root {
-  --bg: #0a0e1a;
-  --panel: rgba(10,14,26,0.92);
-  --border: rgba(255,255,255,0.08);
-  --text: #c8d0e0;
-  --text-dim: #6b7a99;
-  --accent: #7c3aed;
-  --accent2: #f59e0b;
-}
-* { margin:0; padding:0; box-sizing:border-box; }
-html, body { width:100%; height:100%; overflow:hidden; background:var(--bg); font-family:'Inter','Segoe UI',system-ui,-apple-system,sans-serif; color:var(--text); }
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+html,body{width:100%;height:100%;overflow:hidden;background:#04060e;font-family:'Inter','SF Pro Display',system-ui,-apple-system,sans-serif;color:#c8d0e0;-webkit-font-smoothing:antialiased}
+canvas{display:block}
 
-#canvas { display:block; width:100%; height:100%; }
+#loader{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;background:#04060e;z-index:100;transition:opacity 1s ease}
+#loader.hidden{opacity:0;pointer-events:none}
+#loader h1{font-size:2.5rem;font-weight:300;letter-spacing:.12em;background:linear-gradient(135deg,#7c3aed,#3b82f6);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:.5rem}
+#loader .sub{color:rgba(255,255,255,0.25);font-size:.85rem;letter-spacing:.3em;text-transform:uppercase;margin-bottom:.75rem}
+#loader .status{color:rgba(255,255,255,0.2);font-size:.75rem;font-variant-numeric:tabular-nums}
+.loader-ring{width:48px;height:48px;border:1.5px solid rgba(255,255,255,0.06);border-top-color:#7c3aed;border-radius:50%;animation:spin 1.2s cubic-bezier(0.4,0,0.2,1) infinite;margin-bottom:2rem}
+@keyframes spin{to{transform:rotate(360deg)}}
+.loader-bar{width:160px;height:1.5px;background:rgba(255,255,255,0.06);border-radius:2px;margin-top:.75rem;overflow:hidden}
+.loader-bar span{display:block;height:100%;width:0%;background:linear-gradient(90deg,#7c3aed,#3b82f6);border-radius:2px;transition:width .5s ease}
 
-#loading {
-  position:fixed; inset:0; display:flex; flex-direction:column;
-  align-items:center; justify-content:center; background:var(--bg); z-index:100;
-  transition:opacity .6s;
-}
-#loading.hidden { opacity:0; pointer-events:none; }
-#loading h1 { font-size:2rem; font-weight:300; letter-spacing:.15em; color:var(--accent); margin-bottom:1rem; }
-#loading .subtitle { color:var(--text-dim); font-size:.85rem; margin-bottom:.25rem; }
-#loading .status-text { color:var(--text-dim); font-size:.75rem; opacity:.6; }
-.spinner { width:32px; height:32px; border:2px solid var(--border); border-top-color:var(--accent); border-radius:50%; animation:spin .8s linear infinite; margin-bottom:1.5rem; }
-@keyframes spin { to { transform:rotate(360deg); } }
+#header{position:fixed;top:1.25rem;left:50%;transform:translateX(-50%);z-index:10}
+#header nav{display:flex;align-items:center;gap:1.25rem;padding:.5rem 1.25rem .5rem 1.5rem;background:rgba(4,6,14,0.75);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border:1px solid rgba(255,255,255,0.06);border-radius:100px;font-size:.8rem}
+#header .brand{font-weight:500;background:linear-gradient(135deg,#c8d0e0,#6b7a99);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+#header .sep{color:rgba(255,255,255,0.08)}
+#header .stat{color:rgba(255,255,255,0.35);display:flex;align-items:center;gap:.35rem}
+#header .stat .d{width:5px;height:5px;border-radius:50%;display:inline-block}
+#header .stat .d.g{background:#22c55e;box-shadow:0 0 6px rgba(34,197,94,0.4)}
+#header .stat .d.r{background:#ef4444;box-shadow:0 0 6px rgba(239,68,68,0.3)}
+#header .lang{color:rgba(255,255,255,0.15);font-size:.7rem;display:flex;align-items:center;gap:.4rem}
 
-#info {
-  position:fixed; top:1rem; left:50%; transform:translateX(-50%);
-  background:var(--panel); backdrop-filter:blur(12px); border:1px solid var(--border);
-  border-radius:12px; padding:.75rem 1.5rem; z-index:10;
-  display:flex; align-items:center; gap:1rem;
-  font-size:.85rem; white-space:nowrap;
-}
-#info h2 { font-size:.9rem; font-weight:500; color:var(--accent); letter-spacing:.08em; }
-#info span { color:var(--text-dim); }
-#info .dot { display:inline-block; width:6px; height:6px; border-radius:50%; margin-right:4px; }
-#info .dot.green { background:#22c55e; }
-#info .dot.red { background:#ef4444; }
-#info .dot.yellow { background:var(--accent2); }
+#legend{position:fixed;bottom:1.5rem;left:1.5rem;z-index:10}
+#legend button{background:rgba(4,6,14,0.6);backdrop-filter:blur(16px);border:1px solid rgba(255,255,255,0.06);border-radius:8px;padding:.4rem .65rem;color:rgba(255,255,255,0.3);font-size:.7rem;cursor:pointer;transition:color .2s}
+#legend button:hover{color:rgba(255,255,255,0.6)}
+#legend-panel{position:absolute;bottom:calc(100% + .5rem);left:0;background:rgba(4,6,14,0.85);backdrop-filter:blur(24px);border:1px solid rgba(255,255,255,0.06);border-radius:10px;padding:.85rem;min-width:150px;display:none;flex-direction:column;gap:.3rem}
+#legend-panel.show{display:flex}
+#legend-panel .l{display:flex;align-items:center;gap:.45rem;font-size:.7rem;color:rgba(255,255,255,0.35)}
+#legend-panel .sw{width:10px;height:10px;border-radius:3px;flex-shrink:0}
 
-#legend-toggle {
-  position:fixed; bottom:1.5rem; left:1.5rem; z-index:10;
-  background:var(--panel); backdrop-filter:blur(12px); border:1px solid var(--border);
-  border-radius:8px; padding:.5rem; cursor:pointer; color:var(--text-dim);
-  display:flex; align-items:center; gap:.4rem; font-size:.75rem;
-  transition:color .2s;
-}
-#legend-toggle:hover { color:var(--text); }
+#tooltip{position:fixed;z-index:20;pointer-events:none;background:rgba(4,6,14,0.88);backdrop-filter:blur(32px);-webkit-backdrop-filter:blur(32px);border:1px solid rgba(255,255,255,0.06);border-radius:12px;padding:1rem;min-width:180px;max-width:300px;opacity:0;transition:opacity .3s ease;box-shadow:0 16px 48px rgba(0,0,0,0.5)}
+#tooltip.show{opacity:1}
+#tooltip .tag{font-size:.65rem;text-transform:uppercase;letter-spacing:.1em;margin-bottom:.35rem;font-weight:500}
+#tooltip h3{font-size:.9rem;font-weight:500;margin-bottom:.25rem}
+#tooltip p{font-size:.78rem;color:rgba(255,255,255,0.4);line-height:1.5;margin-bottom:.5rem}
+#tooltip .health{display:flex;align-items:center;gap:.35rem;font-size:.72rem}
+#tooltip .health .dot{width:5px;height:5px;border-radius:50%}
+#tooltip a{display:inline-flex;align-items:center;gap:.3rem;margin-top:.4rem;font-size:.72rem;color:#7c3aed;text-decoration:none;pointer-events:auto;padding:.25rem .5rem;background:rgba(124,58,237,0.1);border-radius:6px;transition:background .2s}
+#tooltip a:hover{background:rgba(124,58,237,0.2)}
 
-#legend {
-  position:fixed; bottom:4rem; left:1.5rem; z-index:10;
-  background:var(--panel); backdrop-filter:blur(12px); border:1px solid var(--border);
-  border-radius:10px; padding:1rem; min-width:160px;
-  display:none; flex-direction:column; gap:.4rem;
-}
-#legend.visible { display:flex; }
-#legend .item { display:flex; align-items:center; gap:.5rem; font-size:.75rem; color:var(--text-dim); }
-#legend .swatch { width:12px; height:12px; border-radius:3px; flex-shrink:0; }
-
-#tooltip {
-  position:fixed; z-index:20; pointer-events:none;
-  background:var(--panel); backdrop-filter:blur(16px); border:1px solid var(--border);
-  border-radius:10px; padding:1rem; min-width:200px; max-width:320px;
-  opacity:0; transition:opacity .2s;
-}
-#tooltip.visible { opacity:1; }
-#tooltip h3 { font-size:.9rem; font-weight:500; margin-bottom:.3rem; }
-#tooltip .type { font-size:.7rem; color:var(--accent2); text-transform:uppercase; letter-spacing:.08em; margin-bottom:.4rem; }
-#tooltip p { font-size:.8rem; color:var(--text-dim); line-height:1.5; }
-#tooltip .url { display:inline-block; margin-top:.4rem; font-size:.75rem; color:var(--accent); text-decoration:none; pointer-events:auto; }
-#tooltip .url:hover { text-decoration:underline; }
-#tooltip .status { display:inline-flex; align-items:center; gap:.3rem; margin-top:.4rem; font-size:.75rem; }
-#tooltip .status .dot { width:6px; height:6px; border-radius:50%; }
-
-#controls-hint {
-  position:fixed; bottom:1.5rem; right:1.5rem; z-index:5;
-  color:var(--text-dim); font-size:.7rem; text-align:right; line-height:1.6;
-  opacity:.5; transition:opacity .4s; pointer-events:none;
-}
-#controls-hint kbd { background:rgba(255,255,255,0.06); padding:1px 6px; border-radius:3px; font-family:inherit; }
+#hint{position:fixed;bottom:1.5rem;right:1.5rem;z-index:5;color:rgba(255,255,255,0.12);font-size:.65rem;text-align:right;line-height:1.6;pointer-events:none;transition:opacity 2s;opacity:0}
+#hint.show{opacity:1}
+#hint kbd{background:rgba(255,255,255,0.04);padding:1px 5px;border-radius:3px;font-family:inherit;font-size:.6rem}
 </style>
 </head>
 <body>
 
-<div id="loading">
-  <div class="spinner"></div>
+<div id="loader">
+  <div class="loader-ring"></div>
   <h1>मानचित्र</h1>
-  <p class="subtitle">Infrastructure Map</p>
-  <p class="status-text">Loading data...</p>
+  <p class="sub">Infrastructure Map</p>
+  <div class="loader-bar"><span id="load-progress"></span></div>
+  <p class="status" id="load-status">Initializing...</p>
 </div>
 
-<div id="info">
-  <h2>मानचित्र</h2>
-  <span>AcharyLab Infrastructure</span>
-  <span>·</span>
-  <span><span class="dot green"></span><span id="service-count">--</span> services</span>
+<div id="header">
+  <nav>
+    <span class="brand">मानचित्र</span>
+    <span class="sep">·</span>
+    <span class="stat"><span class="d g"></span><span id="count-online">--</span> online</span>
+    <span class="stat" style="opacity:.5"><span class="d r"></span><span id="count-offline">--</span> offline</span>
+    <span class="sep">·</span>
+    <span class="lang"><span id="count-total">--</span> services</span>
+  </nav>
 </div>
 
-<div id="legend-toggle">◈ Legend</div>
-<div id="legend"></div>
+<div id="legend">
+  <button id="legend-btn">◈ Legend</button>
+  <div id="legend-panel"></div>
+</div>
 
 <div id="tooltip"></div>
-
-<div id="controls-hint">
-  <kbd>Drag</kbd> orbit · <kbd>Scroll</kbd> zoom · <kbd>Click</kbd> inspect
-</div>
-
-<canvas id="canvas"></canvas>
+<div id="hint" class="show"><kbd>Drag</kbd> orbit · <kbd>Scroll</kbd> zoom · <kbd>Click</kbd> inspect</div>
 
 <script type="importmap">
 {
@@ -128,37 +95,41 @@ import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { CSS2DRenderer, CSS2DObject } from 'three/addons/renderers/CSS2DRenderer.js';
 
-const DATA = { islands: [], floating: [], connections: [], stats: { total_services: 0 } };
-
+const DATA = { islands:[], floating:[], connections:[], health:{}, stats:{} };
 async function loadData() {
-  const status = document.querySelector('#loading .status-text');
-  status.textContent = 'Fetching infrastructure data...';
-  const resp = await fetch('data.json');
-  if (!resp.ok) throw new Error('Failed to load data.json');
-  const json = await resp.json();
-  Object.assign(DATA, json);
-  status.textContent = `Loaded ${DATA.stats.total_services} services.`;
+  const r = await fetch('data.json');
+  Object.assign(DATA, await r.json());
+}
+const $ = s => document.querySelector(s);
+const statusEl = $('#load-status');
+const bar = $('#load-progress');
+
+function progress(pct, msg) {
+  bar.style.width = pct + '%';
+  if (msg) statusEl.textContent = msg;
 }
 
-const COLORS = {
-  database: '#2563eb', proxy: '#dc2626', api: '#059669', cache: '#dc2626',
-  auth: '#7c3aed', service: '#f59e0b', app: '#22c55e', monitoring: '#06b6d4',
-  ai: '#f59e0b', network: '#38bdf8', storage: '#e11d48', security: '#94a3b8',
-  dev: '#64748b',
-};
+const S = { health: DATA.health };
+const raycaster = new THREE.Raycaster();
+const pointer = new THREE.Vector2();
+const clickables = [];
+const labels = [];
 
 const scene = new THREE.Scene();
-scene.background = new THREE.Color(0x0a0e1a);
-scene.fog = new THREE.Fog(0x0a0e1a, 40, 70);
+scene.background = new THREE.Color(0x04060e);
+scene.fog = new THREE.FogExp2(0x04060e, 0.018);
 
 const camera = new THREE.PerspectiveCamera(45, innerWidth/innerHeight, 0.1, 100);
-camera.position.set(18, 16, 22);
+camera.position.set(16, 14, 20);
 
-const renderer = new THREE.WebGLRenderer({ canvas: document.getElementById('canvas'), antialias: true });
+const renderer = new THREE.WebGLRenderer({ antialias:true, alpha:false });
 renderer.setSize(innerWidth, innerHeight);
 renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
 renderer.shadowMap.enabled = true;
 renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+renderer.toneMapping = THREE.ACESFilmicToneMapping;
+renderer.toneMappingExposure = 1.2;
+document.body.prepend(renderer.domElement);
 
 const labelRenderer = new CSS2DRenderer();
 labelRenderer.setSize(innerWidth, innerHeight);
@@ -170,497 +141,449 @@ document.body.appendChild(labelRenderer.domElement);
 
 const controls = new OrbitControls(camera, renderer.domElement);
 controls.enableDamping = true;
-controls.dampingFactor = 0.08;
+controls.dampingFactor = 0.06;
 controls.minDistance = 6;
-controls.maxDistance = 50;
-controls.maxPolarAngle = Math.PI / 2.05;
-controls.target.set(0, 0, 0);
+controls.maxDistance = 45;
+controls.maxPolarAngle = Math.PI / 2.1;
+controls.autoRotate = true;
+controls.autoRotateSpeed = 0.4;
+controls.target.set(0, 0.5, 0);
 
-const raycaster = new THREE.Raycaster();
-const pointer = new THREE.Vector2();
-const clickables = [];
+controls.addEventListener('start', () => { controls.autoRotate = false; $('#hint').classList.remove('show'); });
+setTimeout(() => controls.autoRotate = true, 3000);
 
-function createHexRing(radius, color, opacity=0.03) {
-  const shape = new THREE.Shape();
-  for (let i = 0; i < 6; i++) {
-    const a = (i / 6) * Math.PI * 2 - Math.PI / 6;
-    i === 0 ? shape.moveTo(Math.cos(a)*radius, Math.sin(a)*radius) : shape.lineTo(Math.cos(a)*radius, Math.sin(a)*radius);
-  }
-  shape.closePath();
-  const geo = new THREE.ShapeGeometry(shape);
-  const mat = new THREE.MeshBasicMaterial({ color, side: THREE.DoubleSide, transparent: true, opacity, depthWrite: false });
-  return new THREE.Mesh(geo, mat);
+function hcol(id) {
+  const h = S.health[id];
+  if (h === undefined) return 0x4466aa;
+  return h.online ? 0x22c55e : 0xef4444;
+}
+function htxt(id) {
+  const h = S.health[id];
+  if (h === undefined) return ['dim','Unknown'];
+  return h.online ? ['#22c55e','Online'] : ['#ef4444','Offline'];
 }
 
-function createIsland(data) {
-  const group = new THREE.Group();
-  group.position.set(data.x, -0.3, data.z);
+function starField() {
+  const g = new THREE.BufferGeometry();
+  const n = 2000; const p = new Float32Array(n*3); const s = new Float32Array(n);
+  for (let i = 0; i < n; i++) {
+    const r = 30 + Math.random() * 40;
+    const theta = Math.random() * Math.PI * 2;
+    const phi = Math.acos(2 * Math.random() - 1);
+    p[i*3] = r * Math.sin(phi) * Math.cos(theta);
+    p[i*3+1] = Math.abs(r * Math.cos(phi));
+    p[i*3+2] = r * Math.sin(phi) * Math.sin(theta);
+    s[i] = 0.3 + Math.random() * 0.7;
+  }
+  g.setAttribute('position', new THREE.BufferAttribute(p, 3));
+  g.setAttribute('size', new THREE.BufferAttribute(s, 1));
+  const m = new THREE.PointsMaterial({ color:0x8899cc, size:0.12, transparent:true, opacity:0.6, sizeAttenuation:true, blending:THREE.AdditiveBlending, depthWrite:false });
+  scene.add(new THREE.Points(g, m));
+}
 
-  const size = data.size;
-  const segments = 4;
+function lights() {
+  const amb = new THREE.AmbientLight(0x223355, 0.8);
+  scene.add(amb);
 
-  const groundGeo = new THREE.CircleGeometry(size, segments * 4);
-  const groundMat = new THREE.MeshStandardMaterial({
-    color: data.color, roughness: 0.8, metalness: 0.1,
-    transparent: true, opacity: 0.25,
+  const key = new THREE.DirectionalLight(0xffeedd, 2.5);
+  key.position.set(12, 20, 8);
+  key.castShadow = true;
+  key.shadow.mapSize.set(1024, 1024);
+  key.shadow.camera.near = 1;
+  key.shadow.camera.far = 40;
+  key.shadow.camera.left = -15;
+  key.shadow.camera.right = 15;
+  key.shadow.camera.top = 15;
+  key.shadow.camera.bottom = -15;
+  scene.add(key);
+
+  const fill = new THREE.DirectionalLight(0x6666ff, 0.4);
+  fill.position.set(-8, 6, -10);
+  scene.add(fill);
+
+  const rim = new THREE.DirectionalLight(0x4488ff, 0.2);
+  rim.position.set(0, -4, 12);
+  scene.add(rim);
+}
+
+function water() {
+  const g = new THREE.PlaneGeometry(60, 60, 64, 64);
+  const m = new THREE.MeshStandardMaterial({
+    color: 0x080e20, roughness: 0.3, metalness: 0.6,
+    transparent: true, opacity: 0.7,
   });
-  const ground = new THREE.Mesh(groundGeo, groundMat);
+  const w = new THREE.Mesh(g, m);
+  w.rotation.x = -Math.PI / 2;
+  w.position.y = -0.4;
+  w.receiveShadow = true;
+  scene.add(w);
+
+  const g2 = new THREE.PlaneGeometry(60, 60, 1, 1);
+  const m2 = new THREE.MeshBasicMaterial({
+    color: 0x0a1628, transparent: true, opacity: 0.4,
+    side: THREE.DoubleSide,
+  });
+  const w2 = new THREE.Mesh(g2, m2);
+  w2.rotation.x = -Math.PI / 2;
+  w2.position.y = -0.45;
+  scene.add(w2);
+}
+
+function island(data) {
+  const g = new THREE.Group();
+  g.position.set(data.x, -0.2, data.z);
+  const c = new THREE.Color(data.color);
+
+  const sz = data.size;
+
+  const ground = new THREE.Mesh(
+    new THREE.CircleGeometry(sz, 32),
+    new THREE.MeshStandardMaterial({ color: c, roughness: 0.9, metalness: 0.1, transparent: true, opacity: 0.15 })
+  );
   ground.rotation.x = -Math.PI / 2;
   ground.receiveShadow = true;
-  group.add(ground);
+  g.add(ground);
 
-  const rimGeo = new THREE.RingGeometry(size - 0.3, size + 0.8, 48);
-  const rimMat = new THREE.MeshStandardMaterial({
-    color: data.color, roughness: 0.6, metalness: 0.3,
-    transparent: true, opacity: 0.15, side: THREE.DoubleSide,
-  });
-  const rim = new THREE.Mesh(rimGeo, rimMat);
-  rim.rotation.x = -Math.PI / 2;
-  rim.position.y = -0.05;
-  group.add(rim);
-
-  for (let i = 0; i < 6; i++) {
-    const angle = (i / 6) * Math.PI * 2;
-    const ring = createHexRing(size * 0.6 + Math.random() * 0.5, data.color, 0.02 + Math.random() * 0.02);
-    ring.position.set(Math.cos(angle) * size * 0.4, 0.01, Math.sin(angle) * size * 0.4);
-    ring.rotation.x = -Math.PI / 2;
-    group.add(ring);
+  for (let i = 0; i < 4; i++) {
+    const r = new THREE.Mesh(
+      new THREE.RingGeometry(sz * (0.2 + i * 0.18), sz * (0.25 + i * 0.18), 32),
+      new THREE.MeshStandardMaterial({
+        color: c, roughness: 0.6, metalness: 0.3,
+        transparent: true, opacity: 0.04 + i * 0.015,
+        side: THREE.DoubleSide,
+      })
+    );
+    r.rotation.x = -Math.PI / 2;
+    r.position.y = -0.05 + i * 0.02;
+    g.add(r);
   }
 
-  const labelDiv = document.createElement('div');
-  labelDiv.textContent = data.name;
-  labelDiv.style.color = '#fff';
-  labelDiv.style.fontSize = '13px';
-  labelDiv.style.fontWeight = '600';
-  labelDiv.style.letterSpacing = '0.08em';
-  labelDiv.style.textShadow = '0 2px 12px rgba(0,0,0,0.8)';
-  labelDiv.style.background = 'rgba(10,14,26,0.7)';
-  labelDiv.style.backdropFilter = 'blur(8px)';
-  labelDiv.style.padding = '4px 12px';
-  labelDiv.style.borderRadius = '6px';
-  labelDiv.style.border = '1px solid ' + data.color + '44';
-  const label = new CSS2DObject(labelDiv);
-  label.position.set(0, 0.2, -size - 1.2);
-  group.add(label);
+  const rim = new THREE.Mesh(
+    new THREE.TorusGeometry(sz + 0.3, 0.06, 8, 48),
+    new THREE.MeshStandardMaterial({ color: c, emissive: c, emissiveIntensity: 0.15, transparent: true, opacity: 0.2 })
+  );
+  rim.rotation.x = -Math.PI / 2;
+  rim.position.y = 0.01;
+  g.add(rim);
 
-  const subDiv = document.createElement('div');
-  subDiv.textContent = data.subtitle || '';
-  subDiv.style.color = 'rgba(255,255,255,0.35)';
-  subDiv.style.fontSize = '10px';
-  subDiv.style.letterSpacing = '0.05em';
-  subDiv.style.textAlign = 'center';
-  const subLabel = new CSS2DObject(subDiv);
-  subLabel.position.set(0, -0.3, -size - 1.2);
-  group.add(subLabel);
+  const dl = document.createElement('div');
+  dl.textContent = data.name;
+  dl.style.cssText = 'color:#fff;font-size:12px;font-weight:500;letter-spacing:.08em;text-shadow:0 4px 20px rgba(0,0,0,0.9);background:rgba(4,6,14,0.6);backdrop-filter:blur(8px);padding:4px 12px;border-radius:8px;border:1px solid ' + data.color + '33;';
+  const l = new CSS2DObject(dl);
+  l.position.set(0, 0.15, -sz - 1.5);
+  g.add(l);
 
-  return group;
+  if (data.subtitle) {
+    const sd = document.createElement('div');
+    sd.textContent = data.subtitle;
+    sd.style.cssText = 'color:rgba(255,255,255,0.2);font-size:9px;letter-spacing:.05em;text-align:center;';
+    const sl = new CSS2DObject(sd);
+    sl.position.set(0, -0.35, -sz - 1.5);
+    g.add(sl);
+  }
+
+  return g;
 }
 
-function createBuilding(data, ix, total, health) {
-  const group = new THREE.Group();
+function building(d, ix, total) {
+  const g = new THREE.Group();
+  const h = d.h || 1.0;
+  const w = 0.55;
+  const sp = 1.6;
+  const row = Math.floor(ix / 5);
+  const col = ix % 5;
+  const ox = (col - Math.min(total - 1, 4) / 2) * sp;
+  const oz = row * 1.6;
+  g.position.set(ox, 0, oz);
 
-  const isOnline = health?.[data.id]?.online;
-  const h = data.h || 1.0;
+  const bc = new THREE.Color(d.color);
+  const hl = hcol(d.id);
 
-  const width = total > 1 ? 0.6 : 0.8;
-  const spacing = 1.8;
-  const row = Math.floor(ix / 4);
-  const col = ix % 4;
-  const ox = (col - Math.min(total - 1, 3) / 2) * spacing;
-  const oz = (row - 0) * 1.8;
-  group.position.set(ox, 0, oz);
-
-  const color = new THREE.Color(data.color);
-  color.offsetHSL(0, 0, (Math.random() - 0.5) * 0.08);
-
-  const bodyGeo = new THREE.BoxGeometry(width, h, width);
-  const bodyMat = new THREE.MeshStandardMaterial({
-    color, roughness: 0.5, metalness: 0.3,
-    transparent: true, opacity: 0.92,
-  });
-  const body = new THREE.Mesh(bodyGeo, bodyMat);
+  const body = new THREE.Mesh(
+    new THREE.BoxGeometry(w, h, w),
+    new THREE.MeshStandardMaterial({ color: bc, roughness: 0.5, metalness: 0.4, transparent: true, opacity: 0.92 })
+  );
   body.position.y = h / 2 + 0.05;
   body.castShadow = true;
   body.receiveShadow = true;
-  group.add(body);
+  g.add(body);
+
+  const cap = new THREE.Mesh(
+    new THREE.BoxGeometry(w * 0.6, 0.08, w * 0.6),
+    new THREE.MeshStandardMaterial({ color: bc.clone().offsetHSL(0, 0, 0.15), roughness: 0.3, metalness: 0.6 })
+  );
+  cap.position.y = h + 0.03;
+  g.add(cap);
 
   if (h > 1.5) {
-    const topGeo = new THREE.BoxGeometry(width * 0.55, 0.15, width * 0.55);
-    const topMat = new THREE.MeshStandardMaterial({
-      color: new THREE.Color(data.color).offsetHSL(0, 0, 0.2),
-      roughness: 0.3, metalness: 0.5,
-    });
-    const top = new THREE.Mesh(topGeo, topMat);
-    top.position.y = h + 0.1;
-    group.add(top);
+    const ant = new THREE.Mesh(
+      new THREE.CylinderGeometry(0.02, 0.03, 0.3, 4),
+      new THREE.MeshStandardMaterial({ color: 0x8899bb, metalness: 0.8, roughness: 0.2 })
+    );
+    ant.position.set(0, h + 0.25, 0);
+    g.add(ant);
   }
 
-  const glowColor = isOnline === false ? 0xef4444 : 0x22c55e;
-  const glowOpacity = isOnline === false ? 0.25 : 0.3 + Math.random() * 0.2;
-  const glowGeo = new THREE.BoxGeometry(width * 0.3, 0.04, width * 0.3);
-  const glowMat = new THREE.MeshBasicMaterial({
-    color: glowColor, transparent: true, opacity: glowOpacity,
-  });
-  const glow = new THREE.Mesh(glowGeo, glowMat);
-  glow.position.y = h + 0.18;
-  group.add(glow);
-
-  for (let i = 0; i < Math.floor(h * 2); i++) {
-    const wx = (Math.random() - 0.5) * width * 0.6;
-    const wz = (Math.random() - 0.5) * width * 0.6;
-    const wy = 0.1 + (i / (h * 2)) * h;
+  const nWin = Math.floor(h * 2.5);
+  for (let i = 0; i < nWin; i++) {
+    const wx = (Math.random() - 0.5) * w * 0.5;
+    const wz = (Math.random() - 0.5) * w * 0.5;
+    const wy = 0.1 + (i / nWin) * h * 0.85;
+    const side = Math.floor(Math.random() * 4);
     const win = new THREE.Mesh(
-      new THREE.PlaneGeometry(0.08, 0.1),
+      new THREE.PlaneGeometry(0.07, 0.08),
       new THREE.MeshBasicMaterial({
-        color: 0xfbbf24, transparent: true, opacity: 0.15 + Math.random() * 0.15,
+        color: 0xfbbf24, transparent: true,
+        opacity: 0.1 + Math.random() * 0.15,
       })
     );
-    win.position.set(wx, wy, wz > 0 ? width/2 + 0.01 : -width/2 - 0.01);
-    win.lookAt(wz > 0 ? 0 : 0, wy, wz > 0 ? 1 : -1);
-    group.add(win);
+    const off = w / 2 + 0.005;
+    if (side === 0) { win.position.set(off, wy, wz); win.lookAt(1, 0, 0); }
+    else if (side === 1) { win.position.set(-off, wy, wz); win.lookAt(-1, 0, 0); }
+    else if (side === 2) { win.position.set(wx, wy, off); win.lookAt(0, 0, 1); }
+    else { win.position.set(wx, wy, -off); win.lookAt(0, 0, -1); }
+    g.add(win);
   }
 
-  group.userData = { id: data.id, name: data.name, type: data.type, desc: data.desc, url: data.url, color: data.color };
-  clickables.push(group);
+  const glowGeo = new THREE.BoxGeometry(w * 0.35, 0.04, w * 0.35);
+  const glowMat = new THREE.MeshBasicMaterial({
+    color: hl, transparent: true, opacity: hl === 0x22c55e ? 0.4 : (hl === 0xef4444 ? 0.25 : 0.15),
+    blending: THREE.AdditiveBlending,
+  });
+  const glow = new THREE.Mesh(glowGeo, glowMat);
+  glow.position.y = h + 0.1;
+  g.add(glow);
 
-  return group;
+  g.userData = { id: d.id, name: d.name, type: d.type, desc: d.desc, url: d.url, color: d.color };
+  clickables.push(g);
+  return g;
 }
 
-function createFloatingIsland(data, index, health) {
-  const group = new THREE.Group();
-  const angle = (index / DATA.floating.length) * Math.PI * 2;
-  const radius = 6;
-  const cx = Math.cos(angle) * radius;
-  const cz = Math.sin(angle) * radius;
-  group.position.set(cx, 3.5 + Math.sin(index * 1.7) * 0.3, cz);
+function floatingIsland(d, idx) {
+  const g = new THREE.Group();
+  const ang = (idx / DATA.floating.length) * Math.PI * 2;
+  const r = 5.5;
+  g.position.set(Math.cos(ang) * r, 3.2 + Math.sin(idx * 1.7) * 0.2, Math.sin(ang) * r);
+  g.rotation.z = Math.sin(idx * 2.3) * 0.03;
+  g.rotation.x = Math.cos(idx * 1.9) * 0.03;
+  const c = new THREE.Color(d.color);
 
-  const tiltAmount = 0.04;
-  group.rotation.z = Math.sin(index * 2.3) * tiltAmount;
-  group.rotation.x = Math.cos(index * 1.9) * tiltAmount;
-
-  const ground = new THREE.Mesh(
-    new THREE.CircleGeometry(0.8, 8),
-    new THREE.MeshStandardMaterial({
-      color: data.color, roughness: 0.6, metalness: 0.2,
-      transparent: true, opacity: 0.3,
-    })
+  const base = new THREE.Mesh(
+    new THREE.CircleGeometry(0.7, 12),
+    new THREE.MeshStandardMaterial({ color: c, roughness: 0.6, metalness: 0.2, transparent: true, opacity: 0.25 })
   );
-  ground.rotation.x = -Math.PI / 2;
-  ground.position.y = -0.05;
-  group.add(ground);
+  base.rotation.x = -Math.PI / 2;
+  base.position.y = -0.03;
+  g.add(base);
 
-  const rim = new THREE.Mesh(
-    new THREE.RingGeometry(0.65, 0.9, 16),
-    new THREE.MeshStandardMaterial({
-      color: data.color, roughness: 0.4, metalness: 0.4,
-      transparent: true, opacity: 0.12, side: THREE.DoubleSide,
-    })
+  const ring = new THREE.Mesh(
+    new THREE.RingGeometry(0.55, 0.8, 16),
+    new THREE.MeshStandardMaterial({ color: c, roughness: 0.4, metalness: 0.4, transparent: true, opacity: 0.1, side: THREE.DoubleSide })
   );
-  rim.rotation.x = -Math.PI / 2;
-  group.add(rim);
+  ring.rotation.x = -Math.PI / 2;
+  g.add(ring);
 
-  const building = new THREE.Mesh(
-    new THREE.BoxGeometry(0.5, 0.4, 0.5),
-    new THREE.MeshStandardMaterial({
-      color: data.color, roughness: 0.4, metalness: 0.3,
-      transparent: true, opacity: 0.92,
-    })
+  const bw = 0.45, bh = 0.35;
+  const bBody = new THREE.Mesh(
+    new THREE.BoxGeometry(bw, bh, bw),
+    new THREE.MeshStandardMaterial({ color: c, roughness: 0.4, metalness: 0.3, transparent: true, opacity: 0.92 })
   );
-  building.position.y = 0.2;
-  building.castShadow = true;
-  group.add(building);
+  bBody.position.y = bh / 2;
+  bBody.castShadow = true;
+  g.add(bBody);
 
-  const top = new THREE.Mesh(
-    new THREE.BoxGeometry(0.3, 0.06, 0.3),
-    new THREE.MeshStandardMaterial({
-      color: new THREE.Color(data.color).offsetHSL(0, 0, 0.15),
-      roughness: 0.3, metalness: 0.5,
-    })
+  const bCap = new THREE.Mesh(
+    new THREE.BoxGeometry(bw * 0.5, 0.05, bw * 0.5),
+    new THREE.MeshStandardMaterial({ color: c.clone().offsetHSL(0, 0, 0.15), roughness: 0.3, metalness: 0.5 })
   );
-  top.position.y = 0.53;
-  group.add(top);
+  bCap.position.y = bh + 0.02;
+  g.add(bCap);
 
-  const isOnline = health?.[data.id]?.online;
-  const glowCol = isOnline === false ? 0xef4444 : 0x22c55e;
-  const fGlow = new THREE.Mesh(
-    new THREE.BoxGeometry(0.18, 0.03, 0.18),
-    new THREE.MeshBasicMaterial({ color: glowCol, transparent: true, opacity: 0.3 }),
+  const hl = hcol(d.id);
+  const fg = new THREE.Mesh(
+    new THREE.BoxGeometry(0.15, 0.03, 0.15),
+    new THREE.MeshBasicMaterial({ color: hl, transparent: true, opacity: hl === 0x22c55e ? 0.4 : (hl === 0xef4444 ? 0.25 : 0.1), blending: THREE.AdditiveBlending })
   );
-  fGlow.position.y = 0.56;
-  group.add(fGlow);
+  fg.position.y = bh + 0.06;
+  g.add(fg);
 
-  const labelDiv = document.createElement('div');
-  labelDiv.textContent = data.name;
-  labelDiv.style.color = '#fff';
-  labelDiv.style.fontSize = '9px';
-  labelDiv.style.fontWeight = '500';
-  labelDiv.style.textShadow = '0 2px 8px rgba(0,0,0,0.9)';
-  labelDiv.style.background = 'rgba(10,14,26,0.7)';
-  labelDiv.style.padding = '2px 6px';
-  labelDiv.style.borderRadius = '4px';
-  labelDiv.style.whiteSpace = 'nowrap';
-  const label = new CSS2DObject(labelDiv);
-  label.position.set(0, 0.65, 0);
-  group.add(label);
+  const dl = document.createElement('div');
+  dl.textContent = d.name;
+  dl.style.cssText = 'color:#fff;font-size:8px;font-weight:500;text-shadow:0 2px 12px rgba(0,0,0,0.9);background:rgba(4,6,14,0.6);backdrop-filter:blur(6px);padding:2px 6px;border-radius:4px;white-space:nowrap;';
+  const l = new CSS2DObject(dl);
+  l.position.set(0, 0.55, 0);
+  g.add(l);
 
-  group.userData = { id: data.id, name: data.name, type: data.type, desc: data.desc, url: data.url, color: data.color };
-  clickables.push(group);
-
-  return group;
+  g.userData = { id: d.id, name: d.name, type: d.type, desc: d.desc, url: d.url, color: d.color };
+  clickables.push(g);
+  return g;
 }
 
-function createConnection(fromPos, toPos, label, color='#3b82f6') {
-  const dx = toPos.x - fromPos.x;
-  const dz = toPos.z - fromPos.z;
-  const dist = Math.sqrt(dx*dx + dz*dz);
-  const midX = (fromPos.x + toPos.x) / 2;
-  const midZ = (fromPos.z + toPos.z) / 2;
-  const midY = (fromPos.y + toPos.y) / 2 + Math.max(dist * 0.08, 0.5);
+function connection(from, to, label, color='#3b82f6') {
+  const midX = (from.x + to.x) / 2;
+  const midZ = (from.z + to.z) / 2;
+  const dy = Math.abs(to.y - from.y);
+  const midY = Math.max(from.y, to.y) + dy * 0.3 + 0.5;
 
   const curve = new THREE.QuadraticBezierCurve3(
-    new THREE.Vector3(fromPos.x, fromPos.y + 0.15, fromPos.z),
+    new THREE.Vector3(from.x, from.y + 0.1, from.z),
     new THREE.Vector3(midX, midY, midZ),
-    new THREE.Vector3(toPos.x, toPos.y + 0.15, toPos.z),
+    new THREE.Vector3(to.x, to.y + 0.1, to.z),
   );
 
-  const points = curve.getPoints(30);
-  const geo = new THREE.BufferGeometry().setFromPoints(points);
-  const mat = new THREE.LineBasicMaterial({
-    color, transparent: true, opacity: 0.2, linewidth: 1,
-  });
-  const line = new THREE.Line(geo, mat);
-  scene.add(line);
+  const pts = curve.getPoints(40);
+  const geo = new THREE.BufferGeometry().setFromPoints(pts);
+  const mat = new THREE.LineBasicMaterial({ color, transparent: true, opacity: 0.08 });
+  scene.add(new THREE.Line(geo, mat));
 
-  const glowMat = new THREE.LineBasicMaterial({
-    color, transparent: true, opacity: 0.04, linewidth: 1,
-  });
-  const glowLine = new THREE.Line(geo.clone(), glowMat);
-  glowLine.position.y = -0.02;
-  scene.add(glowLine);
+  const glowMat = new THREE.LineBasicMaterial({ color, transparent: true, opacity: 0.25 });
+  const glow = new THREE.Line(geo.clone(), glowMat);
+  scene.add(glow);
 
-  return { line, glowLine };
+  if (label) {
+    const mid = curve.getPoint(0.5);
+    const ld = document.createElement('div');
+    ld.textContent = label;
+    ld.style.cssText = 'color:rgba(255,255,255,0.1);font-size:6px;letter-spacing:.08em;text-transform:uppercase;';
+    const ll = new CSS2DObject(ld);
+    ll.position.copy(mid);
+    ll.position.y += 0.3;
+    scene.add(ll);
+  }
 }
 
-function findEntityPos(id) {
-  for (const island of DATA.islands) {
-    for (const b of island.buildings) {
+function findPos(id) {
+  for (const isl of DATA.islands)
+    for (const b of isl.buildings)
       if (b.id === id) {
-        const row = Math.floor(island.buildings.indexOf(b) / 4);
-        const col = island.buildings.indexOf(b) % 4;
-        const spacing = 1.8;
-        const ox = (col - Math.min(island.buildings.length - 1, 3) / 2) * spacing;
-        const oz = (row - 0) * 1.8;
-        return { x: island.x + ox, y: 0.3, z: island.z + oz };
+        const ix = isl.buildings.indexOf(b);
+        const sp = 1.6;
+        const row = Math.floor(ix / 5), col = ix % 5;
+        const ox = (col - Math.min(isl.buildings.length - 1, 4) / 2) * sp;
+        const oz = row * 1.6;
+        return { x: isl.x + ox, y: 0.3, z: isl.z + oz };
       }
-    }
-  }
-  for (const f of DATA.floating) {
+  for (const f of DATA.floating)
     if (f.id === id) {
       const idx = DATA.floating.indexOf(f);
-      const angle = (idx / DATA.floating.length) * Math.PI * 2;
-      const r = 6;
-      return { x: Math.cos(angle) * r, y: 3.5 + Math.sin(idx * 1.7) * 0.3, z: Math.sin(angle) * r };
+      const ang = (idx / DATA.floating.length) * Math.PI * 2;
+      return { x: Math.cos(ang) * 5.5, y: 3.4, z: Math.sin(ang) * 5.5 };
     }
-  }
   return null;
 }
 
-function buildScene() {
-  const ambient = new THREE.AmbientLight(0x334466, 1.0);
-  scene.add(ambient);
+function build() {
+  progress(20, 'Building scene...');
+  starField();
+  lights();
+  water();
 
-  const dirLight = new THREE.DirectionalLight(0xffeedd, 2.5);
-  dirLight.position.set(15, 25, 10);
-  dirLight.castShadow = true;
-  dirLight.shadow.mapSize.width = 1024;
-  dirLight.shadow.mapSize.height = 1024;
-  dirLight.shadow.camera.near = 1;
-  dirLight.shadow.camera.far = 50;
-  dirLight.shadow.camera.left = -20;
-  dirLight.shadow.camera.right = 20;
-  dirLight.shadow.camera.top = 20;
-  dirLight.shadow.camera.bottom = -20;
-  scene.add(dirLight);
-
-  const fillLight = new THREE.DirectionalLight(0x8888ff, 0.5);
-  fillLight.position.set(-10, 5, -10);
-  scene.add(fillLight);
-
-  const rimLight = new THREE.DirectionalLight(0x4488ff, 0.3);
-  rimLight.position.set(0, -5, 15);
-  scene.add(rimLight);
-
-  const waterGeo = new THREE.PlaneGeometry(60, 60);
-  const waterMat = new THREE.MeshStandardMaterial({
-    color: 0x0c1628, roughness: 0.9, metalness: 0.1,
-    transparent: true, opacity: 0.8,
-  });
-  const water = new THREE.Mesh(waterGeo, waterMat);
-  water.rotation.x = -Math.PI / 2;
-  water.position.y = -0.5;
-  water.receiveShadow = true;
-  scene.add(water);
-
-  const gridHelper = new THREE.GridHelper(40, 20, 0x1a2440, 0x1a2440);
-  gridHelper.position.y = -0.45;
-  gridHelper.material.transparent = true;
-  gridHelper.material.opacity = 0.3;
-  scene.add(gridHelper);
-
-  for (const island of DATA.islands) {
-    const ig = createIsland(island);
+  progress(30, 'Placing islands...');
+  DATA.islands.forEach(isl => {
+    const ig = island(isl);
     scene.add(ig);
-
-    const total = island.buildings.length;
-    island.buildings.forEach((b, i) => {
-      const bg = createBuilding(b, i, total, DATA.health);
+    isl.buildings.forEach((b, i) => {
+      const bg = building(b, i, isl.buildings.length);
       ig.add(bg);
     });
-  }
-
-  const floatingGroup = new THREE.Group();
-  DATA.floating.forEach((f, i) => {
-    const fg = createFloatingIsland(f, i, DATA.health);
-    floatingGroup.add(fg);
   });
-  scene.add(floatingGroup);
 
-  for (const conn of DATA.connections) {
-    const fromPos = findEntityPos(conn.from);
-    const toPos = findEntityPos(conn.to);
-    if (fromPos && toPos) {
-      createConnection(fromPos, toPos, conn.label, '#3b82f6');
-    }
-  }
+  progress(50, 'Creating floating islands...');
+  const fg = new THREE.Group();
+  DATA.floating.forEach((f, i) => fg.add(floatingIsland(f, i)));
+  scene.add(fg);
 
-  addDevAndRepos();
+  progress(65, 'Connecting services...');
+  DATA.connections.forEach(c => {
+    const fp = findPos(c.from), tp = findPos(c.to);
+    if (fp && tp) connection(fp, tp, c.label);
+  });
 
-  animateFloat(floatingGroup);
+  progress(75, 'Computing status...');
+
+  const health = DATA.health || {};
+  let online = 0, offline = 0, total = 0;
+  const allIds = new Set();
+  DATA.islands.forEach(i => i.buildings.forEach(b => allIds.add(b.id)));
+  DATA.floating.forEach(f => allIds.add(f.id));
+  allIds.forEach(id => {
+    total++;
+    const h = health[id];
+    if (h === undefined) return;
+    h.online ? online++ : offline++;
+  });
+
+  S.online = online; S.offline = offline; S.total = total;
+  $('#count-online').textContent = online;
+  $('#count-offline').textContent = offline;
+  $('#count-total').textContent = total;
+
+  progress(85, 'Finalizing...');
 }
 
-function addDevAndRepos() {
-  const div = document.createElement('div');
-  div.style.cssText = 'position:fixed;bottom:1.5rem;left:50%;transform:translateX(-50%);z-index:5;display:flex;gap:1rem;align-items:center;';
-  const repoBadge = document.createElement('a');
-  repoBadge.href = 'https://github.com/sdachary';
-  repoBadge.target = '_blank';
-  repoBadge.textContent = '⚡ 13 GitHub repos';
-  repoBadge.style.cssText = 'color:rgba(255,255,255,0.25);font-size:.7rem;text-decoration:none;letter-spacing:.05em;';
-  div.appendChild(repoBadge);
-  const devBadge = document.createElement('span');
-  devBadge.textContent = '· 3 dev-only · Karma · Indra · Sri';
-  devBadge.style.cssText = 'color:rgba(255,255,255,0.15);font-size:.7rem;';
-  div.appendChild(devBadge);
-  document.body.appendChild(div);
-}
+function setupUI() {
+  const legendTypes = [
+    ['#22c55e','Online'], ['#ef4444','Offline'], ['#4466aa','Unknown'],
+    ['#2563eb','Database'], ['#dc2626','Proxy'], ['#059669','API'],
+    ['#7c3aed','Auth'], ['#f59e0b','Service'], ['#22c55e','App'],
+    ['#06b6d4','Monitor'], ['#38bdf8','Network'], ['#e11d48','Storage'],
+  ];
+  const lp = $('#legend-panel');
+  legendTypes.forEach(([c, l]) => {
+    const e = document.createElement('div'); e.className = 'l';
+    e.innerHTML = '<div class="sw" style="background:' + c + '"></div>' + l;
+    lp.appendChild(e);
+  });
+  $('#legend-btn').addEventListener('click', () => lp.classList.toggle('show'));
 
-let floatingGroup;
-function animateFloat(group) {
-  floatingGroup = group;
-}
-
-function setupTooltip() {
-  const tooltip = document.getElementById('tooltip');
-
-  renderer.domElement.addEventListener('pointermove', (e) => {
+  renderer.domElement.addEventListener('pointermove', e => {
     pointer.x = (e.clientX / innerWidth) * 2 - 1;
     pointer.y = -(e.clientY / innerHeight) * 2 + 1;
   });
 
-  renderer.domElement.addEventListener('click', (e) => {
+  renderer.domElement.addEventListener('click', e => {
     raycaster.setFromCamera(pointer, camera);
-    const intersects = raycaster.intersectObjects(clickables, true);
-
-    if (intersects.length > 0) {
-      let obj = intersects[0].object;
-      while (obj.parent && !obj.parent.userData?.id) obj = obj.parent;
-      const data = obj.parent?.userData || obj.userData;
-      if (data?.id) {
-        showTooltip(data, e.clientX, e.clientY);
-        return;
-      }
+    const hits = raycaster.intersectObjects(clickables, true);
+    if (hits.length) {
+      let o = hits[0].object;
+      while (o.parent && !o.parent.userData?.id) o = o.parent;
+      const d = o.parent?.userData || o.userData;
+      if (d?.id) { showTip(d, e.clientX, e.clientY); return; }
     }
-    hideTooltip();
-  });
-
-  renderer.domElement.addEventListener('click', (e) => {
-    if (e.target.closest('#tooltip a')) return;
+    hideTip();
   });
 }
 
-function showTooltip(data, x, y) {
-  const el = document.getElementById('tooltip');
-  el.className = 'visible';
-
-  const h = DATA.health?.[data.id];
-  const isOnline = h ? h.online : null;
-  const statusDot = isOnline ? '🟢' : (isOnline === false ? '🔴' : '⚪');
-  const statusText = isOnline ? 'Online' : (isOnline === false ? 'Offline' : 'Unknown');
-
+function showTip(d, x, y) {
+  const el = $('#tooltip');
+  el.className = 'show';
+  const [hc, ht] = htxt(d.id);
+  const dot = hc === '#22c55e' ? '🟢' : (hc === '#ef4444' ? '🔴' : '⚪');
   el.innerHTML = `
-    <div class="type" style="color:${data.color || '#f59e0b'}">${data.type || 'service'}</div>
-    <h3>${data.name}</h3>
-    <p>${data.desc || ''}</p>
-    <div class="status">${statusDot} ${statusText}</div>
-    ${data.url ? `<a class="url" href="${data.url}" target="_blank">${data.url}</a>` : ''}
+    <div class="tag" style="color:${d.color||'#f59e0b'}">${d.type||'service'}</div>
+    <h3>${d.name}</h3>
+    ${d.desc ? '<p>'+d.desc+'</p>' : ''}
+    <div class="health"><span class="dot" style="background:${hc}"></span> ${ht}</div>
+    ${d.url ? '<a href="'+d.url+'" target="_blank">↗ Open</a>' : ''}
   `;
-
-  const w = Math.min(el.offsetWidth, 320);
-  let lx = Math.min(x + 16, innerWidth - w - 16);
-  let ly = Math.min(y + 16, innerHeight - el.offsetHeight - 16);
-  el.style.left = lx + 'px';
-  el.style.top = ly + 'px';
+  const bw = Math.min(el.offsetWidth, 300);
+  el.style.left = Math.min(x + 14, innerWidth - bw - 16) + 'px';
+  el.style.top = Math.min(y + 14, innerHeight - el.offsetHeight - 16) + 'px';
 }
 
-function hideTooltip() {
-  document.getElementById('tooltip').className = '';
-}
+function hideTip() { $('#tooltip').className = ''; }
 
-function buildLegend() {
-  const legend = document.getElementById('legend');
-  const types = [
-    { label: 'Database', key: 'database' },
-    { label: 'App Server', key: 'app' },
-    { label: 'API', key: 'api' },
-    { label: 'AI Service', key: 'ai' },
-    { label: 'Auth', key: 'auth' },
-    { label: 'Proxy', key: 'proxy' },
-    { label: 'Cache', key: 'cache' },
-    { label: 'Monitoring', key: 'monitoring' },
-    { label: 'Storage', key: 'storage' },
-    { label: 'Network', key: 'network' },
-    { label: 'Security', key: 'security' },
-    { label: 'Dev Only', key: 'dev' },
-  ];
-
-  types.forEach(t => {
-    const item = document.createElement('div');
-    item.className = 'item';
-    item.innerHTML = `<div class="swatch" style="background:${COLORS[t.key] || '#666'}"></div>${t.label}`;
-    legend.appendChild(item);
-  });
-}
-
-document.getElementById('legend-toggle').addEventListener('click', () => {
-  document.getElementById('legend').classList.toggle('visible');
-});
-
-window.addEventListener('resize', () => {
-  camera.aspect = innerWidth / innerHeight;
-  camera.updateProjectionMatrix();
-  renderer.setSize(innerWidth, innerHeight);
-  labelRenderer.setSize(innerWidth, innerHeight);
-});
-
-function animate() {
-  requestAnimationFrame(animate);
+let floatGroup, floatTime = 0;
+function anim() {
+  requestAnimationFrame(anim);
   controls.update();
 
-  if (floatingGroup) {
-    const t = Date.now() * 0.0003;
-    floatingGroup.children.forEach((child, i) => {
-      const baseY = 3.5 + Math.sin(i * 1.7) * 0.3;
-      child.position.y = baseY + Math.sin(t + i * 1.1) * 0.05;
+  const t = Date.now() * 0.0003;
+  floatTime = t;
+  if (floatGroup) {
+    floatGroup.children.forEach((c, i) => {
+      const by = 3.2 + Math.sin(i * 1.7) * 0.2;
+      c.position.y = by + Math.sin(t + i * 1.1) * 0.04;
     });
   }
 
@@ -669,29 +592,35 @@ function animate() {
 }
 
 async function init() {
-  try {
-    await loadData();
-    buildScene();
-    buildLegend();
-    setupTooltip();
-    animate();
-    const bc = DATA.islands.reduce((a,i) => a + i.buildings.length, 0);
-    const total = DATA.stats.total_services || bc + DATA.floating.length;
-    const onlineCount = DATA.stats.online || 0;
-    document.getElementById('service-count').textContent = total;
-    if (onlineCount) {
-      document.getElementById('info').innerHTML += ' <span>·</span> <span><span class="dot green"></span>' + onlineCount + ' online</span>';
-    }
-    console.log('मानचित्र loaded — %d buildings, %d connections, %d floating', bc, DATA.connections.length, DATA.floating.length);
-  } catch (e) {
-    document.querySelector('#loading .status-text').textContent = 'Error: ' + e.message;
-    document.querySelector('#loading .subtitle').textContent = 'Failed to load.';
-    console.error('मानचित्र init error:', e);
-  }
-  document.getElementById('loading').classList.add('hidden');
+  progress(5, 'Loading data...');
+  await loadData();
+
+  progress(15, 'Parsing infrastructure...');
+  Object.assign(S.health, DATA.health || {});
+
+  build();
+  setupUI();
+  progress(100, 'Ready');
+
+  floatGroup = scene.children.find(c => c.type === 'Group' && c.children.length === DATA.floating.length);
+
+  setTimeout(() => $('#loader').classList.add('hidden'), 400);
+  setTimeout(() => controls.autoRotate = true, 2000);
+
+  anim();
 }
 
-init();
+window.addEventListener('resize', () => {
+  camera.aspect = innerWidth / innerHeight;
+  camera.updateProjectionMatrix();
+  renderer.setSize(innerWidth, innerHeight);
+  labelRenderer.setSize(innerWidth, innerHeight);
+});
+
+init().catch(e => {
+  statusEl.textContent = 'Error: ' + e.message;
+  console.error(e);
+});
 </script>
 </body>
 </html>
