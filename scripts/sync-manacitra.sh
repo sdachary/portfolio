@@ -10,10 +10,11 @@ git pull --ff-only origin main
 
 TMP=$(mktemp)
 
-node -e "
-const fs = require('fs');
-const { execSync } = require('child_process');
-const data = JSON.parse(fs.readFileSync('$DATA_FILE', 'utf8'));
+cat > /tmp/__sync_manacitra.mjs << 'JSEOF'
+import fs from 'fs';
+import { execSync } from 'child_process';
+
+const data_file = process.env.MANACITRA_DATA_FILE;
 
 async function check(url, timeout=4000) {
   const c = new AbortController();
@@ -29,28 +30,27 @@ async function check(url, timeout=4000) {
 }
 
 async function run() {
+  const data = JSON.parse(fs.readFileSync(data_file, 'utf8'));
   data.generated_at = new Date().toISOString();
 
   const checks = [
-    // oradb services — checked via SSH (curl localhost on oradb)
-    { id: 'nginx',       cmd: 'ssh -o StrictHostKeyChecking=accept-new 140.245.227.176 "curl -s -o /dev/null -w %{http_code} http://localhost 2>/dev/null" 2>/dev/null | grep -qE "^[234]"', ssh: true },
-    { id: 'postgrest',   cmd: 'ssh -o StrictHostKeyChecking=accept-new 140.245.227.176 "curl -s -o /dev/null -w %{http_code} http://localhost:3000 2>/dev/null" 2>/dev/null | grep -qE "^[234]"', ssh: true },
-    { id: 'better-auth', cmd: 'ssh -o StrictHostKeyChecking=accept-new 140.245.227.176 "curl -s -o /dev/null -w %{http_code} http://localhost:4000/api/auth/health 2>/dev/null" 2>/dev/null | grep -qE "^[234]"', ssh: true },
-    { id: 'mail-relay',  cmd: 'ssh -o StrictHostKeyChecking=accept-new 140.245.227.176 "curl -s -o /dev/null -w %{http_code} http://localhost:4001/health 2>/dev/null" 2>/dev/null | grep -qE "^[234]"', ssh: true },
-    { id: 'kubera',      cmd: 'ssh -o StrictHostKeyChecking=accept-new 140.245.227.176 "curl -s -o /dev/null -w %{http_code} http://localhost:3002 2>/dev/null" 2>/dev/null | grep -qE "^[234]"', ssh: true },
-    { id: 'bepara-api',  cmd: 'ssh -o StrictHostKeyChecking=accept-new 140.245.227.176 "curl -s -o /dev/null -w %{http_code} http://localhost:3001/api/health 2>/dev/null" 2>/dev/null | grep -qE "^[234]"', ssh: true },
-    { id: 'unnati-server',cmd:'ssh -o StrictHostKeyChecking=accept-new 140.245.227.176 "curl -s -o /dev/null -w %{http_code} http://localhost:4002/api/health 2>/dev/null" 2>/dev/null | grep -qE "^[234]"', ssh: true },
-    { id: 'headroom',    cmd: 'ssh -o StrictHostKeyChecking=accept-new 140.245.227.176 "curl -s -o /dev/null -w %{http_code} http://localhost:8787 2>/dev/null" 2>/dev/null | grep -qE "^[234]"', ssh: true },
-    { id: 'uptime-kuma', cmd: 'ssh -o StrictHostKeyChecking=accept-new 140.245.227.176 "curl -s -o /dev/null -w %{http_code} http://localhost:3003 2>/dev/null" 2>/dev/null | grep -qE "^[234]"', ssh: true },
-    { id: 'pg16',        cmd: 'ssh -o StrictHostKeyChecking=accept-new 140.245.227.176 "pg_isready -q" 2>/dev/null', ssh: true },
-    { id: 'redis',       cmd: 'ssh -o StrictHostKeyChecking=accept-new 140.245.227.176 "redis-cli ping" 2>/dev/null | grep -q PONG', ssh: true },
+    { id: 'nginx',       cmd: "ssh -o StrictHostKeyChecking=accept-new 140.245.227.176 'curl -s -o /dev/null -w %{http_code} http://localhost 2>/dev/null' 2>/dev/null | grep -qE '^[234]'", ssh: true },
+    { id: 'postgrest',   cmd: "ssh -o StrictHostKeyChecking=accept-new 140.245.227.176 'curl -s -o /dev/null -w %{http_code} http://localhost:3000 2>/dev/null' 2>/dev/null | grep -qE '^[234]'", ssh: true },
+    { id: 'better-auth', cmd: "ssh -o StrictHostKeyChecking=accept-new 140.245.227.176 'curl -s -o /dev/null -w %{http_code} http://localhost:4000/api/auth/health 2>/dev/null' 2>/dev/null | grep -qE '^[234]'", ssh: true },
+    { id: 'mail-relay',  cmd: "ssh -o StrictHostKeyChecking=accept-new 140.245.227.176 'curl -s -o /dev/null -w %{http_code} http://localhost:4001/health 2>/dev/null' 2>/dev/null | grep -qE '^[234]'", ssh: true },
+    { id: 'kubera',      cmd: "ssh -o StrictHostKeyChecking=accept-new 140.245.227.176 'curl -s -o /dev/null -w %{http_code} http://localhost:3002 2>/dev/null' 2>/dev/null | grep -qE '^[234]'", ssh: true },
+    { id: 'bepara-api',  cmd: "ssh -o StrictHostKeyChecking=accept-new 140.245.227.176 'curl -s -o /dev/null -w %{http_code} http://localhost:3001/api/health 2>/dev/null' 2>/dev/null | grep -qE '^[234]'", ssh: true },
+    { id: 'unnati-server',cmd:"ssh -o StrictHostKeyChecking=accept-new 140.245.227.176 'curl -s -o /dev/null -w %{http_code} http://localhost:4002/api/health 2>/dev/null' 2>/dev/null | grep -qE '^[234]'", ssh: true },
+    { id: 'headroom',    cmd: "ssh -o StrictHostKeyChecking=accept-new 140.245.227.176 'curl -s -o /dev/null -w %{http_code} http://localhost:8787 2>/dev/null' 2>/dev/null | grep -qE '^[234]'", ssh: true },
+    { id: 'uptime-kuma', cmd: "ssh -o StrictHostKeyChecking=accept-new 140.245.227.176 'curl -s -o /dev/null -w %{http_code} http://localhost:3003 2>/dev/null' 2>/dev/null | grep -qE '^[234]'", ssh: true },
+    { id: 'pg16',        cmd: "ssh -o StrictHostKeyChecking=accept-new 140.245.227.176 'pg_isready -q' 2>/dev/null", ssh: true },
+    { id: 'redis',       cmd: "ssh -o StrictHostKeyChecking=accept-new 140.245.227.176 'redis-cli ping' 2>/dev/null | grep -q PONG", ssh: true },
     { id: 'mcp-hub',     url: 'http://localhost:3000/api/health' },
     { id: 'paca',        url: 'http://localhost:80/' },
     { id: 'nim-proxy',   url: 'http://localhost:8082/' },
     { id: 'ttyd',        url: 'http://localhost:7681/' },
-    { id: 'minio',       cmd: 'sudo docker inspect --format "{{.State.Health.Status}}" paca-minio-1 2>/dev/null | grep -q healthy', ssh: true },
-    { id: 'cloudflared', cmd: 'ssh -o StrictHostKeyChecking=accept-new 140.245.227.176 "curl -s -o /dev/null -w %{http_code} http://localhost:3002 2>/dev/null" 2>/dev/null | grep -qE "^[234]"', ssh: true },
-    // CF Pages — direct HTTP
+    { id: 'minio',       cmd: "sudo docker inspect --format '{{.State.Health.Status}}' paca-minio-1 2>/dev/null | grep -q healthy", ssh: true },
+    { id: 'cloudflared', cmd: "ssh -o StrictHostKeyChecking=accept-new 140.245.227.176 'curl -s -o /dev/null -w %{http_code} http://localhost:3002 2>/dev/null' 2>/dev/null | grep -qE '^[234]'", ssh: true },
     { id: 'chitragupta', url: 'https://chitragupta.pages.dev' },
     { id: 'bepara',      url: 'https://bepara.pages.dev' },
     { id: 'udhyam',      url: 'https://udhyam.pages.dev' },
@@ -64,7 +64,6 @@ async function run() {
   ];
 
   const results = {};
-  let idx = 0;
   for (const c of checks) {
     let ok;
     if (c.ssh) {
@@ -79,7 +78,6 @@ async function run() {
     }
     results[c.id] = ok;
     process.stdout.write(ok ? '.' : 'x');
-    idx++;
   }
   console.log();
 
@@ -95,12 +93,16 @@ async function run() {
   data.stats.total = Object.keys(health).length;
   data.stats.total_services = online;
 
-  fs.writeFileSync('$DATA_FILE', JSON.stringify(data, null, 2) + '\n');
+  fs.writeFileSync(data_file, JSON.stringify(data, null, 2) + '\n');
   console.log('Health: %d/%d online', online, data.stats.total);
 }
 
 run().catch(e => { console.error(e); process.exit(1); });
-" 2>&1 | tee "$TMP"
+JSEOF
+
+export MANACITRA_DATA_FILE="$REPO_DIR/$DATA_FILE"
+node /tmp/__sync_manacitra.mjs 2>&1 | tee "$TMP"
+rm -f /tmp/__sync_manacitra.mjs
 
 git add "$DATA_FILE"
 if git diff --cached --quiet; then
