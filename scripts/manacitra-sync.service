@@ -1,0 +1,12 @@
+[Unit]
+Description=Mānacitra infrastructure data sync
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+ExecStart=/home/deepak/Work/portfolio/scripts/sync-manacitra.sh
+User=deepak
+WorkingDirectory=/home/deepak/Work/portfolio
+StandardOutput=journal
+StandardError=journal

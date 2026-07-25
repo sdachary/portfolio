@@ -1,0 +1,65 @@
+{
+  "islands": [
+    {
+      "id": "oradb", "name": "oradb", "label": "DATA TIER", "subtitle": "140.245.227.176",
+      "x": -12, "z": 0, "color": "#3b82f6", "size": 7,
+      "buildings": [
+        { "id": "pg16", "name": "PostgreSQL 16", "type": "database", "h": 3.2, "color": "#2563eb", "desc": "Primary database. 7 schemas. Port 5432." },
+        { "id": "nginx", "name": "Nginx", "type": "proxy", "h": 2.8, "color": "#dc2626", "desc": "Reverse proxy. Routes /auth/v2/, /mail/, /rest/v1/. Port 80." },
+        { "id": "postgrest", "name": "PostgREST", "type": "api", "h": 1.8, "color": "#059669", "desc": "Auto-generated REST API from PG schema. Port 3000." },
+        { "id": "redis", "name": "Redis", "type": "cache", "h": 1.4, "color": "#dc2626", "desc": "Cache & queue. Kubera Rack::Attack + Sidekiq. Port 6379." },
+        { "id": "better-auth", "name": "Better-Auth", "type": "auth", "h": 2.0, "color": "#7c3aed", "desc": "Auth server. Session tokens, PG16. Port 4000." },
+        { "id": "mail-relay", "name": "Mail-Relay", "type": "service", "h": 1.2, "color": "#f59e0b", "desc": "Email relay. Gmail SMTP fallback chain. Port 4001." },
+        { "id": "kubera", "name": "Kubera", "type": "app", "h": 2.2, "color": "#22c55e", "desc": "Personal finance OS. Rails 7.2 + Sidekiq. Port 3002." },
+        { "id": "bepara-api", "name": "Bepara API", "type": "api", "h": 1.5, "color": "#0d9488", "desc": "Next.js API server. Inventory management. Port 3001." },
+        { "id": "unnati-server", "name": "Unnati Server", "type": "app", "h": 1.6, "color": "#6366f1", "desc": "Next.js server. Career platform APIs. Port 4002." },
+        { "id": "headroom", "name": "Headroom", "type": "monitoring", "h": 1.0, "color": "#06b6d4", "desc": "SQL monitoring dashboard. Port 8787." },
+        { "id": "uptime-kuma", "name": "Uptime Kuma", "type": "monitoring", "h": 1.0, "color": "#eab308", "desc": "Service uptime monitoring. Port 3003." }
+      ]
+    },
+    {
+      "id": "oradev", "name": "oradev", "label": "AI TIER", "subtitle": "68.233.97.153",
+      "x": 12, "z": 0, "color": "#7c3aed", "size": 5.5,
+      "buildings": [
+        { "id": "mcp-hub", "name": "MCP Hub", "type": "ai", "h": 2.8, "color": "#f59e0b", "desc": "AI orchestration. 21 skills, 23 agents. Port 3000." },
+        { "id": "paca", "name": "Paca", "type": "app", "h": 1.8, "color": "#a855f7", "desc": "Project management. Docker Compose. Port 4000." },
+        { "id": "nim-proxy", "name": "NIM Proxy", "type": "ai", "h": 1.4, "color": "#64748b", "desc": "Anthropic→OpenAI proxy for Claude Code. Port 8082." },
+        { "id": "cloudflared", "name": "cloudflared", "type": "network", "h": 1.0, "color": "#38bdf8", "desc": "Cloudflare Tunnel (x2). Exposes MCP Hub + Kubera." },
+        { "id": "ttyd", "name": "ttyd", "type": "service", "h": 1.0, "color": "#22c55e", "desc": "Web terminal. Browser-based SSH. Port 7681." },
+        { "id": "minio", "name": "Minio", "type": "storage", "h": 1.2, "color": "#e11d48", "desc": "S3-compatible storage. Ports 9000/9001." },
+        { "id": "fail2ban", "name": "fail2ban", "type": "security", "h": 0.6, "color": "#94a3b8", "desc": "SSH brute force protection." }
+      ]
+    }
+  ],
+  "floating": [
+    { "id": "chitragupta", "name": "Chitragupta", "type": "app", "color": "#f97316", "url": "https://chitragupta.pages.dev", "desc": "Business ledger. Vite + Hono/TS. GST/TDS." },
+    { "id": "bepara", "name": "Bepara", "type": "app", "color": "#3b82f6", "url": "https://bepara.pages.dev", "desc": "Inventory SaaS. Next.js 16. Barcode scanning." },
+    { "id": "udhyam", "name": "Udhyam", "type": "app", "color": "#eab308", "url": "https://udhyam.pages.dev", "desc": "Jewellery retail. Static HTML + Supabase." },
+    { "id": "kubera-dash", "name": "Kubera Dash", "type": "app", "color": "#a855f7", "url": "https://kubera-d4k.pages.dev", "desc": "Finance dashboard. Vite + React." },
+    { "id": "unnati", "name": "Unnati", "type": "app", "color": "#6366f1", "url": "https://unnati-70z.pages.dev", "desc": "AI career platform. Next.js 15." },
+    { "id": "vishwakarma", "name": "Vishwakarma", "type": "app", "color": "#0d9488", "url": "https://vishwakarma.pages.dev", "desc": "Provisioning portal. CF Worker." },
+    { "id": "saraswati", "name": "Saraswati", "type": "app", "color": "#ec4899", "url": "https://saraswati-7v3.pages.dev", "desc": "Kids coding education. Interactive games." },
+    { "id": "darpan", "name": "Darpan", "type": "app", "color": "#ef4444", "url": "https://darpan.pages.dev", "desc": "Social media audit. D1 + DPDP compliant." },
+    { "id": "narad", "name": "Narad", "type": "app", "color": "#06b6d4", "url": "https://narad-7hc.pages.dev", "desc": "Browser tools: Sandesh, Drishti, Shuddhi." },
+    { "id": "portfolio", "name": "Portfolio", "type": "app", "color": "#f8fafc", "url": "https://sdachary.github.io/portfolio", "desc": "Personal portfolio. Vite + React. GitHub Pages." }
+  ],
+  "connections": [
+    { "from": "chitragupta", "to": "oradb", "label": "API" },
+    { "from": "bepara", "to": "oradb", "label": "API" },
+    { "from": "udhyam", "to": "oradb", "label": "API" },
+    { "from": "unnati", "to": "oradb", "label": "API" },
+    { "from": "vishwakarma", "to": "oradb", "label": "API" },
+    { "from": "kubera-dash", "to": "kubera", "label": "API" },
+    { "from": "oradev", "to": "oradb", "label": "SSH Tunnel" },
+    { "from": "mcp-hub", "to": "oradb", "label": "MCP → DB" },
+    { "from": "better-auth", "to": "pg16", "label": "Auth DB" },
+    { "from": "bepara-api", "to": "pg16", "label": "DB" },
+    { "from": "kubera", "to": "redis", "label": "Queue" },
+    { "from": "kubera", "to": "pg16", "label": "DB" },
+    { "from": "unnati-server", "to": "pg16", "label": "DB" },
+    { "from": "paca", "to": "pg16", "label": "DB" }
+  ],
+  "generated_at": "2026-07-25T00:00:00Z",
+  "stats": { "total_services": 29, "online": 0, "islands": 2, "floating": 10, "connections": 14 },
+  "health": {}
+}

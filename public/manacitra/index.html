@@ -1,0 +1,697 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mānacitra — Infrastructure Map</title>
+<style>
+:root {
+  --bg: #0a0e1a;
+  --panel: rgba(10,14,26,0.92);
+  --border: rgba(255,255,255,0.08);
+  --text: #c8d0e0;
+  --text-dim: #6b7a99;
+  --accent: #7c3aed;
+  --accent2: #f59e0b;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+html, body { width:100%; height:100%; overflow:hidden; background:var(--bg); font-family:'Inter','Segoe UI',system-ui,-apple-system,sans-serif; color:var(--text); }
+
+#canvas { display:block; width:100%; height:100%; }
+
+#loading {
+  position:fixed; inset:0; display:flex; flex-direction:column;
+  align-items:center; justify-content:center; background:var(--bg); z-index:100;
+  transition:opacity .6s;
+}
+#loading.hidden { opacity:0; pointer-events:none; }
+#loading h1 { font-size:2rem; font-weight:300; letter-spacing:.15em; color:var(--accent); margin-bottom:1rem; }
+#loading .subtitle { color:var(--text-dim); font-size:.85rem; margin-bottom:.25rem; }
+#loading .status-text { color:var(--text-dim); font-size:.75rem; opacity:.6; }
+.spinner { width:32px; height:32px; border:2px solid var(--border); border-top-color:var(--accent); border-radius:50%; animation:spin .8s linear infinite; margin-bottom:1.5rem; }
+@keyframes spin { to { transform:rotate(360deg); } }
+
+#info {
+  position:fixed; top:1rem; left:50%; transform:translateX(-50%);
+  background:var(--panel); backdrop-filter:blur(12px); border:1px solid var(--border);
+  border-radius:12px; padding:.75rem 1.5rem; z-index:10;
+  display:flex; align-items:center; gap:1rem;
+  font-size:.85rem; white-space:nowrap;
+}
+#info h2 { font-size:.9rem; font-weight:500; color:var(--accent); letter-spacing:.08em; }
+#info span { color:var(--text-dim); }
+#info .dot { display:inline-block; width:6px; height:6px; border-radius:50%; margin-right:4px; }
+#info .dot.green { background:#22c55e; }
+#info .dot.red { background:#ef4444; }
+#info .dot.yellow { background:var(--accent2); }
+
+#legend-toggle {
+  position:fixed; bottom:1.5rem; left:1.5rem; z-index:10;
+  background:var(--panel); backdrop-filter:blur(12px); border:1px solid var(--border);
+  border-radius:8px; padding:.5rem; cursor:pointer; color:var(--text-dim);
+  display:flex; align-items:center; gap:.4rem; font-size:.75rem;
+  transition:color .2s;
+}
+#legend-toggle:hover { color:var(--text); }
+
+#legend {
+  position:fixed; bottom:4rem; left:1.5rem; z-index:10;
+  background:var(--panel); backdrop-filter:blur(12px); border:1px solid var(--border);
+  border-radius:10px; padding:1rem; min-width:160px;
+  display:none; flex-direction:column; gap:.4rem;
+}
+#legend.visible { display:flex; }
+#legend .item { display:flex; align-items:center; gap:.5rem; font-size:.75rem; color:var(--text-dim); }
+#legend .swatch { width:12px; height:12px; border-radius:3px; flex-shrink:0; }
+
+#tooltip {
+  position:fixed; z-index:20; pointer-events:none;
+  background:var(--panel); backdrop-filter:blur(16px); border:1px solid var(--border);
+  border-radius:10px; padding:1rem; min-width:200px; max-width:320px;
+  opacity:0; transition:opacity .2s;
+}
+#tooltip.visible { opacity:1; }
+#tooltip h3 { font-size:.9rem; font-weight:500; margin-bottom:.3rem; }
+#tooltip .type { font-size:.7rem; color:var(--accent2); text-transform:uppercase; letter-spacing:.08em; margin-bottom:.4rem; }
+#tooltip p { font-size:.8rem; color:var(--text-dim); line-height:1.5; }
+#tooltip .url { display:inline-block; margin-top:.4rem; font-size:.75rem; color:var(--accent); text-decoration:none; pointer-events:auto; }
+#tooltip .url:hover { text-decoration:underline; }
+#tooltip .status { display:inline-flex; align-items:center; gap:.3rem; margin-top:.4rem; font-size:.75rem; }
+#tooltip .status .dot { width:6px; height:6px; border-radius:50%; }
+
+#controls-hint {
+  position:fixed; bottom:1.5rem; right:1.5rem; z-index:5;
+  color:var(--text-dim); font-size:.7rem; text-align:right; line-height:1.6;
+  opacity:.5; transition:opacity .4s; pointer-events:none;
+}
+#controls-hint kbd { background:rgba(255,255,255,0.06); padding:1px 6px; border-radius:3px; font-family:inherit; }
+</style>
+</head>
+<body>
+
+<div id="loading">
+  <div class="spinner"></div>
+  <h1>मानचित्र</h1>
+  <p class="subtitle">Infrastructure Map</p>
+  <p class="status-text">Loading data...</p>
+</div>
+
+<div id="info">
+  <h2>मानचित्र</h2>
+  <span>AcharyLab Infrastructure</span>
+  <span>·</span>
+  <span><span class="dot green"></span><span id="service-count">--</span> services</span>
+</div>
+
+<div id="legend-toggle">◈ Legend</div>
+<div id="legend"></div>
+
+<div id="tooltip"></div>
+
+<div id="controls-hint">
+  <kbd>Drag</kbd> orbit · <kbd>Scroll</kbd> zoom · <kbd>Click</kbd> inspect
+</div>
+
+<canvas id="canvas"></canvas>
+
+<script type="importmap">
+{
+  "imports": {
+    "three": "https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js",
+    "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/"
+  }
+}
+</script>
+
+<script type="module">
+import * as THREE from 'three';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+import { CSS2DRenderer, CSS2DObject } from 'three/addons/renderers/CSS2DRenderer.js';
+
+const DATA = { islands: [], floating: [], connections: [], stats: { total_services: 0 } };
+
+async function loadData() {
+  const status = document.querySelector('#loading .status-text');
+  status.textContent = 'Fetching infrastructure data...';
+  const resp = await fetch('data.json');
+  if (!resp.ok) throw new Error('Failed to load data.json');
+  const json = await resp.json();
+  Object.assign(DATA, json);
+  status.textContent = `Loaded ${DATA.stats.total_services} services.`;
+}
+
+const COLORS = {
+  database: '#2563eb', proxy: '#dc2626', api: '#059669', cache: '#dc2626',
+  auth: '#7c3aed', service: '#f59e0b', app: '#22c55e', monitoring: '#06b6d4',
+  ai: '#f59e0b', network: '#38bdf8', storage: '#e11d48', security: '#94a3b8',
+  dev: '#64748b',
+};
+
+const scene = new THREE.Scene();
+scene.background = new THREE.Color(0x0a0e1a);
+scene.fog = new THREE.Fog(0x0a0e1a, 40, 70);
+
+const camera = new THREE.PerspectiveCamera(45, innerWidth/innerHeight, 0.1, 100);
+camera.position.set(18, 16, 22);
+
+const renderer = new THREE.WebGLRenderer({ canvas: document.getElementById('canvas'), antialias: true });
+renderer.setSize(innerWidth, innerHeight);
+renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+renderer.shadowMap.enabled = true;
+renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+
+const labelRenderer = new CSS2DRenderer();
+labelRenderer.setSize(innerWidth, innerHeight);
+labelRenderer.domElement.style.position = 'fixed';
+labelRenderer.domElement.style.top = '0';
+labelRenderer.domElement.style.left = '0';
+labelRenderer.domElement.style.pointerEvents = 'none';
+document.body.appendChild(labelRenderer.domElement);
+
+const controls = new OrbitControls(camera, renderer.domElement);
+controls.enableDamping = true;
+controls.dampingFactor = 0.08;
+controls.minDistance = 6;
+controls.maxDistance = 50;
+controls.maxPolarAngle = Math.PI / 2.05;
+controls.target.set(0, 0, 0);
+
+const raycaster = new THREE.Raycaster();
+const pointer = new THREE.Vector2();
+const clickables = [];
+
+function createHexRing(radius, color, opacity=0.03) {
+  const shape = new THREE.Shape();
+  for (let i = 0; i < 6; i++) {
+    const a = (i / 6) * Math.PI * 2 - Math.PI / 6;
+    i === 0 ? shape.moveTo(Math.cos(a)*radius, Math.sin(a)*radius) : shape.lineTo(Math.cos(a)*radius, Math.sin(a)*radius);
+  }
+  shape.closePath();
+  const geo = new THREE.ShapeGeometry(shape);
+  const mat = new THREE.MeshBasicMaterial({ color, side: THREE.DoubleSide, transparent: true, opacity, depthWrite: false });
+  return new THREE.Mesh(geo, mat);
+}
+
+function createIsland(data) {
+  const group = new THREE.Group();
+  group.position.set(data.x, -0.3, data.z);
+
+  const size = data.size;
+  const segments = 4;
+
+  const groundGeo = new THREE.CircleGeometry(size, segments * 4);
+  const groundMat = new THREE.MeshStandardMaterial({
+    color: data.color, roughness: 0.8, metalness: 0.1,
+    transparent: true, opacity: 0.25,
+  });
+  const ground = new THREE.Mesh(groundGeo, groundMat);
+  ground.rotation.x = -Math.PI / 2;
+  ground.receiveShadow = true;
+  group.add(ground);
+
+  const rimGeo = new THREE.RingGeometry(size - 0.3, size + 0.8, 48);
+  const rimMat = new THREE.MeshStandardMaterial({
+    color: data.color, roughness: 0.6, metalness: 0.3,
+    transparent: true, opacity: 0.15, side: THREE.DoubleSide,
+  });
+  const rim = new THREE.Mesh(rimGeo, rimMat);
+  rim.rotation.x = -Math.PI / 2;
+  rim.position.y = -0.05;
+  group.add(rim);
+
+  for (let i = 0; i < 6; i++) {
+    const angle = (i / 6) * Math.PI * 2;
+    const ring = createHexRing(size * 0.6 + Math.random() * 0.5, data.color, 0.02 + Math.random() * 0.02);
+    ring.position.set(Math.cos(angle) * size * 0.4, 0.01, Math.sin(angle) * size * 0.4);
+    ring.rotation.x = -Math.PI / 2;
+    group.add(ring);
+  }
+
+  const labelDiv = document.createElement('div');
+  labelDiv.textContent = data.name;
+  labelDiv.style.color = '#fff';
+  labelDiv.style.fontSize = '13px';
+  labelDiv.style.fontWeight = '600';
+  labelDiv.style.letterSpacing = '0.08em';
+  labelDiv.style.textShadow = '0 2px 12px rgba(0,0,0,0.8)';
+  labelDiv.style.background = 'rgba(10,14,26,0.7)';
+  labelDiv.style.backdropFilter = 'blur(8px)';
+  labelDiv.style.padding = '4px 12px';
+  labelDiv.style.borderRadius = '6px';
+  labelDiv.style.border = '1px solid ' + data.color + '44';
+  const label = new CSS2DObject(labelDiv);
+  label.position.set(0, 0.2, -size - 1.2);
+  group.add(label);
+
+  const subDiv = document.createElement('div');
+  subDiv.textContent = data.subtitle || '';
+  subDiv.style.color = 'rgba(255,255,255,0.35)';
+  subDiv.style.fontSize = '10px';
+  subDiv.style.letterSpacing = '0.05em';
+  subDiv.style.textAlign = 'center';
+  const subLabel = new CSS2DObject(subDiv);
+  subLabel.position.set(0, -0.3, -size - 1.2);
+  group.add(subLabel);
+
+  return group;
+}
+
+function createBuilding(data, ix, total, health) {
+  const group = new THREE.Group();
+
+  const isOnline = health?.[data.id]?.online;
+  const h = data.h || 1.0;
+
+  const width = total > 1 ? 0.6 : 0.8;
+  const spacing = 1.8;
+  const row = Math.floor(ix / 4);
+  const col = ix % 4;
+  const ox = (col - Math.min(total - 1, 3) / 2) * spacing;
+  const oz = (row - 0) * 1.8;
+  group.position.set(ox, 0, oz);
+
+  const color = new THREE.Color(data.color);
+  color.offsetHSL(0, 0, (Math.random() - 0.5) * 0.08);
+
+  const bodyGeo = new THREE.BoxGeometry(width, h, width);
+  const bodyMat = new THREE.MeshStandardMaterial({
+    color, roughness: 0.5, metalness: 0.3,
+    transparent: true, opacity: 0.92,
+  });
+  const body = new THREE.Mesh(bodyGeo, bodyMat);
+  body.position.y = h / 2 + 0.05;
+  body.castShadow = true;
+  body.receiveShadow = true;
+  group.add(body);
+
+  if (h > 1.5) {
+    const topGeo = new THREE.BoxGeometry(width * 0.55, 0.15, width * 0.55);
+    const topMat = new THREE.MeshStandardMaterial({
+      color: new THREE.Color(data.color).offsetHSL(0, 0, 0.2),
+      roughness: 0.3, metalness: 0.5,
+    });
+    const top = new THREE.Mesh(topGeo, topMat);
+    top.position.y = h + 0.1;
+    group.add(top);
+  }
+
+  const glowColor = isOnline === false ? 0xef4444 : 0x22c55e;
+  const glowOpacity = isOnline === false ? 0.25 : 0.3 + Math.random() * 0.2;
+  const glowGeo = new THREE.BoxGeometry(width * 0.3, 0.04, width * 0.3);
+  const glowMat = new THREE.MeshBasicMaterial({
+    color: glowColor, transparent: true, opacity: glowOpacity,
+  });
+  const glow = new THREE.Mesh(glowGeo, glowMat);
+  glow.position.y = h + 0.18;
+  group.add(glow);
+
+  for (let i = 0; i < Math.floor(h * 2); i++) {
+    const wx = (Math.random() - 0.5) * width * 0.6;
+    const wz = (Math.random() - 0.5) * width * 0.6;
+    const wy = 0.1 + (i / (h * 2)) * h;
+    const win = new THREE.Mesh(
+      new THREE.PlaneGeometry(0.08, 0.1),
+      new THREE.MeshBasicMaterial({
+        color: 0xfbbf24, transparent: true, opacity: 0.15 + Math.random() * 0.15,
+      })
+    );
+    win.position.set(wx, wy, wz > 0 ? width/2 + 0.01 : -width/2 - 0.01);
+    win.lookAt(wz > 0 ? 0 : 0, wy, wz > 0 ? 1 : -1);
+    group.add(win);
+  }
+
+  group.userData = { id: data.id, name: data.name, type: data.type, desc: data.desc, url: data.url, color: data.color };
+  clickables.push(group);
+
+  return group;
+}
+
+function createFloatingIsland(data, index, health) {
+  const group = new THREE.Group();
+  const angle = (index / DATA.floating.length) * Math.PI * 2;
+  const radius = 6;
+  const cx = Math.cos(angle) * radius;
+  const cz = Math.sin(angle) * radius;
+  group.position.set(cx, 3.5 + Math.sin(index * 1.7) * 0.3, cz);
+
+  const tiltAmount = 0.04;
+  group.rotation.z = Math.sin(index * 2.3) * tiltAmount;
+  group.rotation.x = Math.cos(index * 1.9) * tiltAmount;
+
+  const ground = new THREE.Mesh(
+    new THREE.CircleGeometry(0.8, 8),
+    new THREE.MeshStandardMaterial({
+      color: data.color, roughness: 0.6, metalness: 0.2,
+      transparent: true, opacity: 0.3,
+    })
+  );
+  ground.rotation.x = -Math.PI / 2;
+  ground.position.y = -0.05;
+  group.add(ground);
+
+  const rim = new THREE.Mesh(
+    new THREE.RingGeometry(0.65, 0.9, 16),
+    new THREE.MeshStandardMaterial({
+      color: data.color, roughness: 0.4, metalness: 0.4,
+      transparent: true, opacity: 0.12, side: THREE.DoubleSide,
+    })
+  );
+  rim.rotation.x = -Math.PI / 2;
+  group.add(rim);
+
+  const building = new THREE.Mesh(
+    new THREE.BoxGeometry(0.5, 0.4, 0.5),
+    new THREE.MeshStandardMaterial({
+      color: data.color, roughness: 0.4, metalness: 0.3,
+      transparent: true, opacity: 0.92,
+    })
+  );
+  building.position.y = 0.2;
+  building.castShadow = true;
+  group.add(building);
+
+  const top = new THREE.Mesh(
+    new THREE.BoxGeometry(0.3, 0.06, 0.3),
+    new THREE.MeshStandardMaterial({
+      color: new THREE.Color(data.color).offsetHSL(0, 0, 0.15),
+      roughness: 0.3, metalness: 0.5,
+    })
+  );
+  top.position.y = 0.53;
+  group.add(top);
+
+  const isOnline = health?.[data.id]?.online;
+  const glowCol = isOnline === false ? 0xef4444 : 0x22c55e;
+  const fGlow = new THREE.Mesh(
+    new THREE.BoxGeometry(0.18, 0.03, 0.18),
+    new THREE.MeshBasicMaterial({ color: glowCol, transparent: true, opacity: 0.3 }),
+  );
+  fGlow.position.y = 0.56;
+  group.add(fGlow);
+
+  const labelDiv = document.createElement('div');
+  labelDiv.textContent = data.name;
+  labelDiv.style.color = '#fff';
+  labelDiv.style.fontSize = '9px';
+  labelDiv.style.fontWeight = '500';
+  labelDiv.style.textShadow = '0 2px 8px rgba(0,0,0,0.9)';
+  labelDiv.style.background = 'rgba(10,14,26,0.7)';
+  labelDiv.style.padding = '2px 6px';
+  labelDiv.style.borderRadius = '4px';
+  labelDiv.style.whiteSpace = 'nowrap';
+  const label = new CSS2DObject(labelDiv);
+  label.position.set(0, 0.65, 0);
+  group.add(label);
+
+  group.userData = { id: data.id, name: data.name, type: data.type, desc: data.desc, url: data.url, color: data.color };
+  clickables.push(group);
+
+  return group;
+}
+
+function createConnection(fromPos, toPos, label, color='#3b82f6') {
+  const dx = toPos.x - fromPos.x;
+  const dz = toPos.z - fromPos.z;
+  const dist = Math.sqrt(dx*dx + dz*dz);
+  const midX = (fromPos.x + toPos.x) / 2;
+  const midZ = (fromPos.z + toPos.z) / 2;
+  const midY = (fromPos.y + toPos.y) / 2 + Math.max(dist * 0.08, 0.5);
+
+  const curve = new THREE.QuadraticBezierCurve3(
+    new THREE.Vector3(fromPos.x, fromPos.y + 0.15, fromPos.z),
+    new THREE.Vector3(midX, midY, midZ),
+    new THREE.Vector3(toPos.x, toPos.y + 0.15, toPos.z),
+  );
+
+  const points = curve.getPoints(30);
+  const geo = new THREE.BufferGeometry().setFromPoints(points);
+  const mat = new THREE.LineBasicMaterial({
+    color, transparent: true, opacity: 0.2, linewidth: 1,
+  });
+  const line = new THREE.Line(geo, mat);
+  scene.add(line);
+
+  const glowMat = new THREE.LineBasicMaterial({
+    color, transparent: true, opacity: 0.04, linewidth: 1,
+  });
+  const glowLine = new THREE.Line(geo.clone(), glowMat);
+  glowLine.position.y = -0.02;
+  scene.add(glowLine);
+
+  return { line, glowLine };
+}
+
+function findEntityPos(id) {
+  for (const island of DATA.islands) {
+    for (const b of island.buildings) {
+      if (b.id === id) {
+        const row = Math.floor(island.buildings.indexOf(b) / 4);
+        const col = island.buildings.indexOf(b) % 4;
+        const spacing = 1.8;
+        const ox = (col - Math.min(island.buildings.length - 1, 3) / 2) * spacing;
+        const oz = (row - 0) * 1.8;
+        return { x: island.x + ox, y: 0.3, z: island.z + oz };
+      }
+    }
+  }
+  for (const f of DATA.floating) {
+    if (f.id === id) {
+      const idx = DATA.floating.indexOf(f);
+      const angle = (idx / DATA.floating.length) * Math.PI * 2;
+      const r = 6;
+      return { x: Math.cos(angle) * r, y: 3.5 + Math.sin(idx * 1.7) * 0.3, z: Math.sin(angle) * r };
+    }
+  }
+  return null;
+}
+
+function buildScene() {
+  const ambient = new THREE.AmbientLight(0x334466, 1.0);
+  scene.add(ambient);
+
+  const dirLight = new THREE.DirectionalLight(0xffeedd, 2.5);
+  dirLight.position.set(15, 25, 10);
+  dirLight.castShadow = true;
+  dirLight.shadow.mapSize.width = 1024;
+  dirLight.shadow.mapSize.height = 1024;
+  dirLight.shadow.camera.near = 1;
+  dirLight.shadow.camera.far = 50;
+  dirLight.shadow.camera.left = -20;
+  dirLight.shadow.camera.right = 20;
+  dirLight.shadow.camera.top = 20;
+  dirLight.shadow.camera.bottom = -20;
+  scene.add(dirLight);
+
+  const fillLight = new THREE.DirectionalLight(0x8888ff, 0.5);
+  fillLight.position.set(-10, 5, -10);
+  scene.add(fillLight);
+
+  const rimLight = new THREE.DirectionalLight(0x4488ff, 0.3);
+  rimLight.position.set(0, -5, 15);
+  scene.add(rimLight);
+
+  const waterGeo = new THREE.PlaneGeometry(60, 60);
+  const waterMat = new THREE.MeshStandardMaterial({
+    color: 0x0c1628, roughness: 0.9, metalness: 0.1,
+    transparent: true, opacity: 0.8,
+  });
+  const water = new THREE.Mesh(waterGeo, waterMat);
+  water.rotation.x = -Math.PI / 2;
+  water.position.y = -0.5;
+  water.receiveShadow = true;
+  scene.add(water);
+
+  const gridHelper = new THREE.GridHelper(40, 20, 0x1a2440, 0x1a2440);
+  gridHelper.position.y = -0.45;
+  gridHelper.material.transparent = true;
+  gridHelper.material.opacity = 0.3;
+  scene.add(gridHelper);
+
+  for (const island of DATA.islands) {
+    const ig = createIsland(island);
+    scene.add(ig);
+
+    const total = island.buildings.length;
+    island.buildings.forEach((b, i) => {
+      const bg = createBuilding(b, i, total, DATA.health);
+      ig.add(bg);
+    });
+  }
+
+  const floatingGroup = new THREE.Group();
+  DATA.floating.forEach((f, i) => {
+    const fg = createFloatingIsland(f, i, DATA.health);
+    floatingGroup.add(fg);
+  });
+  scene.add(floatingGroup);
+
+  for (const conn of DATA.connections) {
+    const fromPos = findEntityPos(conn.from);
+    const toPos = findEntityPos(conn.to);
+    if (fromPos && toPos) {
+      createConnection(fromPos, toPos, conn.label, '#3b82f6');
+    }
+  }
+
+  addDevAndRepos();
+
+  animateFloat(floatingGroup);
+}
+
+function addDevAndRepos() {
+  const div = document.createElement('div');
+  div.style.cssText = 'position:fixed;bottom:1.5rem;left:50%;transform:translateX(-50%);z-index:5;display:flex;gap:1rem;align-items:center;';
+  const repoBadge = document.createElement('a');
+  repoBadge.href = 'https://github.com/sdachary';
+  repoBadge.target = '_blank';
+  repoBadge.textContent = '⚡ 13 GitHub repos';
+  repoBadge.style.cssText = 'color:rgba(255,255,255,0.25);font-size:.7rem;text-decoration:none;letter-spacing:.05em;';
+  div.appendChild(repoBadge);
+  const devBadge = document.createElement('span');
+  devBadge.textContent = '· 3 dev-only · Karma · Indra · Sri';
+  devBadge.style.cssText = 'color:rgba(255,255,255,0.15);font-size:.7rem;';
+  div.appendChild(devBadge);
+  document.body.appendChild(div);
+}
+
+let floatingGroup;
+function animateFloat(group) {
+  floatingGroup = group;
+}
+
+function setupTooltip() {
+  const tooltip = document.getElementById('tooltip');
+
+  renderer.domElement.addEventListener('pointermove', (e) => {
+    pointer.x = (e.clientX / innerWidth) * 2 - 1;
+    pointer.y = -(e.clientY / innerHeight) * 2 + 1;
+  });
+
+  renderer.domElement.addEventListener('click', (e) => {
+    raycaster.setFromCamera(pointer, camera);
+    const intersects = raycaster.intersectObjects(clickables, true);
+
+    if (intersects.length > 0) {
+      let obj = intersects[0].object;
+      while (obj.parent && !obj.parent.userData?.id) obj = obj.parent;
+      const data = obj.parent?.userData || obj.userData;
+      if (data?.id) {
+        showTooltip(data, e.clientX, e.clientY);
+        return;
+      }
+    }
+    hideTooltip();
+  });
+
+  renderer.domElement.addEventListener('click', (e) => {
+    if (e.target.closest('#tooltip a')) return;
+  });
+}
+
+function showTooltip(data, x, y) {
+  const el = document.getElementById('tooltip');
+  el.className = 'visible';
+
+  const h = DATA.health?.[data.id];
+  const isOnline = h ? h.online : null;
+  const statusDot = isOnline ? '🟢' : (isOnline === false ? '🔴' : '⚪');
+  const statusText = isOnline ? 'Online' : (isOnline === false ? 'Offline' : 'Unknown');
+
+  el.innerHTML = `
+    <div class="type" style="color:${data.color || '#f59e0b'}">${data.type || 'service'}</div>
+    <h3>${data.name}</h3>
+    <p>${data.desc || ''}</p>
+    <div class="status">${statusDot} ${statusText}</div>
+    ${data.url ? `<a class="url" href="${data.url}" target="_blank">${data.url}</a>` : ''}
+  `;
+
+  const w = Math.min(el.offsetWidth, 320);
+  let lx = Math.min(x + 16, innerWidth - w - 16);
+  let ly = Math.min(y + 16, innerHeight - el.offsetHeight - 16);
+  el.style.left = lx + 'px';
+  el.style.top = ly + 'px';
+}
+
+function hideTooltip() {
+  document.getElementById('tooltip').className = '';
+}
+
+function buildLegend() {
+  const legend = document.getElementById('legend');
+  const types = [
+    { label: 'Database', key: 'database' },
+    { label: 'App Server', key: 'app' },
+    { label: 'API', key: 'api' },
+    { label: 'AI Service', key: 'ai' },
+    { label: 'Auth', key: 'auth' },
+    { label: 'Proxy', key: 'proxy' },
+    { label: 'Cache', key: 'cache' },
+    { label: 'Monitoring', key: 'monitoring' },
+    { label: 'Storage', key: 'storage' },
+    { label: 'Network', key: 'network' },
+    { label: 'Security', key: 'security' },
+    { label: 'Dev Only', key: 'dev' },
+  ];
+
+  types.forEach(t => {
+    const item = document.createElement('div');
+    item.className = 'item';
+    item.innerHTML = `<div class="swatch" style="background:${COLORS[t.key] || '#666'}"></div>${t.label}`;
+    legend.appendChild(item);
+  });
+}
+
+document.getElementById('legend-toggle').addEventListener('click', () => {
+  document.getElementById('legend').classList.toggle('visible');
+});
+
+window.addEventListener('resize', () => {
+  camera.aspect = innerWidth / innerHeight;
+  camera.updateProjectionMatrix();
+  renderer.setSize(innerWidth, innerHeight);
+  labelRenderer.setSize(innerWidth, innerHeight);
+});
+
+function animate() {
+  requestAnimationFrame(animate);
+  controls.update();
+
+  if (floatingGroup) {
+    const t = Date.now() * 0.0003;
+    floatingGroup.children.forEach((child, i) => {
+      const baseY = 3.5 + Math.sin(i * 1.7) * 0.3;
+      child.position.y = baseY + Math.sin(t + i * 1.1) * 0.05;
+    });
+  }
+
+  renderer.render(scene, camera);
+  labelRenderer.render(scene, camera);
+}
+
+async function init() {
+  try {
+    await loadData();
+    buildScene();
+    buildLegend();
+    setupTooltip();
+    animate();
+    const bc = DATA.islands.reduce((a,i) => a + i.buildings.length, 0);
+    const total = DATA.stats.total_services || bc + DATA.floating.length;
+    const onlineCount = DATA.stats.online || 0;
+    document.getElementById('service-count').textContent = total;
+    if (onlineCount) {
+      document.getElementById('info').innerHTML += ' <span>·</span> <span><span class="dot green"></span>' + onlineCount + ' online</span>';
+    }
+    console.log('मानचित्र loaded — %d buildings, %d connections, %d floating', bc, DATA.connections.length, DATA.floating.length);
+  } catch (e) {
+    document.querySelector('#loading .status-text').textContent = 'Error: ' + e.message;
+    document.querySelector('#loading .subtitle').textContent = 'Failed to load.';
+    console.error('मानचित्र init error:', e);
+  }
+  document.getElementById('loading').classList.add('hidden');
+}
+
+init();
+</script>
+</body>
+</html>
