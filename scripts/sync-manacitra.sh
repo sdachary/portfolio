@@ -5,6 +5,8 @@ DATA_FILE="public/manacitra/data.json"
 
 cd "$REPO_DIR"
 git pull --ff-only origin main
+# re-exec once so bash picks up any changes to this script
+[ -z "${MANACITRA_REEXEC:-}" ] && exec env MANACITRA_REEXEC=1 bash "$0" "$@"
 
 [ -f "$DATA_FILE" ] || { echo "ERROR: $DATA_FILE not found"; exit 1; }
 
