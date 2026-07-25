@@ -3,7 +3,7 @@ set -euo pipefail
 # sync-manacitra.sh — update infrastructure data (health checks) and push to portfolio
 # Runs on oradev. Systemd timer: manacitra-sync.timer (weekly)
 
-REPO_DIR="/home/deepak/Work/portfolio"
+REPO_DIR="${REPO_DIR:-/home/ubuntu/portfolio}"
 DATA_FILE="public/manacitra/data.json"
 
 cd "$REPO_DIR"
