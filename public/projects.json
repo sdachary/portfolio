@@ -120,20 +120,20 @@
     "github_url": "https://github.com/sdachary/kubera"
   },
   {
-    "name": "NARAD",
-    "slug": "narad",
+    "name": "PRAYOG",
+    "slug": "prayog",
     "status": "Live",
     "status_key": "live",
-    "description": "Standalone browser utilities — WebRTC file transfer (Sandesh), read-only file scanner (Drishti), and PC cleanup guide (Shuddhi). Zero build, zero backend.",
+    "description": "Standalone browser utilities and games — WebRTC file transfer (Sandesh), file scanner (Drishti), PC cleanup (Shuddhi), audio extractor (Badhai), Snake & Ladder, Color Match. Formerly narad.",
     "tags": [
       "Cloudflare Pages",
       "WebRTC",
       "JavaScript"
     ],
-    "live_url": "https://narad-7hc.pages.dev/",
+    "live_url": "https://prayog.pages.dev/",
     "local": true,
-    "last_updated": "2026-07-21",
-    "github_remote": "git@github.com:sdachary/narad.git"
+    "last_updated": "2026-07-26",
+    "github_remote": "git@github.com:sdachary/prayog.git"
   },
   {
     "name": "MCP-HUB",
@@ -167,22 +167,6 @@
     "local": true,
     "last_updated": "2026-07-02",
     "github_remote": "git@github.com:sdachary/sri.git"
-  },
-  {
-    "name": "SARASWATI",
-    "slug": "saraswati",
-    "status": "Live",
-    "status_key": "live",
-    "description": "Kids coding education platform — interactive games (Snake Ladder, Color Game) that teach Python concepts through play.",
-    "tags": [
-      "Cloudflare Pages",
-      "JavaScript",
-      "HTML"
-    ],
-    "live_url": "https://saraswati-7v3.pages.dev/",
-    "local": true,
-    "last_updated": "2026-07-21",
-    "github_remote": "git@github.com:sdachary/saraswati.git"
   },
   {
     "name": "UNNATI",

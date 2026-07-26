@@ -219,14 +219,6 @@
       "desc": "Provisioning portal. CF Worker."
     },
     {
-      "id": "saraswati",
-      "name": "Saraswati",
-      "type": "app",
-      "color": "#ec4899",
-      "url": "https://saraswati.pages.dev",
-      "desc": "Kids coding education. Interactive games."
-    },
-    {
       "id": "darpan",
       "name": "Darpan",
       "type": "app",
@@ -235,12 +227,12 @@
       "desc": "Social media audit. D1 + DPDP compliant."
     },
     {
-      "id": "narad",
-      "name": "Narad",
+      "id": "prayog",
+      "name": "Prayog",
       "type": "app",
       "color": "#06b6d4",
-      "url": "https://narad.pages.dev",
-      "desc": "Browser tools: Sandesh, Drishti, Shuddhi."
+      "url": "https://prayog.pages.dev",
+      "desc": "Browser tools + games. Formerly narad."
     },
     {
       "id": "portfolio",
@@ -325,12 +317,12 @@
   ],
   "generated_at": "2026-07-25T12:48:34.319Z",
   "stats": {
-    "total_services": 27,
+    "total_services": 26,
     "online": 27,
     "islands": 2,
-    "floating": 10,
+    "floating": 9,
     "connections": 14,
-    "total": 27
+    "total": 26
   },
   "health": {
     "nginx": {

@@ -92,20 +92,20 @@
     "github_url": "https://github.com/sdachary/kubera"
   },
   {
-    "name": "NARAD",
-    "slug": "narad",
+    "name": "PRAYOG",
+    "slug": "prayog",
     "status": "Live",
     "status_key": "live",
-    "description": "Standalone browser utilities — WebRTC file transfer (Sandesh), read-only file scanner (Drishti), and PC cleanup guide (Shuddhi). Zero build, zero backend.",
+    "description": "Standalone browser utilities and games — WebRTC file transfer (Sandesh), file scanner (Drishti), PC cleanup (Shuddhi), audio extractor (Badhai), Snake & Ladder, Color Match. Formerly narad.",
     "tags": [
       "Cloudflare Pages",
       "WebRTC",
       "JavaScript"
     ],
-    "live_url": "https://narad-7hc.pages.dev/",
+    "live_url": "https://prayog.pages.dev/",
     "local": true,
-    "last_updated": "2026-07-21",
-    "github_remote": "git@github.com:sdachary/narad.git"
+    "last_updated": "2026-07-26",
+    "github_remote": "git@github.com:sdachary/prayog.git"
   },
   {
     "name": "MCP-HUB",
@@ -120,20 +120,20 @@
     "github_remote": "git@github.com:sdachary/devendra.git"
   },
   {
-    "name": "SARASWATI",
-    "slug": "saraswati",
-    "status": "Live",
-    "status_key": "live",
-    "description": "Kids coding education platform — interactive games (Snake Ladder, Color Game) that teach Python concepts through play.",
+    "name": "SRI",
+    "slug": "sri",
+    "status": "Local / Standalone",
+    "status_key": "local",
+    "description": "Open-source design toolkit — 16 coding-agent CLIs, 31 composable Skills, 72 brand-grade Design Systems. Built with Next.js + TypeScript.",
     "tags": [
-      "Cloudflare Pages",
-      "JavaScript",
-      "HTML"
+      "TypeScript",
+      "Next.js",
+      "React"
     ],
-    "live_url": "https://saraswati-7v3.pages.dev/",
+    "live_url": null,
     "local": true,
-    "last_updated": "2026-07-21",
-    "github_remote": "git@github.com:sdachary/saraswati.git"
+    "last_updated": "2026-07-02",
+    "github_remote": "git@github.com:sdachary/sri.git"
   },
   {
     "name": "UNNATI",
