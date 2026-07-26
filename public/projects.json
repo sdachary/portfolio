@@ -71,20 +71,20 @@
     "github_remote": "git@github.com:sdachary/indra.git"
   },
   {
-    "name": "KANAK",
-    "slug": "kanak",
+    "name": "UDHYAM",
+    "slug": "udhyam",
     "status": "Live",
     "status_key": "live",
-    "description": "Jewellery retail management SaaS. Real-time dashboard for inventory, gold rate tracking, sales, customer ledger, billing, and financial settlement.",
+    "description": "Jewellery retail management SaaS. Real-time dashboard for inventory, gold rate tracking, sales, customer ledger, billing, and financial settlement. Formerly Kanak. Better-Auth + CF Workers + Supabase.",
     "tags": [
       "Cloudflare Pages",
       "Supabase",
       "JavaScript"
     ],
-    "live_url": "https://kanak-dj5.pages.dev/",
+    "live_url": "https://udhyam.pages.dev/",
     "local": true,
-    "last_updated": "2026-06-26",
-    "github_remote": "git@github.com:sdachary/kanak.git"
+    "last_updated": "2026-07-26",
+    "github_remote": "git@github.com:sdachary/udhyam.git"
   },
   {
     "name": "KARMA",

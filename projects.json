@@ -36,18 +36,6 @@
     "github_remote": "git@github.com:sdachary/chitragupta.git"
   },
   {
-    "name": "GANESH",
-    "slug": "ganesh",
-    "status": "Local / Standalone",
-    "status_key": "local",
-    "description": "Process 700+ screenshots automatically with smart resource management that scales CPU/RAM based on system activity",
-    "tags": [],
-    "live_url": null,
-    "local": true,
-    "last_updated": null,
-    "github_remote": null
-  },
-  {
     "name": "INDRA",
     "slug": "indra",
     "status": "Local / Standalone",
@@ -60,18 +48,20 @@
     "github_remote": "git@github.com:sdachary/indra.git"
   },
   {
-    "name": "KANAK",
-    "slug": "kanak",
+    "name": "UDHYAM",
+    "slug": "udhyam",
     "status": "Live",
     "status_key": "live",
-    "description": "Kanak is a jewellery retail management SaaS. Real-time dashboard for inventory, gold rate tracking, sales, purchases, customer ledger, billing, and financial settlement",
+    "description": "Jewellery retail management SaaS. Real-time dashboard for inventory, gold rate tracking, sales, customer ledger, billing, and financial settlement. Formerly Kanak. Better-Auth + CF Workers + Supabase.",
     "tags": [
-      "Cloudflare Pages"
+      "Cloudflare Pages",
+      "Supabase",
+      "JavaScript"
     ],
-    "live_url": "https://kanak-dj5.pages.dev/",
+    "live_url": "https://udhyam.pages.dev/",
     "local": true,
-    "last_updated": "2026-06-04",
-    "github_remote": "git@github.com:sdachary/kanak.git"
+    "last_updated": "2026-07-26",
+    "github_remote": "git@github.com:sdachary/udhyam.git"
   },
   {
     "name": "KARMA",
@@ -128,52 +118,6 @@
     "local": true,
     "last_updated": "2026-06-04",
     "github_remote": "git@github.com:sdachary/devendra.git"
-  },
-  {
-    "name": "OPEN-DESIGN",
-    "slug": "open-design",
-    "status": "Local / Standalone",
-    "status_key": "local",
-    "description": "<p align=\"center\"> <img src=\"docs/assets/banner.png\" alt=\"Open Design \u2014 editorial cover: design with the agent on your laptop\" width=\"100%\" />",
-    "tags": [
-      "TypeScript"
-    ],
-    "live_url": null,
-    "local": true,
-    "last_updated": "2026-06-03",
-    "github_remote": "https://github.com/nexu-io/open-design"
-  },
-  {
-    "name": "SARKARIALERT",
-    "slug": "sarkarialert",
-    "status": "Local / Standalone",
-    "status_key": "local",
-    "description": "Live: [sarkarialert.in](https://sarkarialert.in)",
-    "tags": [],
-    "live_url": null,
-    "local": true,
-    "last_updated": null,
-    "github_remote": null
-  },
-  {
-    "name": "SOCIAL-BLUEPRINT-AI",
-    "slug": "social-blueprint-ai",
-    "status": "Local / Standalone",
-    "status_key": "local",
-    "description": "AI-powered social media audit and growth strategy tool built with React + Vite (frontend) and Cloudflare Workers + D1 (backend)",
-    "tags": [
-      "React",
-      "Vite",
-      "Express",
-      "Hono",
-      "Tailwind",
-      "TypeScript",
-      "Cloudflare Pages"
-    ],
-    "live_url": null,
-    "local": true,
-    "last_updated": "2026-06-03",
-    "github_remote": "git@github.com:sdachary/social-blueprint-ai.git"
   },
   {
     "name": "SARASWATI",

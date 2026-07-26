@@ -68,5 +68,61 @@
     "description": "Password toggle + forgot/reset flow",
     "date": "2026-07-10",
     "status": "completed"
+  },
+  {
+    "phase": "",
+    "project": "Udhyam",
+    "description": "Kanak→Udhyam rebrand: repo rename, PG schema, CF project, 143 brand refs",
+    "date": "2026-07-24",
+    "status": "completed"
+  },
+  {
+    "phase": "",
+    "project": "Narad",
+    "description": "Badhai audio extraction tool added, PC guide moved from portfolio",
+    "date": "2026-07-24",
+    "status": "completed"
+  },
+  {
+    "phase": "",
+    "project": "MCP Hub",
+    "description": "Usage dashboard, Zapier MCP eval, Sentry error fixes",
+    "date": "2026-07-24",
+    "status": "completed"
+  },
+  {
+    "phase": "",
+    "project": "Codebase",
+    "description": "codebase-memory-mcp installed and indexed across all 14 repos",
+    "date": "2026-07-24",
+    "status": "completed"
+  },
+  {
+    "phase": "",
+    "project": "Portfolio",
+    "description": "Manacitra 3D infrastructure map task created, activity sync moved to oradev systemd timer",
+    "date": "2026-07-25",
+    "status": "completed"
+  },
+  {
+    "phase": "",
+    "project": "Udhyam",
+    "description": "Better-Auth integration (14 API files rewritten), JWT verification, logAudit refactored, all UUID cols migrated to TEXT",
+    "date": "2026-07-26",
+    "status": "completed"
+  },
+  {
+    "phase": "",
+    "project": "Udhyam",
+    "description": "End-to-end UAT completed — 14 API endpoints verified, gold rate cron fixed, billing/ledger/inventory tested, email+WhatsApp verified",
+    "date": "2026-07-26",
+    "status": "completed"
+  },
+  {
+    "phase": "",
+    "project": "Udhyam",
+    "description": "Login page UX redesign — 3-tab replaced with identifier-first pattern, test data cleaned",
+    "date": "2026-07-26",
+    "status": "completed"
   }
 ]

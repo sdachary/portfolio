@@ -199,15 +199,15 @@
       "name": "Kubera Dash",
       "type": "app",
       "color": "#a855f7",
-      "url": "https://kubera-d4k.pages.dev",
-      "desc": "Finance dashboard. Vite + React."
+      "url": "https://kubera.140.245.227.176.nip.io",
+      "desc": "Finance dashboard. Rails + Docker on oradb."
     },
     {
       "id": "unnati",
       "name": "Unnati",
       "type": "app",
       "color": "#6366f1",
-      "url": "https://unnati-70z.pages.dev",
+      "url": "https://unnati.pages.dev",
       "desc": "AI career platform. Next.js 15."
     },
     {
@@ -223,7 +223,7 @@
       "name": "Saraswati",
       "type": "app",
       "color": "#ec4899",
-      "url": "https://saraswati-7v3.pages.dev",
+      "url": "https://saraswati.pages.dev",
       "desc": "Kids coding education. Interactive games."
     },
     {
@@ -239,7 +239,7 @@
       "name": "Narad",
       "type": "app",
       "color": "#06b6d4",
-      "url": "https://narad-7hc.pages.dev",
+      "url": "https://narad.pages.dev",
       "desc": "Browser tools: Sandesh, Drishti, Shuddhi."
     },
     {
