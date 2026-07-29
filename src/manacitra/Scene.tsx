@@ -1,3 +1,4 @@
+import { Suspense } from 'react';
 import Stars from './Stars';
 import Lights from './Lights';
 import EnvMap from './Environment';
@@ -20,14 +21,16 @@ export default function Scene({ data }: { data: ManacitraData }) {
       <Lights />
       <Ocean />
       <Particles />
-      {data.islands.map(isl => (
-        <Island key={isl.id} island={isl} />
-      ))}
-      <group>
-        {data.floating.map((f, i) => (
-          <FloatingIsland key={f.id} app={f} index={i} total={data.floating.length} />
+      <Suspense fallback={null}>
+        {data.islands.map(isl => (
+          <Island key={isl.id} island={isl} />
         ))}
-      </group>
+        <group>
+          {data.floating.map((f, i) => (
+            <FloatingIsland key={f.id} app={f} index={i} total={data.floating.length} />
+          ))}
+        </group>
+      </Suspense>
       <Connections islands={data.islands} floating={data.floating} connections={data.connections} />
       <CameraRig />
       <Effects />
