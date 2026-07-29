@@ -1,10 +1,12 @@
 import Stars from './Stars';
 import Lights from './Lights';
+import EnvMap from './Environment';
 import Ocean from './Ocean';
 import Island from './Island';
 import FloatingIsland from './FloatingIsland';
 import Connections from './Connections';
 import CameraRig from './CameraRig';
+import Effects from './Effects';
 import type { ManacitraData } from './types';
 
 export default function Scene({ data }: { data: ManacitraData }) {
@@ -12,6 +14,7 @@ export default function Scene({ data }: { data: ManacitraData }) {
     <>
       <color attach="background" args={[0x04060e]} />
       <fogExp2 attach="fog" args={[0x04060e, 0.018]} />
+      <EnvMap />
       <Stars />
       <Lights />
       <Ocean />
@@ -25,6 +28,7 @@ export default function Scene({ data }: { data: ManacitraData }) {
       </group>
       <Connections islands={data.islands} floating={data.floating} connections={data.connections} />
       <CameraRig />
+      <Effects />
     </>
   );
 }

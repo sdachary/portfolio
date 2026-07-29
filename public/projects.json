@@ -201,5 +201,23 @@
     "local": true,
     "last_updated": "2026-06-26",
     "github_remote": "git@github.com:sdachary/vishwakarma.git"
+  },
+  {
+    "name": "MĀNACITRA",
+    "slug": "manacitra",
+    "status": "Live",
+    "status_key": "live",
+    "description": "3D infrastructure archipelago — interactive map of every service, VM, and deployment visualized as a floating island city. Real-time health checks, day/night cycle, HDRI lighting. Built with React Three Fiber.",
+    "tags": [
+      "Three.js",
+      "R3F",
+      "TypeScript",
+      "React",
+      "Vite"
+    ],
+    "live_url": "https://sdachary.github.io/portfolio/manacitra.html",
+    "local": true,
+    "last_updated": "2026-07-29",
+    "github_remote": "git@github.com:sdachary/portfolio.git"
   }
 ]
