@@ -7,6 +7,7 @@ import FloatingIsland from './FloatingIsland';
 import Connections from './Connections';
 import CameraRig from './CameraRig';
 import Effects from './Effects';
+import Particles from './Particles';
 import type { ManacitraData } from './types';
 
 export default function Scene({ data }: { data: ManacitraData }) {
@@ -18,6 +19,7 @@ export default function Scene({ data }: { data: ManacitraData }) {
       <Stars />
       <Lights />
       <Ocean />
+      <Particles />
       {data.islands.map(isl => (
         <Island key={isl.id} island={isl} />
       ))}

@@ -2,6 +2,7 @@ import { Canvas } from '@react-three/fiber';
 import * as THREE from 'three';
 import { useEffect, useState, useMemo } from 'react';
 import Scene from './Scene';
+import InfoPanel from './InfoPanel';
 import { useManacitraStore } from './store';
 import { preloadModels } from './models';
 import type { ManacitraData } from './types';
@@ -119,6 +120,7 @@ export default function Manacitra() {
     <div style={{ width: '100vw', height: '100vh', background: '#04060e', position: 'relative', overflow: 'hidden' }}>
       {!loaded && <Loader progress={progress} status={status} />}
       <Header online={online} offline={offline} total={total} />
+      <InfoPanel />
       {data && (
         <Canvas
           camera={{ fov: 45, near: 0.1, far: 100, position: [16, 14, 20] }}
@@ -126,6 +128,10 @@ export default function Manacitra() {
           onCreated={({ gl }) => {
             gl.shadowMap.enabled = true;
             gl.shadowMap.type = THREE.PCFSoftShadowMap;
+          }}
+          onPointerMissed={() => {
+            useManacitraStore.getState().setSelected(null);
+            useManacitraStore.getState().flyHome();
           }}
         >
           <Scene data={data} />

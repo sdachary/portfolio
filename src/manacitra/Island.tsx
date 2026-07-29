@@ -38,7 +38,7 @@ export default function Island({ island }: { island: IslandType }) {
         </Html>
       )}
       {island.buildings.map((b, i) => (
-        <Building key={b.id} building={b} index={i} total={island.buildings.length} />
+        <Building key={b.id} building={b} index={i} total={island.buildings.length} islandX={island.x} islandZ={island.z} />
       ))}
     </group>
   );

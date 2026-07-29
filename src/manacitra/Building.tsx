@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 import type { Building as BuildingType } from './types';
-import { useManacitraStore } from './store';
+import { useManacitraStore, type CamTarget } from './store';
 
 function healthColor(id: string, health: Record<string, { online: boolean }>): number {
   const h = health[id];
@@ -8,8 +8,11 @@ function healthColor(id: string, health: Record<string, { online: boolean }>): n
   return h.online ? 0x22c55e : 0xef4444;
 }
 
-export default function Building({ building, index, total }: { building: BuildingType; index: number; total: number }) {
+export default function Building({ building, index, total, islandX, islandZ }: { building: BuildingType; index: number; total: number; islandX: number; islandZ: number }) {
   const health = useManacitraStore(s => s.data?.health ?? {});
+  const selectedId = useManacitraStore(s => s.selectedId);
+  const setSelected = useManacitraStore(s => s.setSelected);
+  const flyTo = useManacitraStore(s => s.flyTo);
   const h = building.h || 1;
   const w = 0.55;
   const sp = 1.6;
@@ -20,10 +23,19 @@ export default function Building({ building, index, total }: { building: Buildin
   const bc = new THREE.Color(building.color);
   const hl = healthColor(building.id, health);
   const nWin = Math.floor(h * 2.5);
+  const isSelected = selectedId === building.id;
+
+  const handleClick = (e: { stopPropagation: () => void }) => {
+    e.stopPropagation();
+    setSelected(building.id);
+    const target: CamTarget = { x: islandX + ox, y: 0.5, z: islandZ + oz };
+    const pos: CamTarget = { x: islandX + ox + 4, y: 4, z: islandZ + oz + 4 };
+    flyTo(pos, target);
+  };
 
   return (
-    <group position={[ox, 0, oz]} userData={{ id: building.id, name: building.name, type: building.type, desc: building.desc, color: building.color }}>
-      <mesh position={[0, h / 2 + 0.05, 0]} castShadow receiveShadow>
+    <group position={[ox, 0, oz]} userData={{ id: building.id }}>
+      <mesh position={[0, h / 2 + 0.05, 0]} castShadow receiveShadow onClick={handleClick}>
         <boxGeometry args={[w, h, w]} />
         <meshStandardMaterial color={bc} roughness={0.5} metalness={0.4} transparent opacity={0.92} />
       </mesh>
@@ -44,13 +56,13 @@ export default function Building({ building, index, total }: { building: Buildin
         const side = Math.floor(Math.random() * 4);
         const off = w / 2 + 0.005;
         const sides = [
-          { pos: [off, wy, wz], look: [1, 0, 0] },
-          { pos: [-off, wy, wz], look: [-1, 0, 0] },
-          { pos: [wx, wy, off], look: [0, 0, 1] },
-          { pos: [wx, wy, -off], look: [0, 0, -1] },
+          { pos: [off, wy, wz] as [number, number, number] },
+          { pos: [-off, wy, wz] as [number, number, number] },
+          { pos: [wx, wy, off] as [number, number, number] },
+          { pos: [wx, wy, -off] as [number, number, number] },
         ];
         return (
-          <mesh key={i} position={sides[side].pos as [number, number, number]}>
+          <mesh key={i} position={sides[side].pos}>
             <planeGeometry args={[0.07, 0.08]} />
             <meshBasicMaterial color={0xfbbf24} transparent opacity={0.1 + Math.random() * 0.15} />
           </mesh>
@@ -61,10 +73,16 @@ export default function Building({ building, index, total }: { building: Buildin
         <meshBasicMaterial
           color={hl}
           transparent
-          opacity={hl === 0x22c55e ? 0.4 : hl === 0xef4444 ? 0.25 : 0.15}
+          opacity={isSelected ? 0.7 : hl === 0x22c55e ? 0.4 : hl === 0xef4444 ? 0.25 : 0.15}
           blending={THREE.AdditiveBlending}
         />
       </mesh>
+      {isSelected && (
+        <mesh position={[0, h / 2, 0]}>
+          <boxGeometry args={[w + 0.1, h + 0.1, w + 0.1]} />
+          <meshBasicMaterial color={hl} transparent opacity={0.08} blending={THREE.AdditiveBlending} />
+        </mesh>
+      )}
     </group>
   );
 }
