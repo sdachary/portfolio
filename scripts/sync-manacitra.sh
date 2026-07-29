@@ -61,7 +61,7 @@ async function run() {
     { id: 'vishwakarma', url: 'https://vishwakarma.pages.dev' },
     { id: 'darpan',      url: 'https://darpan.pages.dev' },
     { id: 'prayog',      url: 'https://prayog.pages.dev' },
-    { id: 'portfolio',   url: 'https://sdachary.github.io/portfolio' },
+    { id: 'portfolio',   url: 'https://aham.pages.dev' },
   ];
 
   const results = {};

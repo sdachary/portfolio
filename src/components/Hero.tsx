@@ -42,7 +42,7 @@ export default function Hero() {
           transition={{ duration: 0.8, delay: 0.9, ease }}
           className="hero-actions"
         >
-          <a href="/portfolio/resume.pdf" target="_blank" rel="noreferrer" className="hero-cta">
+          <a href="/resume.pdf" target="_blank" rel="noreferrer" className="hero-cta">
             Download Resume
             <span className="hero-cta-icon">↓</span>
           </a>

@@ -1,6 +1,6 @@
 import { useGLTF } from '@react-three/drei';
 
-const BASE = '/portfolio/manacitra/models/';
+const BASE = '/manacitra/models/';
 
 export interface ModelDef {
   path: string;

@@ -97,7 +97,7 @@ export default function Manacitra() {
   useEffect(() => {
     preloadModels();
     setProgress(5);
-    fetch('/portfolio/manacitra/data.json')
+    fetch('/manacitra/data.json')
       .then(r => r.json())
       .then((d: ManacitraData) => {
         setProgress(50);
