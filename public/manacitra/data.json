@@ -317,7 +317,7 @@
     "islands": 2,
     "floating": 9,
     "connections": 13,
-    "total": 25
+    "total": 26
   },
   "health": {
     "nginx": {
@@ -417,6 +417,10 @@
       "checked_at": "2026-07-27T00:10:03.210Z"
     },
     "portfolio": {
+      "online": true,
+      "checked_at": "2026-07-27T00:10:03.210Z"
+    },
+    "fail2ban": {
       "online": true,
       "checked_at": "2026-07-27T00:10:03.210Z"
     }

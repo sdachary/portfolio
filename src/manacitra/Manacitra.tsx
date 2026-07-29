@@ -23,7 +23,7 @@ function Loader({ progress, status }: { progress: number; status: string }) {
         background: 'linear-gradient(135deg,#7c3aed,#3b82f6)',
         WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent',
         marginBottom: '.5rem',
-      }}>मानचित्र</h1>
+      }}>Manacitra</h1>
       <p style={{ color: 'rgba(255,255,255,0.25)', fontSize: '.85rem', letterSpacing: '.3em', textTransform: 'uppercase', marginBottom: '.75rem' }}>
         Infrastructure Map
       </p>
@@ -52,7 +52,7 @@ function Header({ online, offline, total }: { online: number; offline: number; t
           fontWeight: 500,
           background: 'linear-gradient(135deg,#c8d0e0,#6b7a99)',
           WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent',
-        }}>मानचित्र</span>
+        }}>Manacitra</span>
         <span style={{ color: 'rgba(255,255,255,0.08)' }}>·</span>
         <span style={{ color: 'rgba(255,255,255,0.35)', display: 'flex', alignItems: 'center', gap: '.35rem' }}>
           <span style={{ width: 5, height: 5, borderRadius: '50%', display: 'inline-block', background: '#22c55e', boxShadow: '0 0 6px rgba(34,197,94,0.4)' }} />
