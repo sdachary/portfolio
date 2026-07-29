@@ -3,6 +3,7 @@ import * as THREE from 'three';
 import { useEffect, useState, useMemo } from 'react';
 import Scene from './Scene';
 import { useManacitraStore } from './store';
+import { preloadModels } from './models';
 import type { ManacitraData } from './types';
 
 function Loader({ progress, status }: { progress: number; status: string }) {
@@ -93,6 +94,7 @@ export default function Manacitra() {
   }, [data]);
 
   useEffect(() => {
+    preloadModels();
     setProgress(5);
     fetch('/portfolio/manacitra/data.json')
       .then(r => r.json())
