@@ -33,10 +33,10 @@ function Card({ data, side, accent }: { data: DualCardData; side: 'left' | 'righ
   const borderColor = accent === 'var(--accent)' ? 'rgba(200,146,42,0.3)' : 'rgba(184,76,42,0.3)'
   return (
     <motion.div
-      initial={{ opacity: 0, y: 40 }}
-      whileInView={{ opacity: 1, y: 0 }}
+      initial={{ opacity: 0, x: side === 'left' ? -60 : 60 }}
+      whileInView={{ opacity: 1, x: 0 }}
       viewport={{ once: true }}
-      transition={{ duration: 0.7, delay: side === 'left' ? 0 : 0.2, ease }}
+      transition={{ duration: 0.7, delay: side === 'left' ? 0 : 0.2, ease: [0.32, 0.72, 0, 1] }}
     >
       <div className="dual-badge" style={{ color: accent, borderColor }}>
         {data.eyebrow}
@@ -66,14 +66,22 @@ function Card({ data, side, accent }: { data: DualCardData; side: 'left' | 'righ
 
 export default function DualIdentity() {
   return (
-    <section id="dual" className="section section-alt section-divider-both">
+    <section id="dual" className="section section-alt section-divider-both dual-pin-section">
       <div className="section-header">
-        <h2 className="section-title">The Two Modes</h2>
+        <motion.h2
+          initial={{ opacity: 0, letterSpacing: '0.3em' }}
+          whileInView={{ opacity: 1, letterSpacing: '-0.02em' }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5, ease: [0.32, 0.72, 0, 1] }}
+          className="section-title"
+        >The Two Modes</motion.h2>
       </div>
-      <div className="dual-grid">
-        <Card data={day} side="left" accent="var(--accent)" />
-        <div className="dual-vr" />
-        <Card data={night} side="right" accent="var(--accent2)" />
+      <div className="dual-pin">
+        <div className="dual-grid">
+          <Card data={day} side="left" accent="var(--accent)" />
+          <div className="dual-vr" />
+          <Card data={night} side="right" accent="var(--accent2)" />
+        </div>
       </div>
     </section>
   )

@@ -54,7 +54,13 @@ export default function WorkWithMe() {
   return (
     <section id="work" className="section section-alt section-divider-both">
       <div className="section-header">
-        <h2 className="section-title">How I Can Help</h2>
+        <motion.h2
+          initial={{ opacity: 0, letterSpacing: '0.3em' }}
+          whileInView={{ opacity: 1, letterSpacing: '-0.02em' }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5, ease: [0.32, 0.72, 0, 1] }}
+          className="section-title"
+        >How I Can Help</motion.h2>
       </div>
 
       <div className="dual-grid">

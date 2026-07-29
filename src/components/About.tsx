@@ -35,14 +35,15 @@ export default function About() {
 
       <div className="about-body">
         {paragraphs.map((p, i) => (
-          <motion.p
-            key={i}
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.7, delay: i * 0.1, ease }}
-            className="about-text"
-          >{p}</motion.p>
+          <div className="about-clip-wrap" key={i}>
+            <motion.p
+              initial={{ opacity: 0, clipPath: 'inset(0 100% 0 0)' }}
+              whileInView={{ opacity: 1, clipPath: 'inset(0 0% 0 0)' }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.7, delay: i * 0.15, ease }}
+              className="about-text"
+            >{p}</motion.p>
+          </div>
         ))}
       </div>
     </section>

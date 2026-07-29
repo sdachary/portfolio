@@ -47,7 +47,13 @@ export default function Projects() {
   return (
     <section id="projects" className="section section-alt" style={{ overflow: 'hidden' }}>
       <div className="section-header">
-        <h2 className="section-title">Projects</h2>
+        <motion.h2
+          initial={{ opacity: 0, letterSpacing: '0.3em' }}
+          whileInView={{ opacity: 1, letterSpacing: '-0.02em' }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5, ease }}
+          className="section-title"
+        >Projects</motion.h2>
       </div>
 
       <motion.div
@@ -65,8 +71,8 @@ export default function Projects() {
           return (
             <motion.div
               key={p.slug || i}
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
+              initial={{ opacity: 0, scale: 0.96 }}
+              whileInView={{ opacity: 1, scale: 1 }}
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: i * 0.04, ease }}
               className={`project-card${featured ? ' featured' : ''}`}

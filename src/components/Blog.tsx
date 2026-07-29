@@ -17,7 +17,13 @@ export default function Blog() {
   return (
     <section id="blog" className="section section-alt section-divider">
       <div className="section-header">
-        <h2 className="section-title">Blog</h2>
+        <motion.h2
+          initial={{ opacity: 0, letterSpacing: '0.3em' }}
+          whileInView={{ opacity: 1, letterSpacing: '-0.02em' }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5, ease }}
+          className="section-title"
+        >Blog</motion.h2>
       </div>
 
       <div className="blog-controls">
@@ -56,8 +62,8 @@ export default function Blog() {
         {filtered.map((post, i) => (
           <motion.article
             key={post.slug}
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6, delay: i * 0.1, ease }}
             className="blog-post"

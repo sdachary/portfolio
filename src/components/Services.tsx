@@ -30,13 +30,19 @@ export default function Services() {
   return (
     <section id="services" className="section section-divider">
       <div className="section-header">
-        <h2 className="section-title">Services</h2>
+        <motion.h2
+          initial={{ opacity: 0, letterSpacing: '0.3em' }}
+          whileInView={{ opacity: 1, letterSpacing: '-0.02em' }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5, ease }}
+          className="section-title"
+        >Services</motion.h2>
       </div>
 
       <div className="card-grid card-grid-asymmetric">
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
+          initial={{ opacity: 0, scale: 0.96 }}
+          whileInView={{ opacity: 1, scale: 1 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6, ease }}
           className="card"
@@ -50,8 +56,8 @@ export default function Services() {
           {services.slice(1).map((s, i) => (
             <motion.div
               key={i}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
+              initial={{ opacity: 0, scale: 0.96 }}
+              whileInView={{ opacity: 1, scale: 1 }}
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: 0.1 + i * 0.08, ease }}
               className="card"

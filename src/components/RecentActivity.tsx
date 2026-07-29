@@ -1,5 +1,5 @@
-import { useEffect, useState } from 'react'
-import { motion } from 'framer-motion'
+import { useEffect, useState, useRef } from 'react'
+import { motion, useScroll, useTransform } from 'framer-motion'
 import type { ActivityEntry } from '../data/types'
 
 const ease = [0.32, 0.72, 0, 1] as const
@@ -15,11 +15,14 @@ export default function RecentActivity() {
   const [activity, setActivity] = useState<ActivityEntry[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(false)
+  const sectionRef = useRef<HTMLDivElement>(null)
+  const { scrollYProgress } = useScroll({ target: sectionRef, offset: ['start end', 'end start'] })
+  const railScale = useTransform(scrollYProgress, [0, 0.3, 0.7, 1], [0.3, 1, 1, 0.3])
 
   useEffect(() => {
     fetch(import.meta.env.BASE_URL + 'activity.json')
       .then(r => r.ok ? r.json() : [])
-      .then(d => { setActivity(d); setLoading(false) })
+      .then(d => { setActivity([...d].sort((a, b) => b.date.localeCompare(a.date))); setLoading(false) })
       .catch(() => { setError(true); setLoading(false) })
   }, [])
 
@@ -47,11 +50,17 @@ export default function RecentActivity() {
   return (
     <section id="activity" className="section section-alt section-divider">
       <div className="section-header">
-        <h2 className="section-title">Recent Activity</h2>
+        <motion.h2
+          initial={{ opacity: 0, letterSpacing: '0.3em' }}
+          whileInView={{ opacity: 1, letterSpacing: '-0.02em' }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5, ease }}
+          className="section-title"
+        >Recent Activity</motion.h2>
       </div>
 
-      <div className="activity-wrap">
-        <div className="activity-rail" />
+      <div className="activity-wrap" ref={sectionRef}>
+        <motion.div className="activity-rail" style={{ scaleY: railScale, transformOrigin: 'top' }} />
         {activity.map((item, i) => (
           <motion.div
             key={`${item.phase}-${item.project}-${i}`}

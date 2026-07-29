@@ -17,7 +17,13 @@ export default function Skills() {
   return (
     <section id="skills" className="section">
       <div className="section-header">
-        <h2 className="section-title">Tech Stack</h2>
+        <motion.h2
+          initial={{ opacity: 0, letterSpacing: '0.3em' }}
+          whileInView={{ opacity: 1, letterSpacing: '-0.02em' }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5, ease }}
+          className="section-title"
+        >Tech Stack</motion.h2>
       </div>
 
       <motion.div

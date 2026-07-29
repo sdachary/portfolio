@@ -7,15 +7,21 @@ export default function Experience() {
   return (
     <section id="experience" className="section">
       <div className="section-header">
-        <h2 className="section-title">Experience</h2>
+        <motion.h2
+          initial={{ opacity: 0, letterSpacing: '0.3em' }}
+          whileInView={{ opacity: 1, letterSpacing: '-0.02em' }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5, ease }}
+          className="section-title"
+        >Experience</motion.h2>
       </div>
 
       <div className="card-grid card-grid-2">
         {experience.map((exp, i) => (
           <motion.div
             key={i}
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
+            initial={{ opacity: 0, scale: 0.96 }}
+            whileInView={{ opacity: 1, scale: 1 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6, delay: i * 0.08, ease }}
             className="card"

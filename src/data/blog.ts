@@ -39,7 +39,7 @@ const posts: BlogPost[] = [
     body: `
       <p>Kubera, the personal finance app, got a full multi-tenant refactor. The old model was single-user — great for me, useless for anyone else. The new model: BYO database with API keys, isolated schemas in Postgres, and Rack::Attack rate limiting.</p>
       <p>The migration touched 16 database migrations, the entire auth flow, and every controller. The hardest part was preserving backward compatibility — existing users shouldn't notice the change. Solution: a <code>current_tenant</code> method that checks API key header first, falls back to session-based user, and defaults to the original single-tenant path.</p>
-      <p>Deployed on <strong>oradb</strong> (140.245.227.176) with Docker + host Redis + Nginx nip.io proxy at <code>kubera.140.245.227.176.nip.io</code>. The multi-stage Docker build reduced image size from 1.2GB to 480MB.</p>
+      <p>Deployed on <strong>oradb</strong> (140.245.227.176) with Docker + host Redis + Nginx nip.io proxy at <code>acharylab.140.245.227.176.nip.io</code>. The multi-stage Docker build reduced image size from 1.2GB to 480MB.</p>
     `,
   },
   {
