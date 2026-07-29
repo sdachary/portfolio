@@ -59,8 +59,8 @@
           "desc": "Email relay. Gmail SMTP fallback chain. Port 4001."
         },
         {
-          "id": "kubera",
-          "name": "Kubera",
+          "id": "sampada",
+          "name": "Sampada",
           "type": "app",
           "h": 2.2,
           "color": "#22c55e",
@@ -75,8 +75,8 @@
           "desc": "Next.js API server. Inventory management. Port 3001."
         },
         {
-          "id": "unnati-server",
-          "name": "Unnati Server",
+          "id": "sadhan-server",
+          "name": "Sadhan Server",
           "type": "app",
           "h": 1.6,
           "color": "#6366f1",
@@ -195,19 +195,19 @@
       "desc": "Jewellery retail. Static HTML + Supabase."
     },
     {
-      "id": "kubera-dash",
-      "name": "Kubera Dash",
+      "id": "sampada",
+      "name": "Sampada",
       "type": "app",
       "color": "#a855f7",
-      "url": "https://kubera.140.245.227.176.nip.io",
-      "desc": "Finance dashboard. Rails + Docker on oradb."
+      "url": "https://acharylab.140.245.227.176.nip.io",
+      "desc": "Personal finance OS. Rails + Docker on oradb."
     },
     {
-      "id": "unnati",
-      "name": "Unnati",
+      "id": "sadhan",
+      "name": "Sadhan",
       "type": "app",
       "color": "#6366f1",
-      "url": "https://unnati.pages.dev",
+      "url": "https://sadhan.pages.dev",
       "desc": "AI career platform. Next.js 15."
     },
     {
@@ -260,18 +260,13 @@
       "label": "API"
     },
     {
-      "from": "unnati",
+      "from": "sadhan",
       "to": "oradb",
       "label": "API"
     },
     {
       "from": "vishwakarma",
       "to": "oradb",
-      "label": "API"
-    },
-    {
-      "from": "kubera-dash",
-      "to": "kubera",
       "label": "API"
     },
     {
@@ -295,17 +290,17 @@
       "label": "DB"
     },
     {
-      "from": "kubera",
+      "from": "sampada",
       "to": "redis",
       "label": "Queue"
     },
     {
-      "from": "kubera",
+      "from": "sampada",
       "to": "pg16",
       "label": "DB"
     },
     {
-      "from": "unnati-server",
+      "from": "sadhan-server",
       "to": "pg16",
       "label": "DB"
     },
@@ -317,12 +312,12 @@
   ],
   "generated_at": "2026-07-27T00:10:03.210Z",
   "stats": {
-    "total_services": 23,
-    "online": 23,
+    "total_services": 21,
+    "online": 21,
     "islands": 2,
     "floating": 9,
-    "connections": 14,
-    "total": 27
+    "connections": 13,
+    "total": 25
   },
   "health": {
     "nginx": {
@@ -341,7 +336,7 @@
       "online": true,
       "checked_at": "2026-07-27T00:10:03.210Z"
     },
-    "kubera": {
+    "sampada": {
       "online": true,
       "checked_at": "2026-07-27T00:10:03.210Z"
     },
@@ -349,7 +344,7 @@
       "online": true,
       "checked_at": "2026-07-27T00:10:03.210Z"
     },
-    "unnati-server": {
+    "sadhan-server": {
       "online": true,
       "checked_at": "2026-07-27T00:10:03.210Z"
     },
@@ -405,20 +400,12 @@
       "online": true,
       "checked_at": "2026-07-27T00:10:03.210Z"
     },
-    "kubera-dash": {
-      "online": false,
-      "checked_at": "2026-07-27T00:10:03.210Z"
-    },
-    "unnati": {
+    "sadhan": {
       "online": false,
       "checked_at": "2026-07-27T00:10:03.210Z"
     },
     "vishwakarma": {
       "online": true,
-      "checked_at": "2026-07-27T00:10:03.210Z"
-    },
-    "saraswati": {
-      "online": false,
       "checked_at": "2026-07-27T00:10:03.210Z"
     },
     "darpan": {

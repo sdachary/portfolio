@@ -102,8 +102,8 @@
     "github_remote": "git@github.com:sdachary/karma.git"
   },
   {
-    "name": "KUBERA",
-    "slug": "kubera",
+    "name": "SAMPADA",
+    "slug": "sampada",
     "status": "Open Source",
     "status_key": "open-source",
     "description": "Personal finance OS \u2014 self-hosted, open-source tool for tracking wealth, investments, and financial goals. From debt to zero to wealth.",
@@ -113,11 +113,11 @@
       "PostgreSQL",
       "Docker"
     ],
-    "live_url": "https://kubera-d4k.pages.dev",
+    "live_url": "https://sampada.pages.dev",
     "local": true,
-    "last_updated": "2026-07-01",
-    "github_remote": "git@github.com:sdachary/kubera.git",
-    "github_url": "https://github.com/sdachary/kubera"
+    "last_updated": "2026-07-29",
+    "github_remote": "git@github.com:sdachary/sampada.git",
+    "github_url": "https://github.com/sdachary/sampada"
   },
   {
     "name": "PRAYOG",
@@ -169,8 +169,8 @@
     "github_remote": "git@github.com:sdachary/sri.git"
   },
   {
-    "name": "UNNATI",
-    "slug": "unnati",
+    "name": "SADHAN",
+    "slug": "sadhan",
     "status": "Live",
     "status_key": "live",
     "description": "AI-powered job search assistant that automates tedious parts of job hunting while keeping you in control",
@@ -181,10 +181,10 @@
       "TypeScript",
       "Supabase"
     ],
-    "live_url": "https://unnati-70z.pages.dev/",
+    "live_url": "https://sadhan.pages.dev/",
     "local": true,
-    "last_updated": "2026-07-02",
-    "github_remote": "git@github.com:sdachary/unnati.git"
+    "last_updated": "2026-07-29",
+    "github_remote": "git@github.com:sdachary/sadhan.git"
   },
   {
     "name": "VISHWAKARMA",
