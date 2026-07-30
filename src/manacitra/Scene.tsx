@@ -1,26 +1,21 @@
 import { Suspense } from 'react';
-import Stars from './Stars';
 import Lights from './Lights';
 import EnvMap from './Environment';
-import Ocean from './Ocean';
 import Island from './Island';
 import FloatingIsland from './FloatingIsland';
 import Connections from './Connections';
+import Grid from './Grid';
 import IsometricCameraRig from './IsometricCameraRig';
 import Effects from './Effects';
-import Particles from './Particles';
 import type { ManacitraData } from './types';
 
 export default function Scene({ data }: { data: ManacitraData }) {
   return (
     <>
       <color attach="background" args={[0x04060e]} />
-      <fogExp2 attach="fog" args={[0x04060e, 0.018]} />
+      <Grid />
       <EnvMap />
-      <Stars />
       <Lights />
-      <Ocean />
-      <Particles />
       <Suspense fallback={null}>
         {data.islands.map(isl => (
           <Island key={isl.id} island={isl} />

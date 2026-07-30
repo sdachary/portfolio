@@ -38,19 +38,17 @@ export default function Connections({ islands, floating, connections }: {
         const midX = (fp.x + tp.x) / 2;
         const midZ = (fp.z + tp.z) / 2;
         const dy = Math.abs(tp.y - fp.y);
-        const midY = Math.max(fp.y, tp.y) + dy * 0.3 + 0.5;
+        const midY = Math.max(fp.y, tp.y) + dy * 0.15 + 0.3;
 
         const curve = new THREE.QuadraticBezierCurve3(
-          new THREE.Vector3(fp.x, fp.y + 0.1, fp.z),
+          new THREE.Vector3(fp.x, fp.y + 0.05, fp.z),
           new THREE.Vector3(midX, midY, midZ),
-          new THREE.Vector3(tp.x, tp.y + 0.1, tp.z),
+          new THREE.Vector3(tp.x, tp.y + 0.05, tp.z),
         );
-        const pts = curve.getPoints(40).map(p => [p.x, p.y, p.z] as [number, number, number]);
+        const pts = curve.getPoints(20).map(p => [p.x, p.y, p.z] as [number, number, number]);
 
         return (
-          <group key={`${c.from}-${c.to}-${i}`}>
-            <Line points={pts} color="#3b82f6" opacity={0.08} transparent />
-          </group>
+          <Line key={`${c.from}-${c.to}-${i}`} points={pts} color="#4a7cbf" opacity={0.15} transparent />
         );
       })}
     </group>
