@@ -10,6 +10,7 @@ import SceneDescription from './a11y/SceneDescription';
 import { useReducedMotion } from './a11y/useReducedMotion';
 import ContrastToggle from './ui/ContrastToggle';
 import AudioToggle from './ui/AudioToggle';
+import TouchControls from './controls/TouchControls';
 import useAmbientAudio from './audio/useAmbientAudio';
 import { useManacitraStore } from './store';
 import { preloadModels } from './models';
@@ -84,11 +85,20 @@ export default function Manacitra() {
   const [loaded, setLoaded] = useState(false);
   const [progress, setProgress] = useState(0);
   const [status, setStatus] = useState('Loading data...');
+  const [isMobile, setIsMobile] = useState(false);
   const data = useManacitraStore(s => s.data);
   const setData = useManacitraStore(s => s.setData);
   const highContrast = useManacitraStore(s => s.highContrast);
   useReducedMotion();
   useAmbientAudio();
+
+  useEffect(() => {
+    const mq = window.matchMedia('(max-width: 640px)');
+    setIsMobile(mq.matches);
+    const handler = (e: MediaQueryListEvent) => setIsMobile(e.matches);
+    mq.addEventListener('change', handler);
+    return () => mq.removeEventListener('change', handler);
+  }, []);
 
   const { online, offline, total } = useMemo(() => {
     if (!data) return { online: 0, offline: 0, total: 0 };
@@ -131,7 +141,13 @@ export default function Manacitra() {
     <div style={{ width: '100vw', height: '100vh', background: '#04060e', position: 'relative', overflow: 'hidden', ...(highContrast ? { filter: 'contrast(1.3) brightness(1.15)', '--hc': '1' } as React.CSSProperties : {}) }}>
       {!loaded && <Loader progress={progress} status={status} />}
       <Header online={online} offline={offline} total={total} />
-      <div style={{
+      <div style={isMobile ? {
+        position: 'fixed', bottom: '1rem', left: '50%', transform: 'translateX(-50%)', zIndex: 10,
+        display: 'flex', gap: 6, alignItems: 'center', maxWidth: 'calc(100vw - 2rem)',
+        overflowX: 'auto', padding: '8px 12px',
+        background: 'rgba(4,6,14,0.85)', backdropFilter: 'blur(24px)',
+        border: '1px solid rgba(255,255,255,0.06)', borderRadius: 16, WebkitOverflowScrolling: 'touch',
+      } : {
         position: 'fixed', top: '4.5rem', left: '50%', transform: 'translateX(-50%)', zIndex: 10,
         display: 'flex', gap: 8, alignItems: 'center',
       }}>
@@ -142,6 +158,7 @@ export default function Manacitra() {
         <AudioToggle />
       </div>
       <SceneDescription />
+      <TouchControls />
       <InfoPanel />
       {data && (
         <Canvas
