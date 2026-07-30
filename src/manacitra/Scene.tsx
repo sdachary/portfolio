@@ -6,7 +6,7 @@ import Ocean from './Ocean';
 import Island from './Island';
 import FloatingIsland from './FloatingIsland';
 import Connections from './Connections';
-import CameraRig from './CameraRig';
+import IsometricCameraRig from './IsometricCameraRig';
 import Effects from './Effects';
 import Particles from './Particles';
 import type { ManacitraData } from './types';
@@ -32,7 +32,7 @@ export default function Scene({ data }: { data: ManacitraData }) {
         </group>
       </Suspense>
       <Connections islands={data.islands} floating={data.floating} connections={data.connections} />
-      <CameraRig />
+      <IsometricCameraRig />
       <Effects />
     </>
   );

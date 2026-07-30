@@ -123,7 +123,7 @@ export default function Manacitra() {
       <InfoPanel />
       {data && (
         <Canvas
-          camera={{ fov: 45, near: 0.1, far: 100, position: [16, 14, 20] }}
+          camera={{ fov: 22, near: 0.1, far: 200, position: [29, 29, 29] }}
           gl={{ antialias: true, alpha: false, toneMapping: THREE.ACESFilmicToneMapping, toneMappingExposure: 1.2 }}
           onCreated={({ gl }) => {
             gl.shadowMap.enabled = true;
