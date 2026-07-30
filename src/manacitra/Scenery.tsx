@@ -24,7 +24,9 @@ export default function Scenery({ seed, radius }: { seed: number; radius: number
   const b1 = useGLTF(modelUrl(bushModels[1]));
   const b2 = useGLTF(modelUrl(bushModels[2]));
 
-  if (!t0.scene || !t1.scene) return null;
+  if (!t0.scene || !t1.scene || !t2.scene || !t3.scene || !t4.scene || !t5.scene
+    || !r0.scene || !r1.scene || !r2.scene || !r3.scene
+    || !b0.scene || !b1.scene || !b2.scene) return null;
 
   const trees = [t0.scene, t1.scene, t2.scene, t3.scene, t4.scene, t5.scene];
   const rocks = [r0.scene, r1.scene, r2.scene, r3.scene];
