@@ -6,6 +6,8 @@ import InfoPanel from './InfoPanel';
 import SearchBar from './ui/SearchBar';
 import FilterPanel from './ui/FilterPanel';
 import LayerToggles from './ui/LayerToggles';
+import SceneDescription from './a11y/SceneDescription';
+import { useReducedMotion } from './a11y/useReducedMotion';
 import { useManacitraStore } from './store';
 import { preloadModels } from './models';
 import type { ManacitraData } from './types';
@@ -81,6 +83,7 @@ export default function Manacitra() {
   const [status, setStatus] = useState('Loading data...');
   const data = useManacitraStore(s => s.data);
   const setData = useManacitraStore(s => s.setData);
+  useReducedMotion();
 
   const { online, offline, total } = useMemo(() => {
     if (!data) return { online: 0, offline: 0, total: 0 };
@@ -131,6 +134,7 @@ export default function Manacitra() {
         <FilterPanel />
         <LayerToggles />
       </div>
+      <SceneDescription />
       <InfoPanel />
       {data && (
         <Canvas

@@ -18,10 +18,6 @@ function easeApple(t: number): number {
   return t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2;
 }
 
-function prefersReduced(): boolean {
-  return typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-}
-
 export default function IsometricCameraRig() {
   const controlsRef = useRef<OrbitControlsImpl>(null!);
   const introRef = useRef(true);
@@ -33,6 +29,7 @@ export default function IsometricCameraRig() {
   const camTarget = useManacitraStore(s => s.camTarget);
   const isAnimating = useManacitraStore(s => s.isAnimating);
   const flyHome = useManacitraStore(s => s.flyHome);
+  const reduced = useManacitraStore(s => s.reducedMotion);
 
   useEffect(() => {
     const c = controlsRef.current;
@@ -47,8 +44,6 @@ export default function IsometricCameraRig() {
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
   }, [flyHome]);
-
-  const reduced = prefersReduced();
 
   useFrame(({ camera }) => {
     const c = controlsRef.current;
