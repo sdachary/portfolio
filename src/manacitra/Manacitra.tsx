@@ -25,21 +25,19 @@ function Loader({ progress, status }: { progress: number; status: string }) {
     }}>
       <div style={{
         width: 48, height: 48, border: '1.5px solid rgba(255,255,255,0.06)',
-        borderTopColor: '#7c3aed', borderRadius: '50%',
+        borderTopColor: '#6b7a99', borderRadius: '50%',
         animation: 'spin 1.2s cubic-bezier(0.4,0,0.2,1) infinite',
         marginBottom: '2rem',
       }} />
       <h1 style={{
-        fontSize: '2.5rem', fontWeight: 300, letterSpacing: '0.12em',
-        background: 'linear-gradient(135deg,#7c3aed,#3b82f6)',
-        WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent',
-        marginBottom: '.5rem',
+        fontSize: '2.5rem', fontWeight: 300, letterSpacing: '-0.02em',
+        color: '#c8d0e0', marginBottom: '.5rem',
       }}>Manacitra</h1>
-      <p style={{ color: 'rgba(255,255,255,0.25)', fontSize: '.85rem', letterSpacing: '.3em', textTransform: 'uppercase', marginBottom: '.75rem' }}>
+      <p style={{ color: 'rgba(255,255,255,0.25)', fontSize: '.8rem', letterSpacing: '.08em', textTransform: 'uppercase', marginBottom: '.75rem' }}>
         Infrastructure Map
       </p>
       <div style={{ width: 160, height: 1.5, background: 'rgba(255,255,255,0.06)', borderRadius: 2, marginTop: '.75rem', overflow: 'hidden' }}>
-        <span style={{ display: 'block', height: '100%', width: `${progress}%`, background: 'linear-gradient(90deg,#7c3aed,#3b82f6)', borderRadius: 2, transition: 'width .5s ease' }} />
+        <span style={{ display: 'block', height: '100%', width: `${progress}%`, background: '#6b7a99', borderRadius: 2, transition: 'width .5s ease' }} />
       </div>
       <p style={{ color: 'rgba(255,255,255,0.2)', fontSize: '.75rem', fontVariantNumeric: 'tabular-nums', marginTop: '.75rem' }}>
         {status}
@@ -60,9 +58,7 @@ function Header({ online, offline, total }: { online: number; offline: number; t
         border: '1px solid rgba(255,255,255,0.06)', borderRadius: 100, fontSize: '.8rem',
       }}>
         <span style={{
-          fontWeight: 500,
-          background: 'linear-gradient(135deg,#c8d0e0,#6b7a99)',
-          WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent',
+          fontWeight: 500, color: '#c8d0e0',
         }}>Manacitra</span>
         <span style={{ color: 'rgba(255,255,255,0.08)' }}>·</span>
         <span style={{ color: 'rgba(255,255,255,0.35)', display: 'flex', alignItems: 'center', gap: '.35rem' }}>
@@ -166,7 +162,7 @@ export default function Manacitra() {
           gl={{ antialias: true, alpha: false, toneMapping: THREE.ACESFilmicToneMapping, toneMappingExposure: 1.2 }}
           onCreated={({ gl }) => {
             gl.shadowMap.enabled = true;
-            gl.shadowMap.type = THREE.PCFSoftShadowMap;
+            gl.shadowMap.type = THREE.PCFShadowMap;
           }}
           onPointerMissed={() => {
             useManacitraStore.getState().setSelected(null);

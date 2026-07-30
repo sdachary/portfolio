@@ -23,10 +23,10 @@ export default function FilterPanel() {
             onClick={() => toggleStatus(s)}
             aria-pressed={active}
             style={{
-              background: active ? 'rgba(59,130,246,0.2)' : 'rgba(255,255,255,0.04)',
-              border: `1px solid ${active ? 'rgba(59,130,246,0.3)' : 'rgba(255,255,255,0.08)'}`,
+              background: active ? 'rgba(107,122,153,0.2)' : 'rgba(255,255,255,0.04)',
+              border: `1px solid ${active ? 'rgba(107,122,153,0.3)' : 'rgba(255,255,255,0.08)'}`,
               borderRadius: 6, padding: '4px 10px', cursor: 'pointer',
-              color: active ? '#93c5fd' : 'rgba(255,255,255,0.3)',
+              color: active ? '#c8d0e0' : 'rgba(255,255,255,0.3)',
               fontSize: '.75rem',
             }}
           >

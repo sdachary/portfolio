@@ -11,10 +11,10 @@ export default function ContrastToggle() {
       aria-label="Toggle high contrast"
       title="High contrast"
       style={{
-        background: hc ? 'rgba(59,130,246,0.2)' : 'rgba(255,255,255,0.04)',
-        border: `1px solid ${hc ? 'rgba(59,130,246,0.3)' : 'rgba(255,255,255,0.08)'}`,
+        background: hc ? 'rgba(107,122,153,0.2)' : 'rgba(255,255,255,0.04)',
+        border: `1px solid ${hc ? 'rgba(107,122,153,0.3)' : 'rgba(255,255,255,0.08)'}`,
         borderRadius: 6, padding: '4px 8px', cursor: 'pointer',
-        color: hc ? '#93c5fd' : 'rgba(255,255,255,0.4)',
+        color: hc ? '#c8d0e0' : 'rgba(255,255,255,0.4)',
         fontSize: '.8rem', lineHeight: 1,
       }}
     >

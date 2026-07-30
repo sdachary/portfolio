@@ -3,6 +3,18 @@ import { useManacitraStore } from './store';
 import { useMemo } from 'react';
 import { EASE, DURATION } from './motion/constants';
 
+function StatusDot({ online }: { online: boolean | null }) {
+  const reduced = useManacitraStore(s => s.reducedMotion);
+  const bg = online === null ? 'var(--unknown, #4466aa)' : online ? 'var(--online, #22c55e)' : 'var(--offline, #ef4444)';
+  return (
+    <motion.span
+      animate={reduced ? {} : { scale: [1, 1.2, 1] }}
+      transition={reduced ? {} : { repeat: Infinity, duration: 2, ease: 'easeInOut', repeatDelay: 3 }}
+      style={{ width: 6, height: 6, borderRadius: '50%', display: 'inline-block', background: bg, boxShadow: `0 0 8px ${bg}66` }}
+    />
+  );
+}
+
 export default function InfoPanel() {
   const data = useManacitraStore(s => s.data);
   const selectedId = useManacitraStore(s => s.selectedId);
@@ -57,11 +69,7 @@ export default function InfoPanel() {
           </div>
           <p style={{ fontSize: '.8rem', color: 'rgba(255,255,255,0.55)', lineHeight: 1.5, margin: '0 0 .75rem' }}>{info.desc}</p>
           <div style={{ display: 'flex', gap: '.5rem', alignItems: 'center' }}>
-            <motion.span
-              animate={{ scale: [1, 1.2, 1] }}
-              transition={{ repeat: Infinity, duration: 2, ease: 'easeInOut' }}
-              style={{ width: 6, height: 6, borderRadius: '50%', display: 'inline-block', background: info.online === null ? '#4466aa' : info.online ? '#22c55e' : '#ef4444', boxShadow: `0 0 8px ${info.online === null ? '#4466aa' : info.online ? '#22c55e' : '#ef4444'}66` }}
-            />
+            <StatusDot online={info.online} />
             <span style={{ fontSize: '.75rem', color: info.online === null ? '#4466aa' : info.online ? '#22c55e' : '#ef4444' }}>
               {info.online === null ? 'Unknown' : info.online ? 'Online' : 'Offline'}
             </span>

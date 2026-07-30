@@ -5,6 +5,7 @@ let sharedAudio: HTMLAudioElement | null = null;
 
 export default function useAmbientAudio() {
   const muted = useManacitraStore(s => s.audioMuted);
+  const setAudioAvailable = useManacitraStore(s => s.setAudioAvailable);
   const loaded = useRef(false);
 
   useEffect(() => {
@@ -12,8 +13,10 @@ export default function useAmbientAudio() {
     const audio = new Audio('/manacitra/ambient.mp3');
     audio.loop = true;
     audio.volume = 0.3;
+    audio.addEventListener('canplaythrough', () => setAudioAvailable(true), { once: true });
+    audio.addEventListener('error', () => setAudioAvailable(false), { once: true });
     sharedAudio = audio;
-  }, []);
+  }, [setAudioAvailable]);
 
   useEffect(() => {
     if (!sharedAudio) return;

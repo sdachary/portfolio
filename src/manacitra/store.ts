@@ -35,6 +35,7 @@ interface ManacitraStore {
   reducedMotion: boolean;
   highContrast: boolean;
   audioMuted: boolean;
+  audioAvailable: boolean;
   setData: (data: ManacitraData) => void;
   setHovered: (id: string | null) => void;
   setSelected: (id: string | null) => void;
@@ -48,6 +49,7 @@ interface ManacitraStore {
   setTimelineIndex: (idx: number | null) => void;
   setReducedMotion: (v: boolean) => void;
   setHighContrast: (v: boolean) => void;
+  setAudioAvailable: (v: boolean) => void;
   toggleAudio: () => void;
 }
 
@@ -78,6 +80,7 @@ export const useManacitraStore = create<ManacitraStore>((set, get) => ({
   reducedMotion: ls('manacitra_reducedMotion', false),
   highContrast: ls('manacitra_highContrast', false),
   audioMuted: ls('manacitra_audioMuted', true),
+  audioAvailable: false,
   setData: data => set({ data }),
   setHovered: hoveredId => set({ hoveredId }),
   setSelected: selectedId => set({ selectedId }),
@@ -91,5 +94,6 @@ export const useManacitraStore = create<ManacitraStore>((set, get) => ({
   setTimelineIndex: timelineIndex => set({ timelineIndex }),
   setReducedMotion: v => { localStorage.setItem('manacitra_reducedMotion', JSON.stringify(v)); set({ reducedMotion: v }); },
   setHighContrast: v => { localStorage.setItem('manacitra_highContrast', JSON.stringify(v)); set({ highContrast: v }); },
+  setAudioAvailable: v => set({ audioAvailable: v }),
   toggleAudio: () => { const v = !get().audioMuted; localStorage.setItem('manacitra_audioMuted', JSON.stringify(v)); set({ audioMuted: v }); },
 }));
