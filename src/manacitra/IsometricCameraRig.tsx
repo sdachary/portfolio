@@ -4,13 +4,13 @@ import { useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
 import type { OrbitControls as OrbitControlsImpl } from 'three-stdlib';
 import { useManacitraStore } from './store';
+import { DURATION } from './motion/constants';
 
 const ISO_DIST = 50;
 const ISO_NORM = ISO_DIST / Math.sqrt(3);
 const HOME_POS = new THREE.Vector3(ISO_NORM, ISO_NORM, ISO_NORM);
 const HOME_TARGET = new THREE.Vector3(0, 0.5, 0);
 const INTRO_START = new THREE.Vector3(ISO_NORM * 1.25, ISO_NORM * 1.25, ISO_NORM * 1.25);
-const FLY_DURATION = 900;
 
 function easeApple(t: number): number {
   if (t <= 0) return 0;
@@ -97,7 +97,7 @@ export default function IsometricCameraRig() {
         return;
       }
       const elapsed = performance.now() - flyStart.current;
-      const t = Math.min(elapsed / FLY_DURATION, 1);
+      const t = Math.min(elapsed / DURATION.camera, 1);
       const ease = easeApple(t);
       camera.position.lerpVectors(flyFrom.current, targetPos, ease);
       c.target.lerpVectors(flyFromTarget.current, targetTgt, ease);
