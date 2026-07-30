@@ -23,19 +23,19 @@ export default function FloatingIsland({ app, index, total }: { app: FloatingApp
     <group position={[x, yBase, z]} rotation={[Math.sin(index * 1.9) * 0.03, 0, Math.sin(index * 2.3) * 0.03]}>
       <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -0.03, 0]}>
         <circleGeometry args={[0.7, 12]} />
-        <meshStandardMaterial color={c} roughness={0.6} metalness={0.2} transparent opacity={0.25} />
+        <meshStandardMaterial color={c} roughness={0.4} metalness={0.5} transparent opacity={0.3} envMapIntensity={0.4} />
       </mesh>
       <mesh rotation={[-Math.PI / 2, 0, 0]}>
         <ringGeometry args={[0.55, 0.8, 16]} />
-        <meshStandardMaterial color={c} roughness={0.4} metalness={0.4} transparent opacity={0.1} side={THREE.DoubleSide} />
+        <meshStandardMaterial color={c} roughness={0.3} metalness={0.6} transparent opacity={0.15} side={THREE.DoubleSide} envMapIntensity={0.5} />
       </mesh>
       <mesh position={[0, 0.175, 0]} castShadow>
         <boxGeometry args={[0.45, 0.35, 0.45]} />
-        <meshStandardMaterial color={c} roughness={0.4} metalness={0.3} transparent opacity={0.92} />
+        <meshStandardMaterial color={c} roughness={0.25} metalness={0.7} transparent opacity={0.95} envMapIntensity={0.6} />
       </mesh>
       <mesh position={[0, 0.37, 0]}>
         <boxGeometry args={[0.225, 0.05, 0.225]} />
-        <meshStandardMaterial color={c.clone().offsetHSL(0, 0, 0.15)} roughness={0.3} metalness={0.5} />
+        <meshStandardMaterial color={c.clone().offsetHSL(0, 0, 0.2)} roughness={0.2} metalness={0.8} envMapIntensity={0.8} />
       </mesh>
       <mesh position={[0, 0.41, 0]}>
         <boxGeometry args={[0.15, 0.03, 0.15]} />

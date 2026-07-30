@@ -37,16 +37,16 @@ export default function Building({ building, index, total, islandX, islandZ }: {
     <group position={[ox, 0, oz]} userData={{ id: building.id }}>
       <mesh position={[0, h / 2 + 0.05, 0]} castShadow receiveShadow onClick={handleClick}>
         <boxGeometry args={[w, h, w]} />
-        <meshStandardMaterial color={bc} roughness={0.5} metalness={0.4} transparent opacity={0.92} />
+        <meshStandardMaterial color={bc} roughness={0.25} metalness={0.7} transparent opacity={0.95} envMapIntensity={0.6} />
       </mesh>
       <mesh position={[0, h + 0.03, 0]}>
         <boxGeometry args={[w * 0.6, 0.08, w * 0.6]} />
-        <meshStandardMaterial color={bc.clone().offsetHSL(0, 0, 0.15)} roughness={0.3} metalness={0.6} />
+        <meshStandardMaterial color={bc.clone().offsetHSL(0, 0, 0.2)} roughness={0.2} metalness={0.8} envMapIntensity={0.8} />
       </mesh>
       {h > 1.5 && (
         <mesh position={[0, h + 0.25, 0]}>
           <cylinderGeometry args={[0.02, 0.03, 0.3, 4]} />
-          <meshStandardMaterial color={0x8899bb} metalness={0.8} roughness={0.2} />
+          <meshStandardMaterial color={0x8899bb} metalness={0.9} roughness={0.15} envMapIntensity={1.0} />
         </mesh>
       )}
       {Array.from({ length: nWin }).map((_, i) => {
@@ -64,7 +64,7 @@ export default function Building({ building, index, total, islandX, islandZ }: {
         return (
           <mesh key={i} position={sides[side].pos}>
             <planeGeometry args={[0.07, 0.08]} />
-            <meshBasicMaterial color={0xfbbf24} transparent opacity={0.1 + Math.random() * 0.15} />
+            <meshBasicMaterial color={0xfbbf24} transparent opacity={0.15 + Math.random() * 0.2} />
           </mesh>
         );
       })}
