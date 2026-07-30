@@ -8,6 +8,9 @@ import FilterPanel from './ui/FilterPanel';
 import LayerToggles from './ui/LayerToggles';
 import SceneDescription from './a11y/SceneDescription';
 import { useReducedMotion } from './a11y/useReducedMotion';
+import ContrastToggle from './ui/ContrastToggle';
+import AudioToggle from './ui/AudioToggle';
+import useAmbientAudio from './audio/useAmbientAudio';
 import { useManacitraStore } from './store';
 import { preloadModels } from './models';
 import type { ManacitraData } from './types';
@@ -83,7 +86,9 @@ export default function Manacitra() {
   const [status, setStatus] = useState('Loading data...');
   const data = useManacitraStore(s => s.data);
   const setData = useManacitraStore(s => s.setData);
+  const highContrast = useManacitraStore(s => s.highContrast);
   useReducedMotion();
+  useAmbientAudio();
 
   const { online, offline, total } = useMemo(() => {
     if (!data) return { online: 0, offline: 0, total: 0 };
@@ -123,7 +128,7 @@ export default function Manacitra() {
   }, [setData]);
 
   return (
-    <div style={{ width: '100vw', height: '100vh', background: '#04060e', position: 'relative', overflow: 'hidden' }}>
+    <div style={{ width: '100vw', height: '100vh', background: '#04060e', position: 'relative', overflow: 'hidden', ...(highContrast ? { filter: 'contrast(1.3) brightness(1.15)', '--hc': '1' } as React.CSSProperties : {}) }}>
       {!loaded && <Loader progress={progress} status={status} />}
       <Header online={online} offline={offline} total={total} />
       <div style={{
@@ -133,6 +138,8 @@ export default function Manacitra() {
         <SearchBar />
         <FilterPanel />
         <LayerToggles />
+        <ContrastToggle />
+        <AudioToggle />
       </div>
       <SceneDescription />
       <InfoPanel />
