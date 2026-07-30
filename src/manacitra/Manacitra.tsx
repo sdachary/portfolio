@@ -1,6 +1,12 @@
 import { Canvas } from '@react-three/fiber';
 import * as THREE from 'three';
 import { useEffect, useState, useMemo } from 'react';
+
+const _warn = console.warn.bind(console);
+console.warn = (...args: unknown[]) => {
+  if (typeof args[0] === 'string' && args[0].includes('THREE.Clock')) return;
+  _warn(...args);
+};
 import Scene from './Scene';
 import InfoPanel from './InfoPanel';
 import SearchBar from './ui/SearchBar';
@@ -162,7 +168,7 @@ export default function Manacitra() {
           gl={{ antialias: true, alpha: false, toneMapping: THREE.ACESFilmicToneMapping, toneMappingExposure: 1.2 }}
           onCreated={({ gl }) => {
             gl.shadowMap.enabled = true;
-            gl.shadowMap.type = THREE.PCFShadowMap;
+            gl.shadowMap.type = THREE.VSMShadowMap;
           }}
           onPointerMissed={() => {
             useManacitraStore.getState().setSelected(null);
