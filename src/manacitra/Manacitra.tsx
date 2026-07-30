@@ -3,6 +3,9 @@ import * as THREE from 'three';
 import { useEffect, useState, useMemo } from 'react';
 import Scene from './Scene';
 import InfoPanel from './InfoPanel';
+import SearchBar from './ui/SearchBar';
+import FilterPanel from './ui/FilterPanel';
+import LayerToggles from './ui/LayerToggles';
 import { useManacitraStore } from './store';
 import { preloadModels } from './models';
 import type { ManacitraData } from './types';
@@ -120,6 +123,14 @@ export default function Manacitra() {
     <div style={{ width: '100vw', height: '100vh', background: '#04060e', position: 'relative', overflow: 'hidden' }}>
       {!loaded && <Loader progress={progress} status={status} />}
       <Header online={online} offline={offline} total={total} />
+      <div style={{
+        position: 'fixed', top: '4.5rem', left: '50%', transform: 'translateX(-50%)', zIndex: 10,
+        display: 'flex', gap: 8, alignItems: 'center',
+      }}>
+        <SearchBar />
+        <FilterPanel />
+        <LayerToggles />
+      </div>
       <InfoPanel />
       {data && (
         <Canvas
