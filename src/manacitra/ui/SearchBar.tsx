@@ -12,9 +12,9 @@ export default function SearchBar() {
       placeholder="Search services..."
       aria-label="Search services"
       style={{
-        background: 'rgba(4,6,14,0.75)', border: '1px solid rgba(255,255,255,0.08)',
-        borderRadius: 8, padding: '6px 12px', color: '#c8d0e0',
-        fontSize: '.8rem', outline: 'none', width: 180,
+        background: 'rgba(28,28,26,0.04)', border: '1px solid rgba(28,28,26,0.10)',
+        borderRadius: 6, padding: '6px 12px', color: '#1c1c1a',
+        fontSize: '.8rem', outline: 'none', width: 180, fontFamily: 'inherit',
       }}
     />
   );

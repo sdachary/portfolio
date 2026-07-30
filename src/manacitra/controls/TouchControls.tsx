@@ -17,9 +17,9 @@ export default function TouchControls() {
         aria-label="Return to overview"
         style={{
           width: 44, height: 44, borderRadius: '50%',
-          background: 'rgba(4,6,14,0.75)', backdropFilter: 'blur(12px)',
-          border: '1px solid rgba(255,255,255,0.1)',
-          color: 'rgba(255,255,255,0.6)', cursor: 'pointer',
+          background: 'rgba(247,245,240,0.86)', backdropFilter: 'blur(12px)',
+          border: '1px solid rgba(28,28,26,0.12)',
+          color: 'rgba(28,28,26,0.5)', cursor: 'pointer',
           fontSize: '1.2rem', display: 'flex', alignItems: 'center', justifyContent: 'center',
         }}
       >

@@ -31,7 +31,7 @@ export default function Grid() {
             args={[new Float32Array(minor), 3]}
           />
         </bufferGeometry>
-        <lineBasicMaterial color="#1a2744" transparent opacity={0.2} />
+        <lineBasicMaterial color="#1c1c1a" transparent opacity={0.08} />
       </lineSegments>
       <lineSegments>
         <bufferGeometry>
@@ -40,7 +40,7 @@ export default function Grid() {
             args={[new Float32Array(major), 3]}
           />
         </bufferGeometry>
-        <lineBasicMaterial color="#2a3f6a" transparent opacity={0.35} />
+        <lineBasicMaterial color="#1c1c1a" transparent opacity={0.18} />
       </lineSegments>
       <lineSegments>
         <bufferGeometry>
@@ -49,7 +49,7 @@ export default function Grid() {
             args={[new Float32Array(ticks), 3]}
           />
         </bufferGeometry>
-        <lineBasicMaterial color="#3b82f6" transparent opacity={0.25} />
+        <lineBasicMaterial color="#1c1c1a" transparent opacity={0.12} />
       </lineSegments>
     </group>
   );

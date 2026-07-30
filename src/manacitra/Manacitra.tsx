@@ -26,26 +26,26 @@ function Loader({ progress, status }: { progress: number; status: string }) {
   return (
     <div style={{
       position: 'fixed', inset: 0, display: 'flex', flexDirection: 'column',
-      alignItems: 'center', justifyContent: 'center', background: '#04060e',
+      alignItems: 'center', justifyContent: 'center', background: '#f7f5f0',
       zIndex: 100, transition: 'opacity 1s ease',
     }}>
       <div style={{
-        width: 48, height: 48, border: '1.5px solid rgba(255,255,255,0.06)',
-        borderTopColor: '#6b7a99', borderRadius: '50%',
+        width: 48, height: 48, border: '1.5px solid rgba(28,28,26,0.08)',
+        borderTopColor: '#b5472e', borderRadius: '50%',
         animation: 'spin 1.2s cubic-bezier(0.4,0,0.2,1) infinite',
         marginBottom: '2rem',
       }} />
       <h1 style={{
         fontSize: '2.5rem', fontWeight: 300, letterSpacing: '-0.02em',
-        color: '#c8d0e0', marginBottom: '.5rem',
+        color: '#1c1c1a', marginBottom: '.5rem',
       }}>Manacitra</h1>
-      <p style={{ color: 'rgba(255,255,255,0.25)', fontSize: '.8rem', letterSpacing: '.08em', textTransform: 'uppercase', marginBottom: '.75rem' }}>
+      <p style={{ color: 'rgba(28,28,26,0.35)', fontSize: '.8rem', letterSpacing: '.08em', textTransform: 'uppercase', marginBottom: '.75rem' }}>
         Infrastructure Map
       </p>
-      <div style={{ width: 160, height: 1.5, background: 'rgba(255,255,255,0.06)', borderRadius: 2, marginTop: '.75rem', overflow: 'hidden' }}>
-        <span style={{ display: 'block', height: '100%', width: `${progress}%`, background: '#6b7a99', borderRadius: 2, transition: 'width .5s ease' }} />
+      <div style={{ width: 160, height: 1.5, background: 'rgba(28,28,26,0.06)', borderRadius: 2, marginTop: '.75rem', overflow: 'hidden' }}>
+        <span style={{ display: 'block', height: '100%', width: `${progress}%`, background: '#b5472e', borderRadius: 2, transition: 'width .5s ease' }} />
       </div>
-      <p style={{ color: 'rgba(255,255,255,0.2)', fontSize: '.75rem', fontVariantNumeric: 'tabular-nums', marginTop: '.75rem' }}>
+      <p style={{ color: 'rgba(28,28,26,0.25)', fontSize: '.75rem', fontVariantNumeric: 'tabular-nums', marginTop: '.75rem' }}>
         {status}
       </p>
     </div>
@@ -60,22 +60,22 @@ function Header({ online, offline, total }: { online: number; offline: number; t
       <nav style={{
         display: 'flex', alignItems: 'center', gap: '1.25rem',
         padding: '.5rem 1.25rem .5rem 1.5rem',
-        background: 'rgba(4,6,14,0.75)', backdropFilter: 'blur(24px)',
-        border: '1px solid rgba(255,255,255,0.06)', borderRadius: 100, fontSize: '.8rem',
+        background: 'rgba(247,245,240,0.86)', backdropFilter: 'blur(24px)',
+        border: '1px solid rgba(28,28,26,0.08)', borderRadius: 100, fontSize: '.8rem',
       }}>
         <span style={{
-          fontWeight: 500, color: '#c8d0e0',
+          fontWeight: 500, color: '#1c1c1a',
         }}>Manacitra</span>
-        <span style={{ color: 'rgba(255,255,255,0.08)' }}>·</span>
-        <span style={{ color: 'rgba(255,255,255,0.35)', display: 'flex', alignItems: 'center', gap: '.35rem' }}>
-          <span style={{ width: 5, height: 5, borderRadius: '50%', display: 'inline-block', background: '#22c55e', boxShadow: '0 0 6px rgba(34,197,94,0.4)' }} />
+        <span style={{ color: 'rgba(28,28,26,0.10)' }}>·</span>
+        <span style={{ color: 'rgba(28,28,26,0.55)', display: 'flex', alignItems: 'center', gap: '.35rem' }}>
+          <span style={{ width: 5, height: 5, borderRadius: '50%', display: 'inline-block', background: '#2f6d4f' }} />
           {online} online
         </span>
-        <span style={{ color: 'rgba(255,255,255,0.35)', display: 'flex', alignItems: 'center', gap: '.35rem', opacity: 0.5 }}>
-          <span style={{ width: 5, height: 5, borderRadius: '50%', display: 'inline-block', background: '#ef4444', boxShadow: '0 0 6px rgba(239,68,68,0.3)' }} />
+        <span style={{ color: 'rgba(28,28,26,0.4)', display: 'flex', alignItems: 'center', gap: '.35rem' }}>
+          <span style={{ width: 5, height: 5, borderRadius: '50%', display: 'inline-block', background: '#b5472e' }} />
           {offline} offline
         </span>
-        <span style={{ color: 'rgba(255,255,255,0.15)', fontSize: '.7rem', display: 'flex', alignItems: 'center', gap: '.4rem' }}>
+        <span style={{ color: 'rgba(28,28,26,0.25)', fontSize: '.7rem', display: 'flex', alignItems: 'center', gap: '.4rem' }}>
           {total} services
         </span>
       </nav>
@@ -88,6 +88,7 @@ export default function Manacitra() {
   const [progress, setProgress] = useState(0);
   const [status, setStatus] = useState('Loading data...');
   const [isMobile, setIsMobile] = useState(false);
+  const [toolsOpen, setToolsOpen] = useState(false);
   const data = useManacitraStore(s => s.data);
   const setData = useManacitraStore(s => s.setData);
   const highContrast = useManacitraStore(s => s.highContrast);
@@ -140,24 +141,41 @@ export default function Manacitra() {
   }, [setData]);
 
   return (
-    <div style={{ width: '100vw', height: '100vh', background: '#04060e', position: 'relative', overflow: 'hidden', ...(highContrast ? { filter: 'contrast(1.3) brightness(1.15)', '--hc': '1' } as React.CSSProperties : {}) }}>
+    <div data-contrast={highContrast ? 'high' : 'normal'} style={{ width: '100vw', height: '100vh', background: '#f7f5f0', position: 'relative', overflow: 'hidden' }}>
       {!loaded && <Loader progress={progress} status={status} />}
       <Header online={online} offline={offline} total={total} />
-      <div style={isMobile ? {
-        position: 'fixed', bottom: '1rem', left: '50%', transform: 'translateX(-50%)', zIndex: 10,
-        display: 'flex', gap: 6, alignItems: 'center', maxWidth: 'calc(100vw - 2rem)',
-        overflowX: 'auto', padding: '8px 12px',
-        background: 'rgba(4,6,14,0.85)', backdropFilter: 'blur(24px)',
-        border: '1px solid rgba(255,255,255,0.06)', borderRadius: 16, WebkitOverflowScrolling: 'touch',
-      } : {
+      <div style={{
         position: 'fixed', top: '4.5rem', left: '50%', transform: 'translateX(-50%)', zIndex: 10,
-        display: 'flex', gap: 8, alignItems: 'center',
+        display: 'flex', alignItems: 'center', gap: 8,
       }}>
-        <SearchBar />
-        <FilterPanel />
-        <LayerToggles />
-        <ContrastToggle />
-        <AudioToggle />
+        <button
+          onClick={() => setToolsOpen(o => !o)}
+          aria-label={toolsOpen ? 'Close tools' : 'Open tools'}
+          style={{
+            width: 28, height: 28, borderRadius: '50%', cursor: 'pointer', fontFamily: 'inherit',
+            background: toolsOpen ? 'rgba(28,28,26,0.08)' : 'transparent',
+            border: `1px solid ${toolsOpen ? 'rgba(28,28,26,0.15)' : 'rgba(28,28,26,0.12)'}`,
+            color: 'rgba(28,28,26,0.4)', fontSize: '.8rem', lineHeight: 1,
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            transition: 'opacity .2s', opacity: toolsOpen ? 1 : 0.5,
+          }}
+        >{toolsOpen ? '✕' : '···'}</button>
+        {toolsOpen && (
+          <div style={isMobile ? {
+            display: 'flex', gap: 6, alignItems: 'center', maxWidth: 'calc(100vw - 5rem)',
+            overflowX: 'auto', padding: '8px 12px',
+            background: 'rgba(247,245,240,0.92)', backdropFilter: 'blur(24px)',
+            border: '1px solid rgba(28,28,26,0.08)', borderRadius: 16, WebkitOverflowScrolling: 'touch',
+          } : {
+            display: 'flex', gap: 8, alignItems: 'center',
+          }}>
+            <SearchBar />
+            <FilterPanel />
+            <LayerToggles />
+            <ContrastToggle />
+            <AudioToggle />
+          </div>
+        )}
       </div>
       <SceneDescription />
       <TouchControls />

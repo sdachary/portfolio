@@ -13,14 +13,15 @@ export default function AudioToggle() {
       aria-label={muted ? 'Unmute audio' : 'Mute audio'}
       title={available ? (muted ? 'Unmute' : 'Mute') : 'Audio unavailable'}
       style={{
-        background: !muted ? 'rgba(107,122,153,0.2)' : 'rgba(255,255,255,0.04)',
-        border: `1px solid ${!muted ? 'rgba(107,122,153,0.3)' : 'rgba(255,255,255,0.08)'}`,
+        background: !muted ? 'rgba(28,28,26,0.08)' : 'transparent',
+        border: `1px solid ${!muted ? 'rgba(28,28,26,0.15)' : 'rgba(28,28,26,0.08)'}`,
         borderRadius: 6, padding: '4px 8px', cursor: available ? 'pointer' : 'not-allowed',
-        color: !muted ? '#c8d0e0' : 'rgba(255,255,255,0.4)',
+        color: !muted ? '#1c1c1a' : 'rgba(28,28,26,0.4)',
         fontSize: '.8rem', lineHeight: 1, opacity: available ? 1 : 0.35,
+        fontFamily: 'inherit',
       }}
     >
-      {available ? (muted ? '♪' : '♪') : '♪'}
+      {muted ? '♪' : '♫'}
     </button>
   );
 }

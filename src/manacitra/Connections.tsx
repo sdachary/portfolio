@@ -48,7 +48,7 @@ export default function Connections({ islands, floating, connections }: {
         const pts = curve.getPoints(20).map(p => [p.x, p.y, p.z] as [number, number, number]);
 
         return (
-          <Line key={`${c.from}-${c.to}-${i}`} points={pts} color="#4a7cbf" opacity={0.15} transparent />
+          <Line key={`${c.from}-${c.to}-${i}`} points={pts} color="#1c1c1a" opacity={0.1} transparent />
         );
       })}
     </group>

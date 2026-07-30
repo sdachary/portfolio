@@ -23,11 +23,11 @@ export default function FilterPanel() {
             onClick={() => toggleStatus(s)}
             aria-pressed={active}
             style={{
-              background: active ? 'rgba(107,122,153,0.2)' : 'rgba(255,255,255,0.04)',
-              border: `1px solid ${active ? 'rgba(107,122,153,0.3)' : 'rgba(255,255,255,0.08)'}`,
+              background: active ? 'rgba(28,28,26,0.08)' : 'transparent',
+              border: `1px solid ${active ? 'rgba(28,28,26,0.15)' : 'rgba(28,28,26,0.08)'}`,
               borderRadius: 6, padding: '4px 10px', cursor: 'pointer',
-              color: active ? '#c8d0e0' : 'rgba(255,255,255,0.3)',
-              fontSize: '.75rem',
+              color: active ? '#1c1c1a' : 'rgba(28,28,26,0.35)',
+              fontSize: '.75rem', fontFamily: 'inherit',
             }}
           >
             {s === 'online' ? '● Online' : '● Offline'}

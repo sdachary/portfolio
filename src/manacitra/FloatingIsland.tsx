@@ -3,10 +3,10 @@ import { Html } from '@react-three/drei';
 import type { FloatingApp } from './types';
 import { useManacitraStore } from './store';
 
-function healthColor(id: string, health: Record<string, { online: boolean }>): number {
+function healthColor(id: string, health: Record<string, { online: boolean }>): string {
   const h = health[id];
-  if (!h) return 0x4466aa;
-  return h.online ? 0x22c55e : 0xef4444;
+  if (!h) return '#8a8577';
+  return h.online ? '#2f6d4f' : '#b5472e';
 }
 
 export default function FloatingIsland({ app, index, total }: { app: FloatingApp; index: number; total: number }) {
@@ -23,31 +23,28 @@ export default function FloatingIsland({ app, index, total }: { app: FloatingApp
     <group position={[x, yBase, z]} rotation={[Math.sin(index * 1.9) * 0.03, 0, Math.sin(index * 2.3) * 0.03]}>
       <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -0.03, 0]}>
         <circleGeometry args={[0.7, 12]} />
-        <meshStandardMaterial color={c} roughness={0.4} metalness={0.5} transparent opacity={0.3} envMapIntensity={0.4} />
+        <meshStandardMaterial color="#faf8f3" roughness={1} metalness={0} transparent opacity={0.5} />
       </mesh>
       <mesh rotation={[-Math.PI / 2, 0, 0]}>
         <ringGeometry args={[0.55, 0.8, 16]} />
-        <meshStandardMaterial color={c} roughness={0.3} metalness={0.6} transparent opacity={0.15} side={THREE.DoubleSide} envMapIntensity={0.5} />
+        <meshStandardMaterial color="#1c1c1a" roughness={1} metalness={0} transparent opacity={0.08} side={THREE.DoubleSide} />
       </mesh>
       <mesh position={[0, 0.175, 0]} castShadow>
         <boxGeometry args={[0.45, 0.35, 0.45]} />
-        <meshStandardMaterial color={c} roughness={0.25} metalness={0.7} transparent opacity={0.95} envMapIntensity={0.6} />
+        <meshStandardMaterial color={c} roughness={0.9} metalness={0} />
       </mesh>
-      <mesh position={[0, 0.37, 0]}>
-        <boxGeometry args={[0.225, 0.05, 0.225]} />
-        <meshStandardMaterial color={c.clone().offsetHSL(0, 0, 0.2)} roughness={0.2} metalness={0.8} envMapIntensity={0.8} />
-      </mesh>
-      <mesh position={[0, 0.41, 0]}>
-        <boxGeometry args={[0.15, 0.03, 0.15]} />
-        <meshBasicMaterial
-          color={hl}
-          transparent
-          opacity={hl === 0x22c55e ? 0.4 : hl === 0xef4444 ? 0.25 : 0.1}
-          blending={THREE.AdditiveBlending}
-        />
-      </mesh>
+      <group position={[0, 0.03, 0]}>
+        <mesh rotation={[-Math.PI / 2, 0, 0]}>
+          <ringGeometry args={[0.05, 0.08, 12]} />
+          <meshBasicMaterial color={hl} transparent opacity={0.6} side={THREE.DoubleSide} />
+        </mesh>
+        <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.001, 0]}>
+          <circleGeometry args={[0.035, 8]} />
+          <meshBasicMaterial color={hl} transparent opacity={0.4} />
+        </mesh>
+      </group>
       <Html position={[0, 0.55, 0]} center>
-        <div style={{ color: '#fff', fontSize: 8, fontWeight: 500, textShadow: '0 2px 12px rgba(0,0,0,0.9)', background: 'rgba(4,6,14,0.6)', backdropFilter: 'blur(6px)', padding: '2px 6px', borderRadius: 4, whiteSpace: 'nowrap' }}>
+        <div style={{ color: '#1c1c1a', fontSize: 8, fontWeight: 500, fontFamily: "'IBM Plex Mono','SF Mono',ui-monospace,monospace", letterSpacing: '0.04em', background: 'rgba(247,245,240,0.86)', padding: '2px 6px', borderRadius: 4, whiteSpace: 'nowrap', border: '1px solid rgba(28,28,26,0.08)' }}>
           {app.name}
         </div>
       </Html>

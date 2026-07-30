@@ -22,11 +22,11 @@ export default function LayerToggles() {
             onClick={() => toggle(l.key)}
             aria-pressed={active}
             style={{
-              background: active ? 'rgba(255,255,255,0.08)' : 'rgba(255,255,255,0.02)',
-              border: `1px solid ${active ? 'rgba(255,255,255,0.15)' : 'rgba(255,255,255,0.05)'}`,
+              background: active ? 'rgba(28,28,26,0.08)' : 'transparent',
+              border: `1px solid ${active ? 'rgba(28,28,26,0.15)' : 'rgba(28,28,26,0.06)'}`,
               borderRadius: 6, padding: '4px 10px', cursor: 'pointer',
-              color: active ? '#c8d0e0' : 'rgba(255,255,255,0.25)',
-              fontSize: '.75rem',
+              color: active ? '#1c1c1a' : 'rgba(28,28,26,0.3)',
+              fontSize: '.75rem', fontFamily: 'inherit',
             }}
           >
             {l.label}
