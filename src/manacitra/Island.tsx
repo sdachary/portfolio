@@ -1,4 +1,3 @@
-import { Html } from '@react-three/drei';
 import type { Island as IslandType } from './types';
 import Building from './Building';
 import Scenery from './Scenery';
@@ -23,18 +22,6 @@ export default function Island({ island }: { island: IslandType }) {
         <meshStandardMaterial color="#1c1c1a" transparent opacity={0.1} />
       </mesh>
       <Scenery seed={island.x * 100 + island.z * 100} radius={sz} />
-      <Html position={[0, 0.15, -sz - 1.5]} center>
-        <div style={{ color: '#1c1c1a', fontSize: 11, fontWeight: 500, fontFamily: "'IBM Plex Mono','SF Mono',ui-monospace,monospace", letterSpacing: '0.06em', background: 'rgba(247,245,240,0.86)', padding: '4px 10px', borderRadius: 4, border: '1px solid rgba(28,28,26,0.10)' }}>
-          {island.name}
-        </div>
-      </Html>
-      {island.subtitle && (
-        <Html position={[0, -0.35, -sz - 1.5]} center>
-          <div style={{ color: 'rgba(28,28,26,0.55)', fontSize: 8, fontFamily: "'IBM Plex Mono','SF Mono',ui-monospace,monospace", letterSpacing: '0.04em', textAlign: 'center' }}>
-            {island.subtitle}
-          </div>
-        </Html>
-      )}
       {island.buildings.map((b, i) => (
         <Building key={b.id} building={b} index={i} total={island.buildings.length} />
       ))}

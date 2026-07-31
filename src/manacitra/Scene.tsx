@@ -2,7 +2,6 @@ import { Suspense } from 'react';
 import Lights from './Lights';
 import Island from './Island';
 import FloatingIsland from './FloatingIsland';
-import Connections from './Connections';
 import DiagramOverlay from './DiagramOverlay';
 import IsometricCameraRig from './IsometricCameraRig';
 import type { ManacitraData } from './types';
@@ -23,7 +22,6 @@ export default function Scene({ data }: { data: ManacitraData }) {
           ))}
         </group>
       </Suspense>
-      <Connections islands={data.islands} floating={data.floating} connections={data.connections} />
       <IsometricCameraRig />
     </>
   );

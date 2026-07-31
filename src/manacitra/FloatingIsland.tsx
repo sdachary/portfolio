@@ -1,5 +1,4 @@
 import * as THREE from 'three';
-import { Html } from '@react-three/drei';
 import type { FloatingApp } from './types';
 import { useManacitraStore } from './store';
 
@@ -41,27 +40,12 @@ export default function FloatingIsland({ app, index, total }: { app: FloatingApp
         <boxGeometry args={[0.45, 0.35, 0.45]} />
         <meshStandardMaterial color={c} roughness={0.9} metalness={0} />
       </mesh>
-      <group position={[0, 0.03, 0]}>
-        <mesh rotation={[-Math.PI / 2, 0, 0]}>
-          <ringGeometry args={[0.05, 0.08, 12]} />
-          <meshBasicMaterial color={hl} transparent opacity={0.6} side={THREE.DoubleSide} />
-        </mesh>
-        <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.001, 0]}>
-          <circleGeometry args={[0.035, 8]} />
-          <meshBasicMaterial color={hl} transparent opacity={0.4} />
-        </mesh>
-      </group>
       {isSelected && (
         <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.002, 0]}>
           <ringGeometry args={[0.55, 0.85, 16]} />
           <meshBasicMaterial color={hl} transparent opacity={0.4} side={THREE.DoubleSide} />
         </mesh>
       )}
-      <Html position={[0, 0.55, 0]} center>
-        <div style={{ color: '#1c1c1a', fontSize: 8, fontWeight: 500, fontFamily: "'IBM Plex Mono','SF Mono',ui-monospace,monospace", letterSpacing: '0.04em', background: 'rgba(247,245,240,0.86)', padding: '2px 6px', borderRadius: 4, whiteSpace: 'nowrap', border: '1px solid rgba(28,28,26,0.08)' }}>
-          {app.name}
-        </div>
-      </Html>
     </group>
   );
 }

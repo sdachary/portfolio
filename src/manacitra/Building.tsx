@@ -48,16 +48,6 @@ export default function Building({ building, index, total }: {
         </bufferGeometry>
         <lineBasicMaterial color="#1c1c1a" transparent opacity={0.25} />
       </lineSegments>
-      <group position={[0, 0.05, 0]}>
-        <mesh rotation={[-Math.PI / 2, 0, 0]}>
-          <ringGeometry args={[0.05, 0.08, 12]} />
-          <meshBasicMaterial color={hl} transparent opacity={0.6} side={THREE.DoubleSide} />
-        </mesh>
-        <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.001, 0]}>
-          <circleGeometry args={[0.035, 8]} />
-          <meshBasicMaterial color={hl} transparent opacity={0.4} />
-        </mesh>
-      </group>
       {isSelected && (
         <lineSegments position={[0, h / 2 + 0.05, 0]}>
           <bufferGeometry>

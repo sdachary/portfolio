@@ -1,6 +1,8 @@
 import { useThree, useFrame } from '@react-three/fiber';
 import { useRef, useMemo, useEffect } from 'react';
 import * as THREE from 'three';
+import { useManacitraStore } from './store';
+import { buildingBasePos, floatingPos, type WorldPos } from './positions';
 import type { ManacitraData } from './types';
 
 const MAX_CANVAS = 4096;
@@ -54,6 +56,133 @@ function drawGrid(c: Ctx2D) {
   ctx.stroke();
 }
 
+function healthColor(id: string, health: ManacitraData['health']): string {
+  const h = health[id];
+  if (!h) return '#8a8577';
+  return h.online ? '#2f6d4f' : '#b5472e';
+}
+
+function screen(c: Ctx2D, p: WorldPos) {
+  return c.project(p.x, p.y, p.z);
+}
+
+function drawConnections(
+  c: Ctx2D,
+  connections: ManacitraData['connections'],
+  islands: ManacitraData['islands'],
+  floating: ManacitraData['floating'],
+) {
+  const { ctx } = c;
+  ctx.strokeStyle = 'rgba(28,28,26,0.22)';
+  ctx.lineWidth = 1.5;
+  const anchor = (id: string): WorldPos | null => {
+    for (const isl of islands) {
+      for (let i = 0; i < isl.buildings.length; i++) {
+        const b = isl.buildings[i];
+        if (b.id === id) return buildingBasePos(isl, i, isl.buildings.length);
+      }
+    }
+    for (let i = 0; i < floating.length; i++) {
+      if (floating[i].id === id) return floatingPos(i, floating.length);
+    }
+    return null;
+  };
+  for (const conn of connections) {
+    const fp = anchor(conn.from);
+    const tp = anchor(conn.to);
+    if (!fp || !tp) continue;
+    const mid: WorldPos = {
+      x: (fp.x + tp.x) / 2,
+      y: Math.max(fp.y, tp.y) + Math.abs(tp.y - fp.y) * 0.15 + 0.3,
+      z: (fp.z + tp.z) / 2,
+    };
+    const pts: { x: number; y: number }[] = [];
+    let clipped = false;
+    for (let i = 0; i <= 20; i++) {
+      const t = i / 20;
+      const inv = 1 - t;
+      const p = screen(c, {
+        x: inv * inv * fp.x + 2 * inv * t * mid.x + t * t * tp.x,
+        y: inv * inv * fp.y + 2 * inv * t * mid.y + t * t * tp.y,
+        z: inv * inv * fp.z + 2 * inv * t * mid.z + t * t * tp.z,
+      });
+      if (!p) { clipped = true; break; }
+      pts.push(p);
+    }
+    if (clipped || pts.length < 2) continue;
+    ctx.beginPath();
+    ctx.moveTo(pts[0].x, pts[0].y);
+    for (const p of pts.slice(1)) ctx.lineTo(p.x, p.y);
+    ctx.stroke();
+  }
+}
+
+function drawLabels(c: Ctx2D, islands: ManacitraData['islands'], floating: ManacitraData['floating']) {
+  const { ctx } = c;
+  ctx.textAlign = 'center';
+  ctx.font = '500 11px "IBM Plex Mono","SF Mono",ui-monospace,monospace';
+  for (const isl of islands) {
+    const p = screen(c, { x: isl.x, y: -0.05, z: isl.z - isl.size - 1.5 });
+    if (!p) continue;
+    ctx.fillStyle = '#1c1c1a';
+    ctx.fillText(isl.name, p.x, p.y);
+    if (isl.subtitle) {
+      const sp = screen(c, { x: isl.x, y: -0.55, z: isl.z - isl.size - 1.5 });
+      if (sp) {
+        ctx.font = '400 8px "IBM Plex Mono","SF Mono",ui-monospace,monospace';
+        ctx.fillStyle = 'rgba(28,28,26,0.55)';
+        ctx.fillText(isl.subtitle, sp.x, sp.y);
+      }
+    }
+  }
+  ctx.font = '500 8px "IBM Plex Mono","SF Mono",ui-monospace,monospace';
+  for (let i = 0; i < floating.length; i++) {
+    const f = floating[i];
+    const fp = floatingPos(i, floating.length);
+    const p = screen(c, { x: fp.x, y: fp.y + 0.55, z: fp.z });
+    if (!p) continue;
+    ctx.fillStyle = '#1c1c1a';
+    ctx.fillText(f.name, p.x, p.y);
+  }
+}
+
+function drawBadges(
+  c: Ctx2D,
+  islands: ManacitraData['islands'],
+  floating: ManacitraData['floating'],
+  health: ManacitraData['health'],
+) {
+  const { ctx } = c;
+  for (const isl of islands) {
+    for (let i = 0; i < isl.buildings.length; i++) {
+      const b = isl.buildings[i];
+      const bp = buildingBasePos(isl, i, isl.buildings.length);
+      const p = screen(c, { x: bp.x, y: bp.y + b.h + 0.5, z: bp.z });
+      if (!p) continue;
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, 3.5, 0, Math.PI * 2);
+      ctx.fillStyle = healthColor(b.id, health);
+      ctx.fill();
+      ctx.strokeStyle = 'rgba(28,28,26,0.5)';
+      ctx.lineWidth = 1;
+      ctx.stroke();
+    }
+  }
+  for (let i = 0; i < floating.length; i++) {
+    const f = floating[i];
+    const fp = floatingPos(i, floating.length);
+    const p = screen(c, { x: fp.x, y: fp.y + 0.5, z: fp.z });
+    if (!p) continue;
+    ctx.beginPath();
+    ctx.arc(p.x, p.y, 3.5, 0, Math.PI * 2);
+    ctx.fillStyle = healthColor(f.id, health);
+    ctx.fill();
+    ctx.strokeStyle = 'rgba(28,28,26,0.5)';
+    ctx.lineWidth = 1;
+    ctx.stroke();
+  }
+}
+
 export default function DiagramOverlay({ data }: { data: ManacitraData }) {
   const camera = useThree(s => s.camera);
   const gl = useThree(s => s.gl);
@@ -74,6 +203,13 @@ export default function DiagramOverlay({ data }: { data: ManacitraData }) {
   const view = useRef({ W: 0, H: 0 });
   const lastCam = useRef({ px: 0, py: 0, pz: 0, qx: 0, qy: 0, qz: 0, qw: 0 });
 
+  const selectedId = useManacitraStore(s => s.selectedId);
+  const visibleLayers = useManacitraStore(s => s.visibleLayers);
+
+  useEffect(() => {
+    dirty.current = true;
+  }, [selectedId, visibleLayers, data]);
+
   useEffect(() => {
     bgTex.anisotropy = gl.capabilities.getMaxAnisotropy();
     fgTex.anisotropy = gl.capabilities.getMaxAnisotropy();
@@ -91,7 +227,11 @@ export default function DiagramOverlay({ data }: { data: ManacitraData }) {
     const c: Ctx2D = { ctx, W, H, project };
     if (isBg) drawGrid(c);
     else {
-      void data;
+      if (visibleLayers.connections) drawConnections(c, data.connections, data.islands, data.floating);
+      if (visibleLayers.labels) {
+        drawLabels(c, data.islands, data.floating);
+        drawBadges(c, data.islands, data.floating, data.health);
+      }
     }
     tex.needsUpdate = true;
   };
