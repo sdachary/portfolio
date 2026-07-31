@@ -19,7 +19,6 @@ import AudioToggle from './ui/AudioToggle';
 import TouchControls from './controls/TouchControls';
 import useAmbientAudio from './audio/useAmbientAudio';
 import { useManacitraStore } from './store';
-import { preloadModels } from './models';
 import type { ManacitraData } from './types';
 
 function Loader({ progress, status }: { progress: number; status: string }) {
@@ -107,8 +106,7 @@ export default function Manacitra() {
     if (!data) return { online: 0, offline: 0, total: 0 };
     let on = 0, off = 0, t = 0;
     const allIds = new Set<string>();
-    data.islands.forEach(i => i.buildings.forEach(b => allIds.add(b.id)));
-    data.floating.forEach(f => allIds.add(f.id));
+    data.zones.forEach(z => z.services.forEach(s => allIds.add(s.id)));
     allIds.forEach(id => {
       t++;
       const h = data.health[id];
@@ -119,7 +117,6 @@ export default function Manacitra() {
   }, [data]);
 
   useEffect(() => {
-    preloadModels();
     setProgress(5);
     fetch('/manacitra/data.json')
       .then(r => r.json())

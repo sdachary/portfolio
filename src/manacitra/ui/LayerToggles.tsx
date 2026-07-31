@@ -2,8 +2,8 @@ import { useManacitraStore } from '../store';
 import type { VisibleLayers } from '../store';
 
 const LAYERS: { key: keyof VisibleLayers; label: string }[] = [
-  { key: 'islands', label: 'Islands' },
-  { key: 'floating', label: 'Floating' },
+  { key: 'zones', label: 'Zones' },
+  { key: 'services', label: 'Services' },
   { key: 'connections', label: 'Connections' },
   { key: 'labels', label: 'Labels' },
 ];

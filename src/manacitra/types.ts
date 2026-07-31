@@ -3,16 +3,18 @@ export interface HealthEntry {
   checked_at: string;
 }
 
-export interface Building {
+export interface Service {
   id: string;
   name: string;
   type: string;
-  h: number;
+  logo: string;
   color: string;
+  h: number;
   desc: string;
+  url?: string;
 }
 
-export interface Island {
+export interface Zone {
   id: string;
   name: string;
   label: string;
@@ -21,16 +23,7 @@ export interface Island {
   z: number;
   color: string;
   size: number;
-  buildings: Building[];
-}
-
-export interface FloatingApp {
-  id: string;
-  name: string;
-  type: string;
-  color: string;
-  url: string;
-  desc: string;
+  services: Service[];
 }
 
 export interface Connection {
@@ -42,15 +35,13 @@ export interface Connection {
 export interface Stats {
   total_services: number;
   online: number;
-  islands: number;
-  floating: number;
+  zones: number;
   connections: number;
   total: number;
 }
 
 export interface ManacitraData {
-  islands: Island[];
-  floating: FloatingApp[];
+  zones: Zone[];
   connections: Connection[];
   health: Record<string, HealthEntry>;
   stats: Stats;

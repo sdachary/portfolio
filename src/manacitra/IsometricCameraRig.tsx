@@ -19,7 +19,9 @@ export default function IsometricCameraRig() {
   useEffect(() => {
     const c = controlsRef.current;
     if (!c) return;
-    c.enableRotate = false;
+    c.enableRotate = true;
+    c.minPolarAngle = 0.15;
+    c.maxPolarAngle = Math.PI / 2.1;
   }, []);
 
   useEffect(() => {
@@ -49,7 +51,7 @@ export default function IsometricCameraRig() {
       dampingFactor={0.08}
       minDistance={15}
       maxDistance={120}
-      enableRotate={false}
+      enableRotate
       target={[0, 0.5, 0]}
     />
   );

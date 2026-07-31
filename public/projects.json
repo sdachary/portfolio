@@ -207,7 +207,7 @@
     "slug": "manacitra",
     "status": "Live",
     "status_key": "live",
-    "description": "3D infrastructure archipelago — interactive map of every service, VM, and deployment visualized as a floating island city. Real-time health checks, day/night cycle, HDRI lighting. Built with React Three Fiber.",
+    "description": "AcharyLab ops map — isometric network diagram of every VM, service, and Cloudflare app across four zones with live health checks, brand logos, and animated flow connections. Built with React Three Fiber.",
     "tags": [
       "Three.js",
       "R3F",
@@ -217,7 +217,7 @@
     ],
     "live_url": "https://aham.pages.dev/manacitra.html",
     "local": true,
-    "last_updated": "2026-07-29",
+    "last_updated": "2026-07-31",
     "github_remote": "git@github.com:sdachary/portfolio.git"
   }
 ]

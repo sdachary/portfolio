@@ -2,14 +2,13 @@ import { create } from 'zustand';
 import type { ManacitraData } from './types';
 
 export interface Filters {
-  vm: string[];
   status: ('online' | 'offline')[];
   type: string[];
 }
 
 export interface VisibleLayers {
-  islands: boolean;
-  floating: boolean;
+  zones: boolean;
+  services: boolean;
   connections: boolean;
   labels: boolean;
 }
@@ -17,6 +16,7 @@ export interface VisibleLayers {
 interface ManacitraStore {
   data: ManacitraData | null;
   selectedId: string | null;
+  hoveredId: string | null;
   filters: Filters;
   visibleLayers: VisibleLayers;
   searchQuery: string;
@@ -27,6 +27,7 @@ interface ManacitraStore {
   resetToken: number;
   setData: (data: ManacitraData) => void;
   setSelected: (id: string | null) => void;
+  setHovered: (id: string | null) => void;
   setFilters: (filters: Filters) => void;
   toggleLayer: (layer: keyof VisibleLayers) => void;
   setSearchQuery: (q: string) => void;
@@ -44,8 +45,9 @@ const ls = <T,>(key: string, fallback: T): T => {
 export const useManacitraStore = create<ManacitraStore>((set, get) => ({
   data: null,
   selectedId: null,
-  filters: { vm: [], status: [], type: [] },
-  visibleLayers: { islands: true, floating: true, connections: true, labels: true },
+  hoveredId: null,
+  filters: { status: [], type: [] },
+  visibleLayers: { zones: true, services: true, connections: true, labels: true },
   searchQuery: '',
   reducedMotion: ls('manacitra_reducedMotion', false),
   highContrast: ls('manacitra_highContrast', false),
@@ -54,6 +56,7 @@ export const useManacitraStore = create<ManacitraStore>((set, get) => ({
   resetToken: 0,
   setData: data => set({ data }),
   setSelected: selectedId => set({ selectedId }),
+  setHovered: hoveredId => set({ hoveredId }),
   setFilters: filters => set({ filters }),
   toggleLayer: layer => set(s => ({ visibleLayers: { ...s.visibleLayers, [layer]: !s.visibleLayers[layer] } })),
   setSearchQuery: searchQuery => set({ searchQuery }),

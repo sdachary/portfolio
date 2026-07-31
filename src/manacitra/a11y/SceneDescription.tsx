@@ -9,39 +9,24 @@ export default function SceneDescription() {
       position: 'absolute', width: 1, height: 1, padding: 0, margin: -1,
       overflow: 'hidden', clip: 'rect(0,0,0,0)', border: 0,
     }}>
-      <p>Infrastructure map with {data.stats.total_services} services across {data.stats.islands} islands and {data.stats.floating} floating apps.</p>
+      <p>Infrastructure map with {data.stats.total_services} services across {data.stats.zones} zones.</p>
       <p>{data.stats.online} online, {data.stats.total - data.stats.online} offline.</p>
       <ul>
-        {data.islands.map(isl => (
-          <li key={isl.id}>
-            {isl.name} — {isl.subtitle} ({isl.buildings.length} services)
+        {data.zones.map(zone => (
+          <li key={zone.id}>
+            {zone.name} — {zone.subtitle} ({zone.services.length} services)
             <ul>
-              {isl.buildings.map(b => {
-                const h = data.health[b.id];
+              {zone.services.map(svc => {
+                const h = data.health[svc.id];
                 return (
-                  <li key={b.id}>
-                    {b.name} — {b.type} — {h ? (h.online ? 'Online' : 'Offline') : 'Unknown'}
+                  <li key={svc.id}>
+                    {svc.name} — {svc.type} — {h ? (h.online ? 'Online' : 'Offline') : 'Unknown'}
                   </li>
                 );
               })}
             </ul>
           </li>
         ))}
-        {data.floating.length > 0 && (
-          <li>
-            Floating apps
-            <ul>
-              {data.floating.map(f => {
-                const h = data.health[f.id];
-                return (
-                  <li key={f.id}>
-                    {f.name} — {f.type} — {h ? (h.online ? 'Online' : 'Offline') : 'Unknown'}
-                  </li>
-                );
-              })}
-            </ul>
-          </li>
-        )}
       </ul>
     </div>
   );

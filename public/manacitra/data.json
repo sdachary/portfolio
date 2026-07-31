@@ -1,101 +1,112 @@
 {
-  "islands": [
+  "zones": [
     {
       "id": "oradb",
       "name": "oradb",
       "label": "DATA TIER",
       "subtitle": "140.245.227.176",
       "x": -12,
-      "z": 0,
+      "z": -4,
       "color": "#3b82f6",
       "size": 7,
-      "buildings": [
+      "services": [
         {
           "id": "pg16",
           "name": "PostgreSQL 16",
           "type": "database",
-          "h": 3.2,
+          "logo": "postgresql",
           "color": "#2563eb",
+          "h": 3.2,
           "desc": "Primary database. 7 schemas. Port 5432."
         },
         {
           "id": "nginx",
           "name": "Nginx",
           "type": "proxy",
-          "h": 2.8,
+          "logo": "nginx",
           "color": "#dc2626",
+          "h": 2.8,
           "desc": "Reverse proxy. Routes /auth/v2/, /mail/, /rest/v1/. Port 80."
         },
         {
           "id": "postgrest",
           "name": "PostgREST",
           "type": "api",
-          "h": 1.8,
+          "logo": "api",
           "color": "#059669",
+          "h": 1.8,
           "desc": "Auto-generated REST API from PG schema. Port 3000."
         },
         {
           "id": "redis",
           "name": "Redis",
           "type": "cache",
-          "h": 1.4,
+          "logo": "redis",
           "color": "#dc2626",
+          "h": 1.4,
           "desc": "Cache & queue. Kubera Rack::Attack + Sidekiq. Port 6379."
         },
         {
           "id": "better-auth",
           "name": "Better-Auth",
           "type": "auth",
-          "h": 2,
+          "logo": "auth",
           "color": "#7c3aed",
+          "h": 2,
           "desc": "Auth server. Session tokens, PG16. Port 4000."
         },
         {
           "id": "mail-relay",
           "name": "Mail-Relay",
           "type": "service",
-          "h": 1.2,
+          "logo": "mail",
           "color": "#f59e0b",
+          "h": 1.2,
           "desc": "Email relay. Gmail SMTP fallback chain. Port 4001."
         },
         {
-          "id": "sampada",
-          "name": "Sampada",
+          "id": "sampada-api",
+          "name": "Sampada API",
           "type": "app",
-          "h": 2.2,
+          "logo": "rails",
           "color": "#22c55e",
+          "h": 2.2,
           "desc": "Personal finance OS. Rails 7.2 + Sidekiq. Port 3002."
         },
         {
           "id": "bepara-api",
           "name": "Bepara API",
           "type": "api",
-          "h": 1.5,
+          "logo": "nextdotjs",
           "color": "#0d9488",
+          "h": 1.5,
           "desc": "Next.js API server. Inventory management. Port 3001."
         },
         {
           "id": "sadhan-server",
           "name": "Sadhan Server",
           "type": "app",
-          "h": 1.6,
+          "logo": "nextdotjs",
           "color": "#6366f1",
+          "h": 1.6,
           "desc": "Next.js server. Career platform APIs. Port 4002."
         },
         {
           "id": "headroom",
           "name": "Headroom",
           "type": "monitoring",
-          "h": 1,
+          "logo": "monitor",
           "color": "#06b6d4",
+          "h": 1,
           "desc": "SQL monitoring dashboard. Port 8787."
         },
         {
           "id": "uptime-kuma",
           "name": "Uptime Kuma",
           "type": "monitoring",
-          "h": 1,
+          "logo": "uptimekuma",
           "color": "#eab308",
+          "h": 1,
           "desc": "Service uptime monitoring. Port 3003."
         }
       ]
@@ -106,141 +117,209 @@
       "label": "AI TIER",
       "subtitle": "68.233.97.153",
       "x": 12,
-      "z": 0,
+      "z": -4,
       "color": "#7c3aed",
       "size": 5.5,
-      "buildings": [
+      "services": [
         {
           "id": "mcp-hub",
           "name": "MCP Hub",
           "type": "ai",
-          "h": 2.8,
+          "logo": "ai",
           "color": "#f59e0b",
+          "h": 2.8,
           "desc": "AI orchestration. 21 skills, 23 agents. Port 3000."
         },
         {
           "id": "paca",
           "name": "Paca",
           "type": "app",
-          "h": 1.8,
+          "logo": "kanban",
           "color": "#a855f7",
+          "h": 1.8,
           "desc": "Project management. Docker Compose. Port 4000."
         },
         {
           "id": "nim-proxy",
           "name": "NIM Proxy",
           "type": "ai",
-          "h": 1.4,
+          "logo": "nvidia",
           "color": "#64748b",
+          "h": 1.4,
           "desc": "Anthropic→OpenAI proxy for Claude Code. Port 8082."
         },
         {
           "id": "cloudflared",
           "name": "cloudflared",
           "type": "network",
-          "h": 1,
+          "logo": "cloudflare",
           "color": "#38bdf8",
+          "h": 1,
           "desc": "Cloudflare Tunnel (x2). Exposes MCP Hub + Kubera."
         },
         {
           "id": "ttyd",
           "name": "ttyd",
           "type": "service",
-          "h": 1,
+          "logo": "terminal",
           "color": "#22c55e",
+          "h": 1,
           "desc": "Web terminal. Browser-based SSH. Port 7681."
         },
         {
           "id": "minio",
           "name": "Minio",
           "type": "storage",
-          "h": 1.2,
+          "logo": "minio",
           "color": "#e11d48",
+          "h": 1.2,
           "desc": "S3-compatible storage. Ports 9000/9001."
         },
         {
           "id": "fail2ban",
           "name": "fail2ban",
           "type": "security",
-          "h": 0.6,
+          "logo": "shield",
           "color": "#94a3b8",
+          "h": 0.6,
           "desc": "SSH brute force protection."
         }
       ]
-    }
-  ],
-  "floating": [
-    {
-      "id": "chitragupta",
-      "name": "Chitragupta",
-      "type": "app",
-      "color": "#f97316",
-      "url": "https://chitragupta.pages.dev",
-      "desc": "Business ledger. Vite + Hono/TS. GST/TDS."
     },
     {
-      "id": "bepara",
-      "name": "Bepara",
-      "type": "app",
-      "color": "#3b82f6",
-      "url": "https://bepara.pages.dev",
-      "desc": "Inventory SaaS. Next.js 16. Barcode scanning."
+      "id": "cloudflare",
+      "name": "cloudflare",
+      "label": "EDGE TIER",
+      "subtitle": "Pages · 9 apps",
+      "x": -12,
+      "z": 7,
+      "color": "#f38020",
+      "size": 7,
+      "services": [
+        {
+          "id": "chitragupta",
+          "name": "Chitragupta",
+          "type": "app",
+          "logo": "hono",
+          "color": "#f97316",
+          "url": "https://chitragupta.pages.dev",
+          "desc": "Business ledger. Vite + Hono/TS. GST/TDS."
+        },
+        {
+          "id": "bepara",
+          "name": "Bepara",
+          "type": "app",
+          "logo": "nextdotjs",
+          "color": "#3b82f6",
+          "url": "https://bepara.pages.dev",
+          "desc": "Inventory SaaS. Next.js 16. Barcode scanning."
+        },
+        {
+          "id": "udhyam",
+          "name": "Udhyam",
+          "type": "app",
+          "logo": "html5",
+          "color": "#eab308",
+          "url": "https://udhyam.pages.dev",
+          "desc": "Jewellery retail. Static HTML + Supabase."
+        },
+        {
+          "id": "sampada-web",
+          "name": "Sampada",
+          "type": "app",
+          "logo": "react",
+          "color": "#a855f7",
+          "url": "https://acharylab.140.245.227.176.nip.io",
+          "desc": "Personal finance OS. Rails + Docker on oradb."
+        },
+        {
+          "id": "sadhan",
+          "name": "Sadhan",
+          "type": "app",
+          "logo": "nextdotjs",
+          "color": "#6366f1",
+          "url": "https://sadhan.pages.dev",
+          "desc": "AI career platform. Next.js 15."
+        },
+        {
+          "id": "vishwakarma",
+          "name": "Vishwakarma",
+          "type": "app",
+          "logo": "cloudflareworkers",
+          "color": "#0d9488",
+          "url": "https://vishwakarma.pages.dev",
+          "desc": "Provisioning portal. CF Worker."
+        },
+        {
+          "id": "darpan",
+          "name": "Darpan",
+          "type": "app",
+          "logo": "react",
+          "color": "#ef4444",
+          "url": "https://darpan.pages.dev",
+          "desc": "Social media audit. D1 + DPDP compliant."
+        },
+        {
+          "id": "prayog",
+          "name": "Prayog",
+          "type": "app",
+          "logo": "javascript",
+          "color": "#06b6d4",
+          "url": "https://prayog.pages.dev",
+          "desc": "Browser tools + games. Formerly narad."
+        },
+        {
+          "id": "portfolio",
+          "name": "Portfolio",
+          "type": "app",
+          "logo": "vite",
+          "color": "#f8fafc",
+          "url": "https://aham.pages.dev",
+          "desc": "Personal portfolio. Vite + React. GitHub Pages."
+        }
+      ]
     },
     {
-      "id": "udhyam",
-      "name": "Udhyam",
-      "type": "app",
-      "color": "#eab308",
-      "url": "https://udhyam.pages.dev",
-      "desc": "Jewellery retail. Static HTML + Supabase."
-    },
-    {
-      "id": "sampada",
-      "name": "Sampada",
-      "type": "app",
-      "color": "#a855f7",
-      "url": "https://acharylab.140.245.227.176.nip.io",
-      "desc": "Personal finance OS. Rails + Docker on oradb."
-    },
-    {
-      "id": "sadhan",
-      "name": "Sadhan",
-      "type": "app",
-      "color": "#6366f1",
-      "url": "https://sadhan.pages.dev",
-      "desc": "AI career platform. Next.js 15."
-    },
-    {
-      "id": "vishwakarma",
-      "name": "Vishwakarma",
-      "type": "app",
-      "color": "#0d9488",
-      "url": "https://vishwakarma.pages.dev",
-      "desc": "Provisioning portal. CF Worker."
-    },
-    {
-      "id": "darpan",
-      "name": "Darpan",
-      "type": "app",
-      "color": "#ef4444",
-      "url": "https://darpan.pages.dev",
-      "desc": "Social media audit. D1 + DPDP compliant."
-    },
-    {
-      "id": "prayog",
-      "name": "Prayog",
-      "type": "app",
-      "color": "#06b6d4",
-      "url": "https://prayog.pages.dev",
-      "desc": "Browser tools + games. Formerly narad."
-    },
-    {
-      "id": "portfolio",
-      "name": "Portfolio",
-      "type": "app",
-      "color": "#f8fafc",
-      "url": "https://aham.pages.dev",
-      "desc": "Personal portfolio. Vite + React. GitHub Pages."
+      "id": "external",
+      "name": "external",
+      "label": "EXTERNAL",
+      "subtitle": "Third-party",
+      "x": 12,
+      "z": 7,
+      "color": "#64748b",
+      "size": 4,
+      "services": [
+        {
+          "id": "github",
+          "name": "GitHub",
+          "type": "scm",
+          "logo": "github",
+          "color": "#181717",
+          "h": 1.6,
+          "url": "https://github.com/sdachary",
+          "desc": "Source control. CI via GitHub Actions."
+        },
+        {
+          "id": "gcp",
+          "name": "Google Cloud",
+          "type": "cloud",
+          "logo": "googlecloud",
+          "color": "#4285f4",
+          "h": 1.6,
+          "url": "https://console.cloud.google.com",
+          "desc": "GCP infra. Supabase project for bepara + kanak."
+        },
+        {
+          "id": "sentry",
+          "name": "Sentry",
+          "type": "monitoring",
+          "logo": "sentry",
+          "color": "#362d59",
+          "h": 1.2,
+          "url": "https://sentry.io",
+          "desc": "Error tracking for web apps."
+        }
+      ]
     }
   ],
   "connections": [
@@ -260,12 +339,32 @@
       "label": "API"
     },
     {
+      "from": "sampada-web",
+      "to": "sampada-api",
+      "label": "API"
+    },
+    {
       "from": "sadhan",
       "to": "oradb",
       "label": "API"
     },
     {
       "from": "vishwakarma",
+      "to": "oradb",
+      "label": "API"
+    },
+    {
+      "from": "darpan",
+      "to": "oradb",
+      "label": "API"
+    },
+    {
+      "from": "prayog",
+      "to": "oradb",
+      "label": "API"
+    },
+    {
+      "from": "portfolio",
       "to": "oradb",
       "label": "API"
     },
@@ -290,12 +389,12 @@
       "label": "DB"
     },
     {
-      "from": "sampada",
+      "from": "sampada-api",
       "to": "redis",
       "label": "Queue"
     },
     {
-      "from": "sampada",
+      "from": "sampada-api",
       "to": "pg16",
       "label": "DB"
     },
@@ -308,16 +407,30 @@
       "from": "paca",
       "to": "pg16",
       "label": "DB"
+    },
+    {
+      "from": "github",
+      "to": "cloudflare",
+      "label": "CI deploy"
+    },
+    {
+      "from": "gcp",
+      "to": "oradb",
+      "label": "Supabase"
+    },
+    {
+      "from": "sentry",
+      "to": "oradb",
+      "label": "Errors"
     }
   ],
   "generated_at": "2026-07-27T00:10:03.210Z",
   "stats": {
-    "total_services": 21,
-    "online": 21,
-    "islands": 2,
-    "floating": 9,
-    "connections": 13,
-    "total": 26
+    "total_services": 30,
+    "online": 30,
+    "zones": 4,
+    "connections": 20,
+    "total": 30
   },
   "health": {
     "nginx": {
@@ -336,7 +449,7 @@
       "online": true,
       "checked_at": "2026-07-27T00:10:03.210Z"
     },
-    "sampada": {
+    "sampada-api": {
       "online": true,
       "checked_at": "2026-07-27T00:10:03.210Z"
     },
@@ -397,6 +510,10 @@
       "checked_at": "2026-07-27T00:10:03.210Z"
     },
     "udhyam": {
+      "online": true,
+      "checked_at": "2026-07-27T00:10:03.210Z"
+    },
+    "sampada-web": {
       "online": true,
       "checked_at": "2026-07-27T00:10:03.210Z"
     },

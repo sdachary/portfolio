@@ -17,28 +17,26 @@ function StatusDot({ online }: { online: boolean | null }) {
 
 export default function InfoPanel() {
   const data = useManacitraStore(s => s.data);
+  const hoveredId = useManacitraStore(s => s.hoveredId);
   const selectedId = useManacitraStore(s => s.selectedId);
   const setSelected = useManacitraStore(s => s.setSelected);
 
+  const activeId = hoveredId ?? selectedId;
+
   const info = useMemo(() => {
-    if (!data || !selectedId) return null;
-    for (const isl of data.islands) {
-      for (const b of isl.buildings) {
-        if (b.id === selectedId) {
-          const h = data.health[selectedId];
-          return { name: b.name, type: b.type, desc: b.desc, color: b.color, online: h?.online ?? null, island: isl.name, id: b.id };
+    if (!data || !activeId) return null;
+    for (const zone of data.zones) {
+      for (const svc of zone.services) {
+        if (svc.id === activeId) {
+          const h = data.health[activeId];
+          return { name: svc.name, type: svc.type, desc: svc.desc, color: svc.color, online: h?.online ?? null, zone: zone.label, id: svc.id, url: svc.url };
         }
       }
     }
-    for (const f of data.floating) {
-      if (f.id === selectedId) {
-        const h = data.health[selectedId];
-        return { name: f.name, type: f.type, desc: f.desc, color: f.color, online: h?.online ?? null, island: 'Floating', id: f.id };
-      }
-    }
     return null;
-  }, [data, selectedId]);
+  }, [data, activeId]);
 
+  const isHover = hoveredId !== null && hoveredId === activeId;
   const close = () => setSelected(null);
 
   return (
@@ -59,12 +57,14 @@ export default function InfoPanel() {
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '.5rem' }}>
             <div>
               <div style={{ fontSize: '1rem', fontWeight: 600, color: '#1c1c1a', letterSpacing: '-0.01em' }}>{info.name}</div>
-              <div style={{ fontSize: '.7rem', color: 'rgba(28,28,26,0.4)', textTransform: 'uppercase', letterSpacing: '.12em', marginTop: 2 }}>{info.type} · {info.island}</div>
+              <div style={{ fontSize: '.7rem', color: 'rgba(28,28,26,0.4)', textTransform: 'uppercase', letterSpacing: '.12em', marginTop: 2 }}>{info.type} · {info.zone}</div>
             </div>
-            <button
-              onClick={close}
-              style={{ background: 'rgba(28,28,26,0.06)', border: 'none', color: 'rgba(28,28,26,0.4)', borderRadius: 6, width: 28, height: 28, cursor: 'pointer', fontSize: 14, display: 'flex', alignItems: 'center', justifyContent: 'center' }}
-            >✕</button>
+            {!isHover && (
+              <button
+                onClick={close}
+                style={{ background: 'rgba(28,28,26,0.06)', border: 'none', color: 'rgba(28,28,26,0.4)', borderRadius: 6, width: 28, height: 28, cursor: 'pointer', fontSize: 14, display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+              >✕</button>
+            )}
           </div>
           <p style={{ fontSize: '.8rem', color: 'rgba(28,28,26,0.65)', lineHeight: 1.5, margin: '0 0 .75rem' }}>{info.desc}</p>
           <div style={{ display: 'flex', gap: '.5rem', alignItems: 'center' }}>
@@ -75,6 +75,13 @@ export default function InfoPanel() {
             <span style={{ color: 'rgba(28,28,26,0.12)' }}>|</span>
             <span style={{ fontSize: '.7rem', color: 'rgba(28,28,26,0.25)' }}>{info.id}</span>
           </div>
+          {info.url && (
+            <div style={{ marginTop: '.6rem' }}>
+              <a href={info.url} target="_blank" rel="noreferrer" onClick={e => e.stopPropagation()} style={{ fontSize: '.72rem', color: '#1c1c1a', textDecoration: 'none', borderBottom: '1px dashed rgba(28,28,26,0.3)' }}>
+                {info.url.replace(/^https?:\/\//, '')}
+              </a>
+            </div>
+          )}
         </motion.div>
       )}
     </AnimatePresence>
