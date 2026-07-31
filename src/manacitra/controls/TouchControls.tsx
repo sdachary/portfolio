@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useManacitraStore } from '../store';
 
 export default function TouchControls() {
-  const flyHome = useManacitraStore(s => s.flyHome);
+  const resetView = useManacitraStore(s => s.resetView);
   const [isTouch] = useState(() => typeof window !== 'undefined' && 'ontouchstart' in window);
 
   if (!isTouch) return null;
@@ -13,7 +13,7 @@ export default function TouchControls() {
       display: 'flex', flexDirection: 'column', gap: 8,
     }}>
       <button
-        onClick={flyHome}
+        onClick={resetView}
         aria-label="Return to overview"
         style={{
           width: 44, height: 44, borderRadius: '50%',

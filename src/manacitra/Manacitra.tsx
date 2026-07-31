@@ -190,7 +190,6 @@ export default function Manacitra() {
           }}
           onPointerMissed={() => {
             useManacitraStore.getState().setSelected(null);
-            useManacitraStore.getState().flyHome();
           }}
         >
           <Scene data={data} />

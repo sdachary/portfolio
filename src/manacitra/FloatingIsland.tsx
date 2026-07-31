@@ -11,6 +11,8 @@ function healthColor(id: string, health: Record<string, { online: boolean }>): s
 
 export default function FloatingIsland({ app, index, total }: { app: FloatingApp; index: number; total: number }) {
   const health = useManacitraStore(s => s.data?.health ?? {});
+  const selectedId = useManacitraStore(s => s.selectedId);
+  const setSelected = useManacitraStore(s => s.setSelected);
   const ang = (index / total) * Math.PI * 2;
   const r = 5.5;
   const x = Math.cos(ang) * r;
@@ -18,9 +20,15 @@ export default function FloatingIsland({ app, index, total }: { app: FloatingApp
   const yBase = 3.2 + Math.sin(index * 1.7) * 0.2;
   const c = new THREE.Color(app.color);
   const hl = healthColor(app.id, health);
+  const isSelected = selectedId === app.id;
+
+  const handleClick = (e: { stopPropagation: () => void }) => {
+    e.stopPropagation();
+    setSelected(app.id);
+  };
 
   return (
-    <group position={[x, yBase, z]} rotation={[Math.sin(index * 1.9) * 0.03, 0, Math.sin(index * 2.3) * 0.03]}>
+    <group position={[x, yBase, z]} rotation={[Math.sin(index * 1.9) * 0.03, 0, Math.sin(index * 2.3) * 0.03]} onClick={handleClick}>
       <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -0.03, 0]}>
         <circleGeometry args={[0.7, 12]} />
         <meshStandardMaterial color="#faf8f3" roughness={1} metalness={0} transparent opacity={0.5} />
@@ -43,6 +51,12 @@ export default function FloatingIsland({ app, index, total }: { app: FloatingApp
           <meshBasicMaterial color={hl} transparent opacity={0.4} />
         </mesh>
       </group>
+      {isSelected && (
+        <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.002, 0]}>
+          <ringGeometry args={[0.55, 0.85, 16]} />
+          <meshBasicMaterial color={hl} transparent opacity={0.4} side={THREE.DoubleSide} />
+        </mesh>
+      )}
       <Html position={[0, 0.55, 0]} center>
         <div style={{ color: '#1c1c1a', fontSize: 8, fontWeight: 500, fontFamily: "'IBM Plex Mono','SF Mono',ui-monospace,monospace", letterSpacing: '0.04em', background: 'rgba(247,245,240,0.86)', padding: '2px 6px', borderRadius: 4, whiteSpace: 'nowrap', border: '1px solid rgba(28,28,26,0.08)' }}>
           {app.name}

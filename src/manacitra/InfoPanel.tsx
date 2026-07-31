@@ -19,7 +19,6 @@ export default function InfoPanel() {
   const data = useManacitraStore(s => s.data);
   const selectedId = useManacitraStore(s => s.selectedId);
   const setSelected = useManacitraStore(s => s.setSelected);
-  const flyHome = useManacitraStore(s => s.flyHome);
 
   const info = useMemo(() => {
     if (!data || !selectedId) return null;
@@ -40,7 +39,7 @@ export default function InfoPanel() {
     return null;
   }, [data, selectedId]);
 
-  const close = () => { setSelected(null); flyHome(); };
+  const close = () => setSelected(null);
 
   return (
     <AnimatePresence>

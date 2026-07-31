@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import { useManacitraStore, type CamTarget } from './store';
+import { useManacitraStore } from './store';
 
 function healthColor(id: string, health: Record<string, { online: boolean }>): string {
   const h = health[id];
@@ -7,14 +7,13 @@ function healthColor(id: string, health: Record<string, { online: boolean }>): s
   return h.online ? '#2f6d4f' : '#b5472e';
 }
 
-export default function Building({ building, index, total, islandX, islandZ }: {
+export default function Building({ building, index, total }: {
   building: { id: string; name: string; color: string; h?: number };
-  index: number; total: number; islandX: number; islandZ: number;
+  index: number; total: number;
 }) {
   const health = useManacitraStore(s => s.data?.health ?? {});
   const selectedId = useManacitraStore(s => s.selectedId);
   const setSelected = useManacitraStore(s => s.setSelected);
-  const flyTo = useManacitraStore(s => s.flyTo);
   const h = building.h || 1;
   const w = 0.55;
   const sp = 1.6;
@@ -29,9 +28,6 @@ export default function Building({ building, index, total, islandX, islandZ }: {
   const handleClick = (e: { stopPropagation: () => void }) => {
     e.stopPropagation();
     setSelected(building.id);
-    const target: CamTarget = { x: islandX + ox, y: 0.5, z: islandZ + oz };
-    const pos: CamTarget = { x: islandX + ox + 4, y: 4, z: islandZ + oz + 4 };
-    flyTo(pos, target);
   };
 
   const geo = new THREE.BoxGeometry(w, h, w);
