@@ -44,6 +44,7 @@ export default function IsometricCameraRig() {
   return (
     <OrbitControls
       ref={controlsRef}
+      makeDefault
       enableDamping
       dampingFactor={0.08}
       minDistance={15}
