@@ -40,6 +40,10 @@ export default function FloatingIsland({ app, index, total }: { app: FloatingApp
         <boxGeometry args={[0.45, 0.35, 0.45]} />
         <meshStandardMaterial color={c} roughness={0.9} metalness={0} />
       </mesh>
+      <mesh position={[0, 0.39, 0]} castShadow>
+        <boxGeometry args={[0.5, 0.08, 0.5]} />
+        <meshStandardMaterial color={c} roughness={0.9} metalness={0} />
+      </mesh>
       {isSelected && (
         <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.002, 0]}>
           <ringGeometry args={[0.55, 0.85, 16]} />
