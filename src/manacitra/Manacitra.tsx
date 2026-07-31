@@ -26,7 +26,7 @@ function Loader({ progress, status }: { progress: number; status: string }) {
   return (
     <div style={{
       position: 'fixed', inset: 0, display: 'flex', flexDirection: 'column',
-      alignItems: 'center', justifyContent: 'center', background: '#f7f5f0',
+      alignItems: 'center', justifyContent: 'center', background: '#f4f5f7',
       zIndex: 100, transition: 'opacity 1s ease',
     }}>
       <div style={{
@@ -141,7 +141,7 @@ export default function Manacitra() {
   }, [setData]);
 
   return (
-    <div data-contrast={highContrast ? 'high' : 'normal'} style={{ width: '100vw', height: '100vh', background: '#f7f5f0', position: 'relative', overflow: 'hidden' }}>
+    <div data-contrast={highContrast ? 'high' : 'normal'} style={{ width: '100vw', height: '100vh', background: '#f4f5f7', position: 'relative', overflow: 'hidden' }}>
       {!loaded && <Loader progress={progress} status={status} />}
       <Header online={online} offline={offline} total={total} />
       <div style={{

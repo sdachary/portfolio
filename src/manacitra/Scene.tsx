@@ -9,7 +9,7 @@ import type { ManacitraData } from './types';
 export default function Scene({ data }: { data: ManacitraData }) {
   return (
     <>
-      <color attach="background" args={[0xf7f5f0]} />
+      <color attach="background" args={[0xf4f5f7]} />
       <DiagramOverlay data={data} />
       <Lights />
       <Suspense fallback={null}>

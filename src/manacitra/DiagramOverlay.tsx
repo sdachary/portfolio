@@ -36,24 +36,29 @@ function makeLayerMaterial(tex: THREE.CanvasTexture, depthTest: boolean) {
 
 function drawGrid(c: Ctx2D) {
   const { ctx, project } = c;
-  const line = (x1: number, y1: number, x2: number, y2: number) => {
-    ctx.moveTo(x1, y1);
-    ctx.lineTo(x2, y2);
-  };
-
-  ctx.strokeStyle = 'rgba(28,28,26,0.18)';
   ctx.lineWidth = 1;
-  ctx.beginPath();
   for (let i = 0; i <= GRID_DIV; i++) {
     const pos = -GRID_HALF + i * GRID_STEP;
+    const major = i % 5 === 0;
     const a = project(-GRID_HALF, 0, pos);
     const b = project(GRID_HALF, 0, pos);
     const c2 = project(pos, 0, -GRID_HALF);
     const d = project(pos, 0, GRID_HALF);
-    if (a && b) line(a.x, a.y, b.x, b.y);
-    if (c2 && d) line(c2.x, c2.y, d.x, d.y);
+    if (a && b) {
+      ctx.beginPath();
+      ctx.moveTo(a.x, a.y);
+      ctx.lineTo(b.x, b.y);
+      ctx.strokeStyle = major ? 'rgba(28,28,26,0.12)' : 'rgba(28,28,26,0.06)';
+      ctx.stroke();
+    }
+    if (c2 && d) {
+      ctx.beginPath();
+      ctx.moveTo(c2.x, c2.y);
+      ctx.lineTo(d.x, d.y);
+      ctx.strokeStyle = major ? 'rgba(28,28,26,0.12)' : 'rgba(28,28,26,0.06)';
+      ctx.stroke();
+    }
   }
-  ctx.stroke();
 }
 
 function healthColor(id: string, health: ManacitraData['health']): string {
