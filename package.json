@@ -13,15 +13,10 @@
     "test:watch": "vitest"
   },
   "dependencies": {
-    "@react-three/drei": "^10.7.7",
-    "@react-three/fiber": "^9.6.1",
-    "@react-three/postprocessing": "^3.0.4",
     "@sentry/react": "^10.66.0",
     "framer-motion": "^12.38.0",
-    "postprocessing": "^6.39.4",
     "react": "^19.2.6",
     "react-dom": "^19.2.6",
-    "three": "^0.185.1",
     "zustand": "^5.0.14"
   },
   "devDependencies": {

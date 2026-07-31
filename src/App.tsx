@@ -6,6 +6,7 @@ import DualIdentity from './components/DualIdentity'
 import Services from './components/Services'
 import Skills from './components/Skills'
 import Projects from './components/Projects'
+import ManacitraSection from './components/ManacitraSection'
 import Blog from './components/Blog'
 import RecentActivity from './components/RecentActivity'
 import WorkWithMe from './components/WorkWithMe'
@@ -22,6 +23,7 @@ export default function App() {
       <Services />
       <Skills />
       <Projects />
+      <ManacitraSection />
       <Blog />
       <RecentActivity />
       <WorkWithMe />

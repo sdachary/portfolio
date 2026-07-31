@@ -38,11 +38,9 @@ export default function Projects() {
 
   if (projects.length === 0) return null
 
-  const sorted = [...projects].sort((a, b) => {
-    if (isFeatured(a) && !isFeatured(b)) return -1
-    if (!isFeatured(a) && isFeatured(b)) return 1
-    return 0
-  })
+  const sorted = [...projects]
+    .filter(p => p.slug !== 'manacitra')
+    .sort((a, b) => a.name.localeCompare(b.name))
 
   return (
     <section id="projects" className="section section-alt" style={{ overflow: 'hidden' }}>
