@@ -38,9 +38,9 @@
   {
     "name": "DARPAN",
     "slug": "darpan",
-    "status": "Local / Standalone",
-    "status_key": "local",
-    "description": "AI-powered social media audit and growth strategy tool. Profile analysis, AI content plans, brand kits, and competitor tracking \u2014 built with React + Vite frontend and Cloudflare Workers + D1 backend.",
+    "status": "Live",
+    "status_key": "live",
+    "description": "AI-powered social media audit and growth strategy tool. Profile analysis, AI content plans, brand kits, and competitor tracking — built with React + Vite frontend and Cloudflare Workers + D1 backend.",
     "tags": [
       "React",
       "Vite",
@@ -49,9 +49,9 @@
       "TypeScript",
       "Cloudflare Pages"
     ],
-    "live_url": null,
-    "local": true,
-    "last_updated": "2026-07-03",
+    "live_url": "https://darpan.pages.dev/",
+    "local": false,
+    "last_updated": "2026-07-31",
     "github_remote": "git@github.com:sdachary/darpan.git"
   },
   {
@@ -106,7 +106,7 @@
     "slug": "sampada",
     "status": "Open Source",
     "status_key": "open-source",
-    "description": "Personal finance OS \u2014 self-hosted, open-source tool for tracking wealth, investments, and financial goals. From debt to zero to wealth.",
+    "description": "Personal finance OS — self-hosted, open-source tool for tracking wealth, investments, and financial goals. From debt to zero to wealth.",
     "tags": [
       "Ruby",
       "Rails",
@@ -140,7 +140,7 @@
     "slug": "mcp-hub",
     "status": "Local / Standalone",
     "status_key": "local",
-    "description": "Unified AI Agent Orchestration Platform \u2014 120+ tools, 55 skills, 22 agents via SSE transport on port 3000. Multi-provider AI routing, DAG workflow engine, skill evolution system, and memory-augmented agents.",
+    "description": "Unified AI Agent Orchestration Platform — 120+ tools, 55 skills, 22 agents via SSE transport on port 3000. Multi-provider AI routing, DAG workflow engine, skill evolution system, and memory-augmented agents.",
     "tags": [
       "Python",
       "FastAPI",
@@ -157,7 +157,7 @@
     "slug": "sri",
     "status": "Local / Standalone",
     "status_key": "local",
-    "description": "Open-source design toolkit and the alternative to Claude Design. Local-first, web-deployable \u2014 16 coding-agent CLIs, 31 composable Skills, 72 brand-grade Design Systems. Built with Next.js + TypeScript.",
+    "description": "Open-source design toolkit and the alternative to Claude Design. Local-first, web-deployable — 16 coding-agent CLIs, 31 composable Skills, 72 brand-grade Design Systems. Built with Next.js + TypeScript.",
     "tags": [
       "TypeScript",
       "Next.js",
