@@ -264,6 +264,7 @@ function arrowPts(x: number, y: number, angleDeg: number) {
 
 function LogoMark({ key, size }: { key: string; size: number }) {
   const def = logoFor(key);
+  if (!def) return null;
   return (
     <svg viewBox={def.vb} width={size} height={size} aria-hidden="true" style={{ flexShrink: 0 }}>
       <path d={def.d} fill={def.color} />
@@ -391,8 +392,8 @@ export default function FlatMap({ data }: { data: ManacitraData }) {
                     <LogoMark key={svc.logo} size={26} />
                   </g>
                   <text
-                    x={tile.x + tile.w / 2} y={tile.y + tile.h - 10}
-                    fontFamily={T.fontSans} fontSize={10} fontWeight={500} fill={T.ink}
+                    x={tile.x + tile.w / 2} y={logoFor(svc.logo) ? tile.y + tile.h - 10 : tile.y + tile.h / 2}
+                    fontFamily={T.fontSans} fontSize={logoFor(svc.logo) ? 10 : 11} fontWeight={500} fill={T.ink}
                     textAnchor="middle"
                     style={{ pointerEvents: 'none' }}
                   >
