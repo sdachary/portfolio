@@ -38,3 +38,4 @@ __pycache__/
 scan.log
 portfolio/.gitignore
 projects_snippet.html
+.shots/

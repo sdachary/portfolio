@@ -4,9 +4,9 @@ import { logoFor } from './logos';
 import { TOKENS, TOKENS_HC } from './tokens';
 import type { ManacitraData, Zone } from './types';
 
-const TILE_W = 150;
-const TILE_H = 52;
-const TILE_GAP = 12;
+const TILE = 72;
+const TILE_GAP = 14;
+const ROW_PITCH = TILE + TILE_GAP;
 const PAD = 20;
 const HEADER = 58;
 const MARGIN = 48;
@@ -24,8 +24,8 @@ function gridFor(n: number) {
 
 function zoneSize(n: number) {
   const { cols, rows } = gridFor(n);
-  const w = PAD * 2 + cols * (TILE_W + TILE_GAP) - TILE_GAP;
-  const h = HEADER + PAD + rows * (TILE_H + TILE_GAP) - TILE_GAP + PAD;
+  const w = PAD * 2 + cols * (TILE + TILE_GAP) - TILE_GAP;
+  const h = HEADER + PAD + rows * ROW_PITCH - TILE_GAP + PAD;
   return { w, h };
 }
 
@@ -46,10 +46,10 @@ function layout(data: ManacitraData): { cards: ZoneCard[]; W: number; H: number 
     const { cols } = gridFor(zone.services.length);
     const tiles: Tile[] = zone.services.map((svc, i) => ({
       id: svc.id,
-      x: x + PAD + (i % cols) * (TILE_W + TILE_GAP),
-      y: y + HEADER + PAD + Math.floor(i / cols) * (TILE_H + TILE_GAP),
-      w: TILE_W,
-      h: TILE_H,
+      x: x + PAD + (i % cols) * (TILE + TILE_GAP),
+      y: y + HEADER + PAD + Math.floor(i / cols) * ROW_PITCH,
+      w: TILE,
+      h: TILE,
     }));
     return { zone, x, y, w: size.w, h: size.h, tiles };
   };
@@ -101,6 +101,24 @@ function buildRoutes(data: ManacitraData, cards: ZoneCard[]) {
   for (const card of cards) for (const t of card.tiles) tileOf.set(t.id, { tile: t, zone: card.zone });
   const cardOf = (id: string) => cardById(cards, id);
   const zoneOf = (id: string) => (tileOf.has(id) ? tileOf.get(id)!.zone : cardOf(id)?.zone ?? null);
+
+  // spread exit/entry points along tile edges so multiple arrows to the same block don't stack
+  const srcCount = new Map<string, number>();
+  const dstCount = new Map<string, number>();
+  const nextSrc = (t: Tile) => {
+    const k = srcCount.get(t.id) ?? 0;
+    srcCount.set(t.id, k + 1);
+    return t.y + 12 + (k % 5) * 12;
+  };
+  const nextDst = (t: Tile) => {
+    const k = dstCount.get(t.id) ?? 0;
+    dstCount.set(t.id, k + 1);
+    return t.x + 10 + (k % 5) * 11;
+  };
+  const nextDstLane = (t: Tile) => {
+    const k = dstCount.get(t.id) ?? 0;
+    return t.y - TILE_GAP + 4 + (k % 3) * 3;
+  };
 
   const routes: Route[] = [];
   const intraRoutes: Route[] = [];
@@ -158,23 +176,21 @@ function buildRoutes(data: ManacitraData, cards: ZoneCard[]) {
     const fromCard = cardOf(fromZone.id)!;
     const toCard = cardOf(toZone.id)!;
 
-    // intra-zone: route between tiles inside the card
+    // intra-zone: route inside the card through tile-gap lanes so no line crosses a tile
     if (fromZone.id === toZone.id) {
       const a = tileOf.get(conn.from);
       const b = tileOf.get(conn.to);
       if (!a || !b) return;
-      const sx = a.tile.x + a.tile.w / 2;
-      const sy = a.tile.y + a.tile.h / 2;
-      const tx = b.tile.x + b.tile.w / 2;
-      const ty = b.tile.y + b.tile.h / 2;
-      const laneY = (sy + ty) / 2;
-      const d = `M ${sx} ${sy} V ${laneY} H ${tx} V ${ty}`;
-      const up = ty < sy;
+      const sy = nextSrc(a.tile);
+      const lx = a.tile.x - TILE_GAP / 2;
+      const lane = nextDstLane(b.tile);
+      const tx = nextDst(b.tile);
+      const d = `M ${a.tile.x} ${sy} H ${lx} V ${lane} H ${tx} V ${b.tile.y}`;
       intraRoutes.push({
         d,
-        end: { x: tx, y: ty },
-        angle: up ? -90 : 90,
-        label: { x: (sx + tx) / 2, y: laneY - 6 },
+        end: { x: tx, y: b.tile.y },
+        angle: 90,
+        label: { x: lx - 8, y: (sy + lane) / 2 },
         from: conn.from,
         to: conn.to,
       });
@@ -191,9 +207,19 @@ function buildRoutes(data: ManacitraData, cards: ZoneCard[]) {
       const laneX = slice.min + ((pos + 0.5) / Math.max(1, fam.conns.length)) * (slice.max - slice.min);
       const src = srcT ? edgePoint(fromCard, 'r', (srcT.tile.y - fromCard.y) / fromCard.h)
                        : edgePoint(fromCard, 'r', 0.5);
-      const dst = dstT
-        ? edgePoint(toCard, 'l', (dstT.tile.y - toCard.y) / toCard.h)
-        : { x: toCard.x, y: toCard.y + PAD + (laneX - (fromCard.x + fromCard.w + 12)) / ((toCard.x - 12) - (fromCard.x + fromCard.w + 12)) * (toCard.h - PAD * 2) };
+
+      if (dstT) {
+        // route into the card through the left padding gutter, then touch the tile's top edge
+        const entry = edgePoint(toCard, 'l', (dstT.tile.y - toCard.y) / toCard.h);
+        const gutterX = toCard.x + PAD / 2;
+        const lane = nextDstLane(dstT.tile);
+        const tx = nextDst(dstT.tile);
+        const d = `M ${src.x} ${src.y} H ${laneX} V ${entry.y} H ${gutterX} V ${lane} H ${tx} V ${dstT.tile.y}`;
+        routes.push({ d, end: { x: tx, y: dstT.tile.y }, angle: 90, label: { x: laneX + 8, y: (src.y + entry.y) / 2 }, from: conn.from, to: conn.to });
+        return;
+      }
+
+      const dst = { x: toCard.x, y: toCard.y + PAD + (laneX - (fromCard.x + fromCard.w + 12)) / ((toCard.x - 12) - (fromCard.x + fromCard.w + 12)) * (toCard.h - PAD * 2) };
       const d = `M ${src.x} ${src.y} H ${laneX} V ${dst.y} H ${dst.x}`;
       routes.push({ d, end: dst, angle: 0, label: { x: laneX + 8, y: (src.y + dst.y) / 2 }, from: conn.from, to: conn.to });
       return;
@@ -356,23 +382,24 @@ export default function FlatMap({ data }: { data: ManacitraData }) {
                   }}
                 >
                   <rect
-                    x={tile.x} y={tile.y} width={tile.w} height={tile.h} rx={10}
+                    x={tile.x} y={tile.y} width={tile.w} height={tile.h} rx={16}
                     fill={isActive ? T.surfaceBorder : T.bg}
                     stroke={isActive ? T.ink : T.surfaceBorder}
                     strokeWidth={isActive ? 1.6 : 1}
                   />
-                  <g transform={`translate(${tile.x + 14}, ${tile.y + (TILE_H - 26) / 2})`}>
+                  <g transform={`translate(${tile.x + (tile.w - 26) / 2}, ${tile.y + 8})`}>
                     <LogoMark key={svc.logo} size={26} />
                   </g>
                   <text
-                    x={tile.x + 52} y={tile.y + TILE_H / 2 + 1}
-                    fontFamily={T.fontSans} fontSize={13} fontWeight={500} fill={T.ink}
+                    x={tile.x + tile.w / 2} y={tile.y + tile.h - 10}
+                    fontFamily={T.fontSans} fontSize={10} fontWeight={500} fill={T.ink}
+                    textAnchor="middle"
                     style={{ pointerEvents: 'none' }}
                   >
                     {svc.name}
                   </text>
                   {visibleLayers.labels && (
-                    <circle cx={tile.x + tile.w - 14} cy={tile.y + TILE_H / 2} r={4.5} fill={statusColor} stroke={T.bg} strokeWidth={1.5} />
+                    <circle cx={tile.x + tile.w - 9} cy={tile.y + 9} r={4.5} fill={statusColor} stroke={T.bg} strokeWidth={1.5} />
                   )}
                 </g>
               );

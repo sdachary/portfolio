@@ -22,7 +22,7 @@ export default function RecentActivity() {
   useEffect(() => {
     fetch(import.meta.env.BASE_URL + 'activity.json')
       .then(r => r.ok ? r.json() : [])
-      .then(d => { setActivity([...d].sort((a, b) => b.date.localeCompare(a.date))); setLoading(false) })
+      .then(d => { setActivity([...d].sort((a, b) => b.date.localeCompare(a.date)).slice(0, 8)); setLoading(false) })
       .catch(() => { setError(true); setLoading(false) })
   }, [])
 

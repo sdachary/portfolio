@@ -300,16 +300,6 @@
           "desc": "Source control. CI via GitHub Actions."
         },
         {
-          "id": "gcp",
-          "name": "Google Cloud",
-          "type": "cloud",
-          "logo": "googlecloud",
-          "color": "#4285f4",
-          "h": 1.6,
-          "url": "https://console.cloud.google.com",
-          "desc": "GCP infra. Supabase project for bepara + kanak."
-        },
-        {
           "id": "sentry",
           "name": "Sentry",
           "type": "monitoring",
@@ -414,11 +404,6 @@
       "label": "CI deploy"
     },
     {
-      "from": "gcp",
-      "to": "oradb",
-      "label": "Supabase"
-    },
-    {
       "from": "sentry",
       "to": "oradb",
       "label": "Errors"
@@ -426,11 +411,11 @@
   ],
   "generated_at": "2026-07-27T00:10:03.210Z",
   "stats": {
-    "total_services": 30,
-    "online": 30,
+    "total_services": 29,
+    "online": 29,
     "zones": 4,
-    "connections": 20,
-    "total": 30
+    "connections": 19,
+    "total": 29
   },
   "health": {
     "nginx": {
