@@ -5,12 +5,13 @@ import { TOKENS, TOKENS_HC } from './tokens';
 import type { ManacitraData, Zone } from './types';
 
 const TILE_W = 150;
-const TILE_H = 46;
-const TILE_GAP = 10;
-const PAD = 18;
-const HEADER = 54;
-const ZONE_GAP = 70;
-const MARGIN = 40;
+const TILE_H = 52;
+const TILE_GAP = 12;
+const PAD = 20;
+const HEADER = 58;
+const MARGIN = 48;
+const COL_GAP = 200;
+const ROW_GAP = 90;
 
 interface Rect { x: number; y: number; w: number; h: number }
 interface Tile extends Rect { id: string }
@@ -30,80 +31,209 @@ function zoneSize(n: number) {
 
 function layout(data: ManacitraData): { cards: ZoneCard[]; W: number; H: number } {
   const sized = data.zones.map(z => ({ zone: z, size: zoneSize(z.services.length) }));
+  const get = (id: string) => sized.find(s => s.zone.id === id)!;
 
-  const cloudflare = sized.find(s => s.zone.id === 'cloudflare');
-  const oradev = sized.find(s => s.zone.id === 'oradev');
-  const oradb = sized.find(s => s.zone.id === 'oradb');
-  const external = sized.find(s => s.zone.id === 'external');
+  const cloudflare = get('cloudflare');
+  const oradb = get('oradb');
+  const oradev = get('oradev');
+  const external = get('external');
 
-  const colA = cloudflare?.size.w ?? 0;
-  const colB = Math.max(oradev?.size.w ?? 0, external?.size.w ?? 0);
-  const xA = MARGIN;
-  const xB = xA + colA + ZONE_GAP;
-  const xC = xB + colB + ZONE_GAP;
+  const leftW = Math.max(cloudflare.size.w, oradev.size.w);
+  const rightX = MARGIN + leftW + COL_GAP;
 
-  const yRow1 = MARGIN;
-  const yExternal = yRow1 + (oradev?.size.h ?? 0) + ZONE_GAP;
-
-  const place = (entry: { zone: Zone; size: { w: number; h: number } } | undefined, x: number, y: number): ZoneCard | null => {
-    if (!entry) return null;
+  const place = (entry: { zone: Zone; size: { w: number; h: number } }, x: number, y: number): ZoneCard => {
     const { zone, size } = entry;
     const { cols } = gridFor(zone.services.length);
-    const tiles: Tile[] = zone.services.map((svc, i) => {
-      const col = i % cols;
-      const row = Math.floor(i / cols);
-      return {
-        id: svc.id,
-        x: x + PAD + col * (TILE_W + TILE_GAP),
-        y: y + HEADER + PAD + row * (TILE_H + TILE_GAP),
-        w: TILE_W,
-        h: TILE_H,
-      };
-    });
+    const tiles: Tile[] = zone.services.map((svc, i) => ({
+      id: svc.id,
+      x: x + PAD + (i % cols) * (TILE_W + TILE_GAP),
+      y: y + HEADER + PAD + Math.floor(i / cols) * (TILE_H + TILE_GAP),
+      w: TILE_W,
+      h: TILE_H,
+    }));
     return { zone, x, y, w: size.w, h: size.h, tiles };
   };
 
   const cards = [
-    place(cloudflare, xA, yRow1),
-    place(oradev, xB, yRow1),
-    place(oradb, xC, yRow1),
-    place(external, xB, yExternal),
-  ].filter((c): c is ZoneCard => c !== null);
+    place(cloudflare, MARGIN, MARGIN),
+    place(oradb, rightX, MARGIN),
+    place(oradev, MARGIN, MARGIN + cloudflare.size.h + ROW_GAP),
+    place(external, rightX, MARGIN + oradb.size.h + ROW_GAP),
+  ];
 
-  const W = Math.max(xA + colA, xC + (oradb?.size.w ?? 0), xB + colB) + MARGIN;
-  const H = Math.max(yRow1 + (cloudflare?.size.h ?? 0), yExternal + (external?.size.h ?? 0), yRow1 + (oradb?.size.h ?? 0)) + MARGIN;
+  const W = rightX + Math.max(oradb.size.w, external.size.w) + MARGIN;
+  const H = Math.max(
+    MARGIN + cloudflare.size.h + ROW_GAP + oradev.size.h,
+    MARGIN + oradb.size.h + ROW_GAP + external.size.h,
+  ) + MARGIN;
   return { cards, W, H };
 }
 
-function zoneAnchor(zone: ZoneCard, src: { x: number; y: number }) {
-  const cx = zone.x + zone.w / 2;
-  const cy = zone.y + zone.h / 2;
-  const horizontal = Math.abs(cx - src.x) >= Math.abs(cy - src.y);
-  const min = zone.y + HEADER;
-  const max = zone.y + zone.h - PAD;
-  const t = Math.max(0, Math.min(1, (src.y - min) / Math.max(1, max - min)));
-  if (horizontal) {
-    return { x: src.x > cx ? zone.x + zone.w : zone.x, y: min + t * (max - min) };
+function cardById(cards: ZoneCard[], id: string) {
+  return cards.find(c => c.zone.id === id);
+}
+
+function clamp(v: number, lo: number, hi: number) {
+  return Math.max(lo, Math.min(hi, v));
+}
+
+// point on a card edge (face: l/r/t/b), t in 0..1 along that edge
+function edgePoint(c: ZoneCard, face: 'l' | 'r' | 't' | 'b', t: number) {
+  const pad = PAD;
+  const t0 = clamp(t, 0.08, 0.92);
+  if (face === 'l') return { x: c.x, y: c.y + pad + t0 * (c.h - pad * 2) };
+  if (face === 'r') return { x: c.x + c.w, y: c.y + pad + t0 * (c.h - pad * 2) };
+  if (face === 't') return { x: c.x + pad + t0 * (c.w - pad * 2), y: c.y };
+  return { x: c.x + pad + t0 * (c.w - pad * 2), y: c.y + c.h };
+}
+
+interface Route {
+  d: string;
+  end: { x: number; y: number };
+  angle: number;
+  label: { x: number; y: number };
+  from: string;
+  to: string;
+}
+
+function buildRoutes(data: ManacitraData, cards: ZoneCard[]) {
+  const tileOf = new Map<string, { tile: Tile; zone: Zone }>();
+  for (const card of cards) for (const t of card.tiles) tileOf.set(t.id, { tile: t, zone: card.zone });
+  const cardOf = (id: string) => cardById(cards, id);
+  const zoneOf = (id: string) => (tileOf.has(id) ? tileOf.get(id)!.zone : cardOf(id)?.zone ?? null);
+
+  const routes: Route[] = [];
+  const intraRoutes: Route[] = [];
+
+  // rightward families: (fromZone, toZone) -> ordered connections, lanes sliced per family
+  const rightConnList = data.connections.filter(c => {
+    const f = zoneOf(c.from), t = zoneOf(c.to);
+    return f && t && f.id !== t.id && cardById(cards, t.id)!.x >= cardById(cards, f.id)!.x + cardById(cards, f.id)!.w;
+  });
+  const families = new Map<string, { from: Zone; to: Zone; conns: typeof data.connections }>();
+  for (const c of rightConnList) {
+    const f = zoneOf(c.from)!, t = zoneOf(c.to)!;
+    const key = `${f.id}>${t.id}`;
+    const fam = families.get(key) ?? { from: f, to: t, conns: [] };
+    fam.conns.push(c);
+    families.set(key, fam);
   }
-  const y = src.y > cy ? zone.y + zone.h : zone.y;
-  return { x: zone.x + PAD + t * (zone.w - PAD * 2), y };
+  const famList = [...families.values()].map(fam => ({
+    ...fam,
+    conns: [...fam.conns].sort((x, y) => {
+      const a = tileOf.get(x.from);
+      const b = tileOf.get(y.from);
+      return (a ? a.tile.y : 0) - (b ? b.tile.y : 0);
+    }),
+  }));
+  // divide the corridor among families sharing the same destination card
+  const familySlices = new Map<string, { min: number; max: number }>();
+  const byToCard = new Map<string, typeof famList>();
+  for (const fam of famList) {
+    const tc = cardOf(fam.to.id)!;
+    const key = `${tc.x},${tc.y}`;
+    const list = byToCard.get(key) ?? [];
+    list.push(fam);
+    byToCard.set(key, list);
+  }
+  for (const list of byToCard.values()) {
+    const fc = cardOf(list[0].from.id)!;
+    const tc = cardOf(list[0].to.id)!;
+    const corridorMin = fc.x + fc.w + 12;
+    const corridorMax = tc.x - 12;
+    const total = list.reduce((s, f) => s + f.conns.length, 0);
+    let offset = 0;
+    for (const fam of list) {
+      const min = corridorMin + (offset / total) * (corridorMax - corridorMin);
+      offset += fam.conns.length;
+      const max = corridorMin + (offset / total) * (corridorMax - corridorMin);
+      familySlices.set(`${fam.from.id}>${fam.to.id}`, { min, max });
+    }
+  }
+
+  data.connections.forEach(conn => {
+    const fromZone = zoneOf(conn.from);
+    const toZone = zoneOf(conn.to);
+    if (!fromZone || !toZone) return;
+    const fromCard = cardOf(fromZone.id)!;
+    const toCard = cardOf(toZone.id)!;
+
+    // intra-zone: route between tiles inside the card
+    if (fromZone.id === toZone.id) {
+      const a = tileOf.get(conn.from);
+      const b = tileOf.get(conn.to);
+      if (!a || !b) return;
+      const sx = a.tile.x + a.tile.w / 2;
+      const sy = a.tile.y + a.tile.h / 2;
+      const tx = b.tile.x + b.tile.w / 2;
+      const ty = b.tile.y + b.tile.h / 2;
+      const laneY = (sy + ty) / 2;
+      const d = `M ${sx} ${sy} V ${laneY} H ${tx} V ${ty}`;
+      const up = ty < sy;
+      intraRoutes.push({
+        d,
+        end: { x: tx, y: ty },
+        angle: up ? -90 : 90,
+        label: { x: (sx + tx) / 2, y: laneY - 6 },
+        from: conn.from,
+        to: conn.to,
+      });
+      return;
+    }
+
+    // rightward: target card is to the right of source card
+    if (toCard.x >= fromCard.x + fromCard.w) {
+      const srcT = tileOf.get(conn.from);
+      const dstT = tileOf.get(conn.to);
+      const slice = familySlices.get(`${fromZone.id}>${toZone.id}`)!;
+      const fam = famList.find(f => f.from.id === fromZone.id && f.to.id === toZone.id)!;
+      const pos = Math.max(0, fam.conns.findIndex(c => c.from === conn.from && c.to === conn.to));
+      const laneX = slice.min + ((pos + 0.5) / Math.max(1, fam.conns.length)) * (slice.max - slice.min);
+      const src = srcT ? edgePoint(fromCard, 'r', (srcT.tile.y - fromCard.y) / fromCard.h)
+                       : edgePoint(fromCard, 'r', 0.5);
+      const dst = dstT
+        ? edgePoint(toCard, 'l', (dstT.tile.y - toCard.y) / toCard.h)
+        : { x: toCard.x, y: toCard.y + PAD + (laneX - (fromCard.x + fromCard.w + 12)) / ((toCard.x - 12) - (fromCard.x + fromCard.w + 12)) * (toCard.h - PAD * 2) };
+      const d = `M ${src.x} ${src.y} H ${laneX} V ${dst.y} H ${dst.x}`;
+      routes.push({ d, end: dst, angle: 0, label: { x: laneX + 8, y: (src.y + dst.y) / 2 }, from: conn.from, to: conn.to });
+      return;
+    }
+
+    // upward: target card is above source card
+    if (toCard.y + toCard.h <= fromCard.y) {
+      const srcT = tileOf.get(conn.from);
+      const dstT = tileOf.get(conn.to);
+      const src = srcT ? edgePoint(fromCard, 't', (srcT.tile.x - fromCard.x) / fromCard.w)
+                       : edgePoint(fromCard, 't', 0.5);
+      const dst = dstT ? edgePoint(toCard, 'b', (dstT.tile.x - toCard.x) / toCard.w)
+                       : edgePoint(toCard, 'b', (src.x - toCard.x) / toCard.w);
+      const corridorMin = toCard.y + toCard.h + 8;
+      const corridorMax = fromCard.y - 8;
+      const upConns = data.connections.filter(c => {
+        const f = zoneOf(c.from), t = zoneOf(c.to);
+        if (!f || !t || f.id !== fromZone.id || t.id !== toZone.id) return false;
+        const fc = cardOf(f.id)!, tc = cardOf(t.id)!;
+        return tc.y + tc.h <= fc.y;
+      });
+      const pos = Math.max(0, upConns.findIndex(c => c.from === conn.from && c.to === conn.to));
+      const laneY = corridorMin + ((pos + 0.5) / Math.max(1, upConns.length)) * (corridorMax - corridorMin);
+      const d = `M ${src.x} ${src.y} V ${laneY} H ${dst.x} V ${dst.y}`;
+      routes.push({ d, end: dst, angle: -90, label: { x: (src.x + dst.x) / 2, y: laneY - 6 }, from: conn.from, to: conn.to });
+      return;
+    }
+  });
+
+  return { routes, intraRoutes };
 }
 
-function tileCenter(t: Tile) {
-  return { x: t.x + t.w / 2, y: t.y + t.h / 2 };
-}
-
-function bezier(p1: { x: number; y: number }, p2: { x: number; y: number }, lat: number) {
-  const dx = p2.x - p1.x;
-  const dy = p2.y - p1.y;
-  const len = Math.hypot(dx, dy) || 1;
-  const nx = -dy / len;
-  const ny = dx / len;
-  const c1x = p1.x + dx * 0.35 + nx * lat * 12;
-  const c1y = p1.y + dy * 0.35 + ny * lat * 12;
-  const c2x = p2.x - dx * 0.35 + nx * lat * 12;
-  const c2y = p2.y - dy * 0.35 + ny * lat * 12;
-  return `M ${p1.x} ${p1.y} C ${c1x} ${c1y}, ${c2x} ${c2y}, ${p2.x} ${p2.y}`;
+function arrowPts(x: number, y: number, angleDeg: number) {
+  const a = (angleDeg * Math.PI) / 180;
+  const s = 8;
+  const w = 4.5;
+  const tip = `${x},${y}`;
+  const b1 = `${x - s * Math.cos(a) + w * Math.cos(a + Math.PI / 2)},${y - s * Math.sin(a) + w * Math.sin(a + Math.PI / 2)}`;
+  const b2 = `${x - s * Math.cos(a) - w * Math.cos(a + Math.PI / 2)},${y - s * Math.sin(a) - w * Math.sin(a + Math.PI / 2)}`;
+  return `${tip} ${b1} ${b2}`;
 }
 
 function LogoMark({ key, size }: { key: string; size: number }) {
@@ -135,44 +265,26 @@ export default function FlatMap({ data }: { data: ManacitraData }) {
 
   const tileById = useMemo(() => {
     const m = new Map<string, { tile: Tile; zone: Zone }>();
-    for (const card of cards) {
-      for (const t of card.tiles) m.set(t.id, { tile: t, zone: card.zone });
-    }
+    for (const card of cards) for (const t of card.tiles) m.set(t.id, { tile: t, zone: card.zone });
     return m;
   }, [cards]);
 
   const dimmed = useMemo(() => {
     const s = new Set<string>();
-    for (const [id, { tile, zone }] of tileById) {
+    for (const [id, { zone }] of tileById) {
       const h = data.health[id];
       const statusOk = filters.status.length === 0 || (h && filters.status.includes(h.online ? 'online' : 'offline'));
-      const queryOk = !q || tile.id.toLowerCase().includes(q) || zone.name.toLowerCase().includes(q) || zone.label.toLowerCase().includes(q);
+      const queryOk = !q || id.toLowerCase().includes(q) || zone.name.toLowerCase().includes(q) || zone.label.toLowerCase().includes(q);
       if (!statusOk || !queryOk) s.add(id);
     }
     return s;
   }, [tileById, filters.status, q, data.health]);
 
-  const connections = useMemo(() => {
-    const conns: { d: string; from: string; to: string; label: string }[] = [];
-    data.connections.forEach((conn, ci) => {
-      const fromTile = tileById.get(conn.from);
-      const toTile = tileById.get(conn.to);
-      const fromCard = cards.find(c => c.zone.id === conn.from);
-      const toCard = cards.find(c => c.zone.id === conn.to);
-      if (!fromTile && !fromCard) return;
-      if (!toTile && !toCard) return;
-      const srcCenter = fromTile ? tileCenter(fromTile.tile) : { x: fromCard!.x + fromCard!.w / 2, y: fromCard!.y + fromCard!.h / 2 };
-      const dstCenter = toTile ? tileCenter(toTile.tile) : { x: toCard!.x + toCard!.w / 2, y: toCard!.y + toCard!.h / 2 };
-      const p1 = fromCard && !fromTile ? zoneAnchor(fromCard, dstCenter) : srcCenter;
-      const p2 = toCard && !toTile ? zoneAnchor(toCard, srcCenter) : dstCenter;
-      conns.push({ d: bezier(p1, p2, (ci % 4) - 1.5), from: conn.from, to: conn.to, label: conn.label });
-    });
-    return conns;
-  }, [data.connections, tileById, cards]);
+  const { routes, intraRoutes } = useMemo(() => buildRoutes(data, cards), [data, cards]);
 
-  const linkActive = (conn: { from: string; to: string }) => {
+  const linkActive = (from: string, to: string) => {
     if (!activeId) return true;
-    return conn.from === activeId || conn.to === activeId;
+    return from === activeId || to === activeId;
   };
 
   return (
@@ -180,9 +292,7 @@ export default function FlatMap({ data }: { data: ManacitraData }) {
       ref={svgRef}
       viewBox={`0 0 ${W} ${H}`}
       preserveAspectRatio="xMidYMid meet"
-      onClick={e => {
-        if (e.target === svgRef.current) setSelected(null);
-      }}
+      onClick={e => { if (e.target === svgRef.current) setSelected(null); }}
       style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', background: T.bgCanvas }}
     >
       <defs>
@@ -191,17 +301,18 @@ export default function FlatMap({ data }: { data: ManacitraData }) {
         </filter>
       </defs>
 
-      {visibleLayers.connections && connections.map((conn, i) => {
-        const isActive = linkActive(conn);
+      {/* inter-zone connections (under cards) */}
+      {visibleLayers.connections && routes.map((conn, i) => {
+        const isActive = linkActive(conn.from, conn.to);
         const dim = dimmed.has(conn.from) || dimmed.has(conn.to);
-        const opacity = isActive ? 0.75 : dim ? 0.12 : 0.38;
-        const stroke = isActive ? T.ink : T.inkMuted;
-        const dur = (10 + (i % 5) * 2).toFixed(1);
+        const opacity = isActive ? 0.8 : dim ? 0.12 : 0.42;
+        const stroke = isActive ? T.accent : T.ink;
+        const dur = (8 + (i % 5) * 2).toFixed(1);
         return (
-          <g key={i} opacity={opacity} style={{ transition: 'opacity .2s' }}>
-            <path d={conn.d} fill="none" stroke={stroke} strokeWidth={isActive ? 2 : 1.4} strokeDasharray="5 6" strokeLinecap="round" strokeLinejoin="round" />
+          <g key={`r${i}`} opacity={opacity} style={{ transition: 'opacity .2s' }}>
+            <path d={conn.d} fill="none" stroke={stroke} strokeWidth={isActive ? 2.2 : 1.5} strokeLinecap="round" />
             {!reducedMotion && (
-              <circle r={2.6} fill={T.accent}>
+              <circle r={2.4} fill={T.accent}>
                 <animateMotion dur={`${dur}s`} repeatCount="indefinite" path={conn.d} />
               </circle>
             )}
@@ -209,20 +320,20 @@ export default function FlatMap({ data }: { data: ManacitraData }) {
         );
       })}
 
+      {/* zone cards */}
       {visibleLayers.zones && cards.map(card => {
         const zoneDim = card.tiles.every(t => dimmed.has(t.id));
+        const tint = card.zone.color;
         return (
           <g key={card.zone.id} opacity={zoneDim ? 0.4 : 1} style={{ transition: 'opacity .2s' }}>
-            <rect x={card.x} y={card.y} width={card.w} height={card.h} rx={16} fill={T.surface} stroke={card.zone.color} strokeOpacity={0.5} strokeWidth={1.4} />
-            <rect x={card.x} y={card.y} width={card.w} height={5} rx={2.5} fill={card.zone.color} opacity={0.9} />
-            <g filter="url(#halo)">
-              <text x={card.x + PAD} y={card.y + 30} fontFamily={T.fontMono} fontSize={15} fontWeight={600} fill={T.ink}>
-                {card.zone.name}
-              </text>
-              <text x={card.x + PAD} y={card.y + 46} fontFamily={T.fontMono} fontSize={10} letterSpacing={2} fill={T.inkMuted}>
-                {card.zone.label}{card.zone.subtitle ? ` · ${card.zone.subtitle}` : ''}
-              </text>
-            </g>
+            <rect x={card.x} y={card.y} width={card.w} height={card.h} rx={16} fill={T.surface} stroke={T.lineStrong} strokeWidth={1.2} />
+            <rect x={card.x + 1} y={card.y + 1} width={6} height={card.h - 2} rx={3} fill={tint} opacity={0.85} />
+            <text x={card.x + PAD + 12} y={card.y + 30} fontFamily={T.fontMono} fontSize={15} fontWeight={600} fill={T.ink} letterSpacing={1}>
+              {card.zone.name}
+            </text>
+            <text x={card.x + PAD + 12} y={card.y + 48} fontFamily={T.fontMono} fontSize={10} letterSpacing={2} fill={T.inkMuted}>
+              {card.zone.label}{card.zone.subtitle ? ` · ${card.zone.subtitle}` : ''}
+            </text>
 
             {visibleLayers.services && card.tiles.map(tile => {
               const svc = card.zone.services.find(s => s.id === tile.id)!;
@@ -245,36 +356,65 @@ export default function FlatMap({ data }: { data: ManacitraData }) {
                   }}
                 >
                   <rect
-                    x={tile.x}
-                    y={tile.y}
-                    width={tile.w}
-                    height={tile.h}
-                    rx={9}
+                    x={tile.x} y={tile.y} width={tile.w} height={tile.h} rx={10}
                     fill={isActive ? T.surfaceBorder : T.bg}
-                    stroke={isActive ? T.ink : 'rgba(28,28,26,0.14)'}
+                    stroke={isActive ? T.ink : T.surfaceBorder}
                     strokeWidth={isActive ? 1.6 : 1}
                   />
-                  <g transform={`translate(${tile.x + 14}, ${tile.y + (TILE_H - 20) / 2})`}>
-                    <LogoMark key={svc.logo} size={20} />
+                  <g transform={`translate(${tile.x + 14}, ${tile.y + (TILE_H - 26) / 2})`}>
+                    <LogoMark key={svc.logo} size={26} />
                   </g>
                   <text
-                    x={tile.x + 44}
-                    y={tile.y + TILE_H / 2 + 1}
-                    fontFamily={T.fontSans}
-                    fontSize={12.5}
-                    fontWeight={500}
-                    fill={T.ink}
+                    x={tile.x + 52} y={tile.y + TILE_H / 2 + 1}
+                    fontFamily={T.fontSans} fontSize={13} fontWeight={500} fill={T.ink}
                     style={{ pointerEvents: 'none' }}
                   >
                     {svc.name}
                   </text>
                   {visibleLayers.labels && (
-                    <circle cx={tile.x + tile.w - 14} cy={tile.y + TILE_H / 2} r={4} fill={statusColor} stroke={T.bg} strokeWidth={1.5} />
+                    <circle cx={tile.x + tile.w - 14} cy={tile.y + TILE_H / 2} r={4.5} fill={statusColor} stroke={T.bg} strokeWidth={1.5} />
                   )}
                 </g>
               );
             })}
           </g>
+        );
+      })}
+
+      {/* intra-zone connections (above cards) */}
+      {visibleLayers.connections && intraRoutes.map((conn, i) => {
+        const isActive = linkActive(conn.from, conn.to);
+        const dim = dimmed.has(conn.from) || dimmed.has(conn.to);
+        const opacity = isActive ? 0.9 : dim ? 0.15 : 0.5;
+        const stroke = isActive ? T.accent : T.ink;
+        return (
+          <path key={`i${i}`} d={conn.d} fill="none" stroke={stroke} strokeWidth={isActive ? 2.2 : 1.5}
+            opacity={opacity} strokeLinecap="round" style={{ transition: 'opacity .2s' }} />
+        );
+      })}
+
+      {/* arrowheads */}
+      {visibleLayers.connections && [...routes, ...intraRoutes].map((conn, i) => {
+        const isActive = linkActive(conn.from, conn.to);
+        const dim = dimmed.has(conn.from) || dimmed.has(conn.to);
+        const opacity = isActive ? 0.95 : dim ? 0.15 : 0.5;
+        return (
+          <polygon key={`ar${i}`} points={arrowPts(conn.end.x, conn.end.y, conn.angle)} fill={isActive ? T.accent : T.ink} opacity={opacity} style={{ transition: 'opacity .2s' }} />
+        );
+      })}
+
+      {/* connection labels */}
+      {visibleLayers.labels && [...routes, ...intraRoutes].map((conn, i) => {
+        const label = data.connections.find(c => c.from === conn.from && c.to === conn.to)?.label;
+        if (!label) return null;
+        const isActive = linkActive(conn.from, conn.to);
+        const dim = dimmed.has(conn.from) || dimmed.has(conn.to);
+        const opacity = isActive ? 1 : dim ? 0.15 : 0.6;
+        return (
+          <text key={`l${i}`} x={conn.label.x} y={conn.label.y} fontFamily={T.fontMono} fontSize={9.5}
+            fill={isActive ? T.accent : T.ink} opacity={opacity} filter="url(#halo)" style={{ transition: 'opacity .2s' }}>
+            {label}
+          </text>
         );
       })}
     </svg>
