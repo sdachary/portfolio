@@ -5,13 +5,13 @@ import { TOKENS, TOKENS_HC } from './tokens';
 import type { ManacitraData, Zone } from './types';
 
 const TILE = 72;
-const TILE_GAP = 14;
+const TILE_GAP = 24;
 const ROW_PITCH = TILE + TILE_GAP;
-const PAD = 20;
+const PAD = 26;
 const HEADER = 58;
-const MARGIN = 48;
-const COL_GAP = 200;
-const ROW_GAP = 90;
+const MARGIN = 64;
+const COL_GAP = 420;
+const ROW_GAP = 240;
 
 interface Rect { x: number; y: number; w: number; h: number }
 interface Tile extends Rect { id: string }
