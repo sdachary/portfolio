@@ -1,0 +1,19 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Manacitra Flow Editor — Infrastructure Map</title>
+    <meta name="description" content="AcharyLab infrastructure map editor — React Flow canvas with draggable nodes and auto-routed edges." />
+    <link rel="stylesheet" href="/manacitra/manacitra.css" />
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body, #root { width: 100%; height: 100%; overflow: hidden; background: var(--bg); font-family: var(--font-sans, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif); }
+      @keyframes spin { to { transform: rotate(360deg); } }
+    </style>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/manacitra/flow-editor-main.tsx"></script>
+  </body>
+</html>

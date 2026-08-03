@@ -10,6 +10,7 @@ export default defineConfig({
       input: {
         main: resolve(__dirname, 'index.html'),
         manacitra: resolve(__dirname, 'manacitra.html'),
+        floweditor: resolve(__dirname, 'floweditor.html'),
       },
     },
   },
