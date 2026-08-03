@@ -409,122 +409,118 @@
       "label": "Errors"
     }
   ],
-  "generated_at": "2026-07-27T00:10:03.210Z",
+  "generated_at": "2026-08-03T00:47:55.589Z",
   "stats": {
-    "total_services": 29,
-    "online": 29,
+    "total_services": 22,
+    "online": 22,
     "zones": 4,
     "connections": 19,
-    "total": 29
+    "total": 26
   },
   "health": {
     "nginx": {
       "online": true,
-      "checked_at": "2026-07-27T00:10:03.210Z"
+      "checked_at": "2026-08-03T00:47:55.589Z"
     },
     "postgrest": {
       "online": true,
-      "checked_at": "2026-07-27T00:10:03.210Z"
+      "checked_at": "2026-08-03T00:47:55.589Z"
     },
     "better-auth": {
       "online": true,
-      "checked_at": "2026-07-27T00:10:03.210Z"
+      "checked_at": "2026-08-03T00:47:55.589Z"
     },
     "mail-relay": {
       "online": true,
-      "checked_at": "2026-07-27T00:10:03.210Z"
+      "checked_at": "2026-08-03T00:47:55.589Z"
     },
     "sampada-api": {
       "online": true,
-      "checked_at": "2026-07-27T00:10:03.210Z"
+      "checked_at": "2026-08-03T00:47:55.589Z"
     },
     "bepara-api": {
       "online": true,
-      "checked_at": "2026-07-27T00:10:03.210Z"
+      "checked_at": "2026-08-03T00:47:55.589Z"
     },
     "sadhan-server": {
       "online": true,
-      "checked_at": "2026-07-27T00:10:03.210Z"
+      "checked_at": "2026-08-03T00:47:55.589Z"
     },
     "headroom": {
       "online": true,
-      "checked_at": "2026-07-27T00:10:03.210Z"
+      "checked_at": "2026-08-03T00:47:55.589Z"
     },
     "uptime-kuma": {
       "online": true,
-      "checked_at": "2026-07-27T00:10:03.210Z"
+      "checked_at": "2026-08-03T00:47:55.589Z"
     },
     "pg16": {
       "online": true,
-      "checked_at": "2026-07-27T00:10:03.210Z"
+      "checked_at": "2026-08-03T00:47:55.589Z"
     },
     "redis": {
       "online": true,
-      "checked_at": "2026-07-27T00:10:03.210Z"
+      "checked_at": "2026-08-03T00:47:55.589Z"
     },
     "mcp-hub": {
       "online": false,
-      "checked_at": "2026-07-27T00:10:03.210Z"
+      "checked_at": "2026-08-03T00:47:55.589Z"
     },
     "paca": {
       "online": true,
-      "checked_at": "2026-07-27T00:10:03.210Z"
+      "checked_at": "2026-08-03T00:47:55.589Z"
     },
     "nim-proxy": {
-      "online": true,
-      "checked_at": "2026-07-27T00:10:03.210Z"
+      "online": false,
+      "checked_at": "2026-08-03T00:47:55.589Z"
     },
     "ttyd": {
       "online": true,
-      "checked_at": "2026-07-27T00:10:03.210Z"
+      "checked_at": "2026-08-03T00:47:55.589Z"
     },
     "minio": {
       "online": true,
-      "checked_at": "2026-07-27T00:10:03.210Z"
+      "checked_at": "2026-08-03T00:47:55.589Z"
     },
     "cloudflared": {
       "online": true,
-      "checked_at": "2026-07-27T00:10:03.210Z"
+      "checked_at": "2026-08-03T00:47:55.589Z"
     },
     "chitragupta": {
       "online": true,
-      "checked_at": "2026-07-27T00:10:03.210Z"
+      "checked_at": "2026-08-03T00:47:55.589Z"
     },
     "bepara": {
       "online": true,
-      "checked_at": "2026-07-27T00:10:03.210Z"
+      "checked_at": "2026-08-03T00:47:55.589Z"
     },
     "udhyam": {
       "online": true,
-      "checked_at": "2026-07-27T00:10:03.210Z"
+      "checked_at": "2026-08-03T00:47:55.589Z"
     },
     "sampada-web": {
-      "online": true,
-      "checked_at": "2026-07-27T00:10:03.210Z"
+      "online": false,
+      "checked_at": "2026-08-03T00:47:55.589Z"
     },
     "sadhan": {
       "online": false,
-      "checked_at": "2026-07-27T00:10:03.210Z"
+      "checked_at": "2026-08-03T00:47:55.589Z"
     },
     "vishwakarma": {
       "online": true,
-      "checked_at": "2026-07-27T00:10:03.210Z"
+      "checked_at": "2026-08-03T00:47:55.589Z"
     },
     "darpan": {
       "online": true,
-      "checked_at": "2026-07-27T00:10:03.210Z"
+      "checked_at": "2026-08-03T00:47:55.589Z"
     },
     "prayog": {
       "online": true,
-      "checked_at": "2026-07-27T00:10:03.210Z"
+      "checked_at": "2026-08-03T00:47:55.589Z"
     },
     "portfolio": {
       "online": true,
-      "checked_at": "2026-07-27T00:10:03.210Z"
-    },
-    "fail2ban": {
-      "online": true,
-      "checked_at": "2026-07-27T00:10:03.210Z"
+      "checked_at": "2026-08-03T00:47:55.589Z"
     }
   }
 }
