@@ -1,4 +1,4 @@
-import { useMemo, useCallback, useEffect, useState, useRef } from 'react';
+import { useCallback, useEffect, useState, useRef } from 'react';
 import {
   ReactFlow,
   useNodesState,
@@ -8,16 +8,12 @@ import {
   Node,
   Edge,
   NodeTypes,
-  EdgeTypes,
   Background,
   Controls,
   MiniMap,
   MarkerType,
   Handle,
   Position,
-  type OnNodesChange,
-  type OnEdgesChange,
-  type OnConnect,
   type XYPosition,
   type Viewport,
 } from '@xyflow/react';
@@ -30,13 +26,31 @@ interface ServiceNodeData {
   service: Service;
   zoneId: string;
   zoneName: string;
+  [key: string]: unknown;
 }
 
 interface ZoneNodeData {
   zone: Zone;
+  [key: string]: unknown;
 }
 
 type ManacitraNode = Node<ServiceNodeData | ZoneNodeData, 'service' | 'zone'>;
+
+const LAYOUT_KEY = 'manacitra_flow_layout';
+
+interface SavedLayout {
+  zones: Record<string, { x: number; z: number }>;
+  services: Record<string, { x: number; z: number }>;
+}
+
+function loadLayout(): SavedLayout | null {
+  try {
+    const raw = localStorage.getItem(LAYOUT_KEY);
+    return raw ? JSON.parse(raw) as SavedLayout : null;
+  } catch {
+    return null;
+  }
+}
 
 const TILE_W = 180;
 const TILE_H = 100;
@@ -44,12 +58,16 @@ const ZONE_PADDING = 32;
 const ZONE_HEADER_H = 56;
 
 function ServiceNode({ data }: { data: ServiceNodeData }) {
-  const { service, zoneId, zoneName } = data;
+  const { service } = data;
   const def = logoFor(service.logo);
   const hasLogo = !!def;
 
   return (
     <div
+      role={service.url ? 'link' : undefined}
+      tabIndex={service.url ? 0 : undefined}
+      onClick={() => { if (service.url) window.open(service.url, '_blank', 'noopener'); }}
+      onKeyDown={e => { if (service.url && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); window.open(service.url, '_blank', 'noopener'); } }}
       style={{
         width: TILE_W,
         height: TILE_H,
@@ -61,7 +79,7 @@ function ServiceNode({ data }: { data: ServiceNodeData }) {
         alignItems: 'center',
         padding: '12px 8px',
         boxShadow: '0 1px 3px rgba(0,0,0,0.08)',
-        cursor: 'grab',
+        cursor: service.url ? 'pointer' : 'grab',
         userSelect: 'none',
       }}
     >
@@ -175,6 +193,7 @@ const nodeTypes: NodeTypes = {
 
 function buildInitialNodes(data: ManacitraData): ManacitraNode[] {
   const nodes: ManacitraNode[] = [];
+  const saved = loadLayout();
 
   const zonePositions: Record<string, XYPosition> = {
     oradb: { x: 600, y: 100 },
@@ -184,7 +203,8 @@ function buildInitialNodes(data: ManacitraData): ManacitraNode[] {
   };
 
   for (const zone of data.zones) {
-    const pos = zonePositions[zone.id] ?? { x: 100, y: 100 };
+    const savedZ = saved?.zones[zone.id];
+    const pos: XYPosition = savedZ ? { x: savedZ.x, y: savedZ.z } : (zonePositions[zone.id] ?? { x: 100, y: 100 });
 
     nodes.push({
       id: `zone-${zone.id}`,
@@ -199,17 +219,18 @@ function buildInitialNodes(data: ManacitraData): ManacitraNode[] {
     zone.services.forEach((svc, i) => {
       const col = i % cols;
       const row = Math.floor(i / cols);
+      const base = saved?.services[svc.id];
       nodes.push({
         id: svc.id,
         type: 'service',
-        position: {
+        position: base ? { x: base.x, y: base.z } : {
           x: pos.x + ZONE_PADDING + col * (TILE_W + 16),
           y: pos.y + ZONE_HEADER_H + ZONE_PADDING + row * (TILE_H + 16),
         },
         data: { service: svc, zoneId: zone.id, zoneName: zone.name },
         draggable: true,
         selectable: true,
-        parentNode: `zone-${zone.id}`,
+        parentId: `zone-${zone.id}`,
         extent: 'parent',
       });
     });
@@ -240,37 +261,24 @@ function buildInitialEdges(data: ManacitraData): Edge[] {
   }));
 }
 
-function nodesToLayout(nodes: ManacitraNode[], data: ManacitraData): Partial<ManacitraData> {
-  const zoneNodes = nodes.filter(n => n.type === 'zone');
-  const serviceNodes = nodes.filter(n => n.type === 'service');
-
-  const updatedZones = data.zones.map(zone => {
-    const zn = zoneNodes.find(n => n.id === `zone-${zone.id}`);
-    if (!zn) return zone;
-
-    const children = serviceNodes.filter(n => n.parentNode === zn.id);
-    return {
-      ...zone,
-      x: zn.position.x,
-      z: zn.position.y,
-      services: children.map(cn => {
-        const svc = zone.services.find(s => s.id === cn.id);
-        return svc;
-      }).filter(Boolean) as Service[],
-    };
+function nodesToLayout(nodes: ManacitraNode[]): SavedLayout {
+  const layout: SavedLayout = { zones: {}, services: {} };
+  nodes.forEach(n => {
+    const p = { x: n.position.x, z: n.position.y };
+    if (n.type === 'zone') layout.zones[n.id.replace(/^zone-/, '')] = p;
+    else layout.services[n.id] = p;
   });
-
-  return { zones: updatedZones };
+  return layout;
 }
 
-export default function FlowEditor({ data, onSaveLayout }: { data: ManacitraData; onSaveLayout?: (layout: Partial<ManacitraData>) => void }) {
-  const [nodes, setNodes, onNodesChange] = useNodesState(buildInitialNodes(data));
+export default function FlowEditor({ data, onSaveLayout }: { data: ManacitraData; onSaveLayout?: (layout: SavedLayout) => void }) {
+  const [nodes, , onNodesChange] = useNodesState(buildInitialNodes(data));
   const [edges, setEdges, onEdgesChange] = useEdgesState(buildInitialEdges(data));
   const [viewport, setViewport] = useState<Viewport>({ x: 0, y: 0, zoom: 1 });
   const highContrast = useManacitraStore(s => s.highContrast);
   const T = highContrast ? TOKENS_HC : TOKENS;
-  const saveRef = useRef(onSaveLayout);
-  saveRef.current = onSaveLayout;
+  const saveCallback = useRef(onSaveLayout);
+  saveCallback.current = onSaveLayout;
 
   const onConnect = useCallback((params: Connection) => {
     setEdges(eds => addEdge({ ...params, type: 'smoothstep', animated: true, markerEnd: { type: MarkerType.ArrowClosed } }, eds));
@@ -278,9 +286,9 @@ export default function FlowEditor({ data, onSaveLayout }: { data: ManacitraData
 
   useEffect(() => {
     const timer = setTimeout(() => {
-      if (saveRef.current) {
-        saveRef.current(nodesToLayout(nodes, data));
-      }
+      const layout = nodesToLayout(nodes);
+      try { localStorage.setItem(LAYOUT_KEY, JSON.stringify(layout)); } catch { /* storable only */ }
+      saveCallback.current?.(layout);
     }, 500);
     return () => clearTimeout(timer);
   }, [nodes, data]);
@@ -302,7 +310,7 @@ export default function FlowEditor({ data, onSaveLayout }: { data: ManacitraData
         <Background color={T.inkMuted} gap={24} />
         <Controls />
         <MiniMap
-          nodeColor={(node) => node.type === 'zone' ? node.data.zone.color : '#6b7280'}
+          nodeColor={(node) => node.type === 'zone' ? (node.data as ZoneNodeData).zone.color : '#6b7280'}
           nodeStrokeColor="#fff"
           nodeBorderRadius={4}
         />

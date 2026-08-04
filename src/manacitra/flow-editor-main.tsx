@@ -59,7 +59,7 @@ function FlowEditorPage() {
         <p style={{ color: 'rgba(28,28,26,0.25)', fontSize: '.75rem', fontVariantNumeric: 'tabular-nums', marginTop: '.75rem' }}>
           {status}
         </p>
-        <style jsx>{`
+        <style>{`
           @keyframes spin { to { transform: rotate(360deg); } }
         `}</style>
       </div>
@@ -68,10 +68,7 @@ function FlowEditorPage() {
 
   return (
     <div style={{ width: '100vw', height: '100vh', background: '#f4f5f7', position: 'relative', overflow: 'hidden' }}>
-      <FlowEditor data={data} onSaveLayout={layout => {
-        console.log('Layout saved:', layout);
-        // In production, this would persist to localStorage or send to an API
-      }} />
+      <FlowEditor data={data} />
     </div>
   );
 }
