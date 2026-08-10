@@ -13,7 +13,6 @@
     "test:watch": "vitest"
   },
   "dependencies": {
-    "@sentry/react": "^10.66.0",
     "@xyflow/react": "^12.11.2",
     "framer-motion": "^12.38.0",
     "react": "^19.2.6",
