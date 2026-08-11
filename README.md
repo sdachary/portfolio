@@ -30,3 +30,7 @@ npm run dev
 ## Env Vars
 
 See `.env.example` for all required variables.
+
+## License
+
+This project is licensed under the Apache License 2.0 — see the [LICENSE](LICENSE) file for details.
