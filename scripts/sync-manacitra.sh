@@ -52,7 +52,9 @@ async function run() {
     { id: 'nim-proxy',   url: 'http://localhost:8082/v1/models' },
     { id: 'ttyd',        url: 'http://localhost:7681/' },
     { id: 'minio',       cmd: "sudo docker inspect --format '{{.State.Health.Status}}' paca-minio-1 2>/dev/null | grep -q healthy", ssh: true },
+    { id: 'fail2ban',    cmd: "systemctl is-active fail2ban 2>/dev/null | grep -q active", ssh: true },
     { id: 'cloudflared', cmd: "ssh -o StrictHostKeyChecking=accept-new 140.245.227.176 'curl -s -o /dev/null -w %{http_code} http://localhost:3002 2>/dev/null' 2>/dev/null | grep -qE '^[234]'", ssh: true },
+    { id: 'github',      url: 'https://github.com' },
     { id: 'chitragupta', url: 'https://chitragupta.pages.dev' },
     { id: 'bepara',      url: 'https://bepara.pages.dev' },
     { id: 'udhyam',      url: 'https://udhyam.pages.dev' },
@@ -89,13 +91,16 @@ async function run() {
   data.health = health;
 
   const online = Object.values(health).filter(h => h.online).length;
+  const total_services = data.zones.reduce((n, z) => n + z.services.length, 0);
   data.stats = data.stats || {};
   data.stats.online = online;
   data.stats.total = Object.keys(health).length;
-  data.stats.total_services = online;
+  data.stats.total_services = total_services;
+  data.stats.zones = data.zones.length;
+  data.stats.connections = (data.connections || []).length;
 
   fs.writeFileSync(data_file, JSON.stringify(data, null, 2) + '\n');
-  console.log('Health: %d/%d online', online, data.stats.total);
+  console.log('Health: %d/%d online (%d services, %d zones)', online, data.stats.total, total_services, data.stats.zones);
 }
 
 run().catch(e => { console.error(e); process.exit(1); });

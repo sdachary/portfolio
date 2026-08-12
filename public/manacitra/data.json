@@ -44,7 +44,7 @@
           "logo": "redis",
           "color": "#dc2626",
           "h": 1.4,
-          "desc": "Cache & queue. Kubera Rack::Attack + Sidekiq. Port 6379."
+          "desc": "Cache & queue. Sampada Rack::Attack + Sidekiq. Port 6379."
         },
         {
           "id": "better-auth",
@@ -137,7 +137,7 @@
           "logo": "kanban",
           "color": "#a855f7",
           "h": 1.8,
-          "desc": "Project management. Docker Compose. Port 4000."
+          "desc": "Project management. Docker Compose. Port 80."
         },
         {
           "id": "nim-proxy",
@@ -155,7 +155,7 @@
           "logo": "cloudflare",
           "color": "#38bdf8",
           "h": 1,
-          "desc": "Cloudflare Tunnel (x2). Exposes MCP Hub + Kubera."
+          "desc": "Cloudflare Tunnel (x2). Exposes MCP Hub + Sampada."
         },
         {
           "id": "ttyd",
@@ -275,7 +275,7 @@
           "logo": "vite",
           "color": "#f8fafc",
           "url": "https://aham.pages.dev",
-          "desc": "Personal portfolio. Vite + React. GitHub Pages."
+          "desc": "Personal portfolio. Vite + React. Cloudflare Pages."
         }
       ]
     },
@@ -298,16 +298,6 @@
           "h": 1.6,
           "url": "https://github.com/sdachary",
           "desc": "Source control. CI via GitHub Actions."
-        },
-        {
-          "id": "sentry",
-          "name": "Sentry",
-          "type": "monitoring",
-          "logo": "sentry",
-          "color": "#362d59",
-          "h": 1.2,
-          "url": "https://sentry.io",
-          "desc": "Error tracking for web apps."
         }
       ]
     }
@@ -402,25 +392,20 @@
       "from": "github",
       "to": "cloudflare",
       "label": "CI deploy"
-    },
-    {
-      "from": "sentry",
-      "to": "oradb",
-      "label": "Errors"
     }
   ],
-  "generated_at": "2026-08-10T00:12:04.000Z",
+  "generated_at": "2026-08-11T00:00:00.000Z",
   "stats": {
-    "total_services": 22,
-    "online": 22,
+    "total_services": 28,
+    "online": 24,
     "zones": 4,
-    "connections": 19,
-    "total": 26
+    "connections": 18,
+    "total": 28
   },
   "health": {
     "nginx": {
       "online": true,
-      "checked_at": "2026-08-10T00:12:04.000Z"
+      "checked_at": "2026-08-11T00:00:00.000Z"
     },
     "postgrest": {
       "online": true,
@@ -520,7 +505,15 @@
     },
     "portfolio": {
       "online": true,
-      "checked_at": "2026-08-10T00:12:04.000Z"
+      "checked_at": "2026-08-11T00:00:00.000Z"
+    },
+    "fail2ban": {
+      "online": true,
+      "checked_at": "2026-08-11T00:00:00.000Z"
+    },
+    "github": {
+      "online": true,
+      "checked_at": "2026-08-11T00:00:00.000Z"
     }
   }
 }

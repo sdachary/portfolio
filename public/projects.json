@@ -150,7 +150,7 @@
     "live_url": null,
     "local": true,
     "last_updated": "2026-07-03",
-    "github_remote": "git@github.com:sdachary/devendra.git"
+    "github_remote": "git@github.com:sdachary/mcp-hub.git"
   },
   {
     "name": "SRI",
@@ -207,13 +207,13 @@
     "slug": "manacitra",
     "status": "Live",
     "status_key": "live",
-    "description": "AcharyLab ops map — isometric network diagram of every VM, service, and Cloudflare app across four zones with live health checks, brand logos, and animated flow connections. Built with React Three Fiber.",
+    "description": "AcharyLab ops map — flat 2D SVG diagram of every VM, service, and Cloudflare app across four zones with live health checks, brand logos, and animated flow connections. Built with React + zustand + React Flow.",
     "tags": [
-      "Three.js",
-      "R3F",
-      "TypeScript",
       "React",
-      "Vite"
+      "SVG",
+      "React Flow",
+      "TypeScript",
+      "zustand"
     ],
     "live_url": "https://aham.pages.dev/manacitra.html",
     "local": true,
