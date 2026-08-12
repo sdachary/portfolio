@@ -24,8 +24,10 @@ interface ManacitraStore {
   highContrast: boolean;
   audioMuted: boolean;
   audioAvailable: boolean;
+  loadError: boolean;
   resetToken: number;
   setData: (data: ManacitraData) => void;
+  setLoadError: (v: boolean) => void;
   setSelected: (id: string | null) => void;
   setHovered: (id: string | null) => void;
   setFilters: (filters: Filters) => void;
@@ -53,6 +55,7 @@ export const useManacitraStore = create<ManacitraStore>((set, get) => ({
   highContrast: ls('manacitra_highContrast', false),
   audioMuted: ls('manacitra_audioMuted', true),
   audioAvailable: false,
+  loadError: false,
   resetToken: 0,
   setData: data => set({ data }),
   setSelected: selectedId => set({ selectedId }),
@@ -63,6 +66,7 @@ export const useManacitraStore = create<ManacitraStore>((set, get) => ({
   setReducedMotion: v => { localStorage.setItem('manacitra_reducedMotion', JSON.stringify(v)); set({ reducedMotion: v }); },
   setHighContrast: v => { localStorage.setItem('manacitra_highContrast', JSON.stringify(v)); set({ highContrast: v }); },
   setAudioAvailable: v => set({ audioAvailable: v }),
+  setLoadError: v => set({ loadError: v }),
   toggleAudio: () => { const v = !get().audioMuted; localStorage.setItem('manacitra_audioMuted', JSON.stringify(v)); set({ audioMuted: v }); },
   resetView: () => set(s => ({ resetToken: s.resetToken + 1 })),
 }));

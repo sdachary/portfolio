@@ -78,6 +78,7 @@ export default function Manacitra() {
   const [loaded, setLoaded] = useState(false);
   const [progress, setProgress] = useState(0);
   const [status, setStatus] = useState('Loading data...');
+  const [error, setError] = useState<string | null>(null);
   const [isMobile, setIsMobile] = useState(false);
   const [toolsOpen, setToolsOpen] = useState(false);
   const data = useManacitraStore(s => s.data);
@@ -124,14 +125,33 @@ export default function Manacitra() {
           setLoaded(true);
         }, 200);
       })
-      .catch(e => {
-        setStatus('Error: ' + e.message);
+      .catch(() => {
+        setError('Could not load map data. Please try again.');
+        setStatus('Error');
+        setLoaded(true);
       });
   }, [setData]);
 
   return (
     <div data-contrast={highContrast ? 'high' : 'normal'} style={{ width: '100vw', height: '100vh', background: '#f4f5f7', position: 'relative', overflow: 'hidden' }}>
-      {!loaded && <Loader progress={progress} status={status} />}
+      {error ? (
+        <div style={{
+          position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column',
+          alignItems: 'center', justifyContent: 'center', gap: 12, color: 'rgba(28,28,26,0.6)',
+          font: '0.85rem var(--font-mono, monospace)', textAlign: 'center', padding: '1rem',
+        }}>
+          <span>⚠ {error}</span>
+          <button
+            onClick={() => window.location.reload()}
+            style={{
+              padding: '8px 18px', borderRadius: 999, cursor: 'pointer', font: 'inherit',
+              background: 'rgba(28,28,26,0.92)', color: '#f4f5f7', border: 'none',
+            }}
+          >
+            Retry
+          </button>
+        </div>
+      ) : !loaded && <Loader progress={progress} status={status} />}
       <Header online={online} offline={offline} total={total} />
       <div style={{
         position: 'fixed', top: '4.5rem', left: '50%', transform: 'translateX(-50%)', zIndex: 10,
