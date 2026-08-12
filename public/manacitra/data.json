@@ -92,6 +92,15 @@
           "desc": "Next.js server. Career platform APIs. Port 4002."
         },
         {
+          "id": "nidhiflow-api",
+          "name": "Nidhiflow API",
+          "type": "api",
+          "logo": "nestjs",
+          "color": "#e11d48",
+          "h": 1.6,
+          "desc": "NestJS financial identity API. Prisma, PG16. Port 4003."
+        },
+        {
           "id": "headroom",
           "name": "Headroom",
           "type": "monitoring",
@@ -276,6 +285,15 @@
           "color": "#f8fafc",
           "url": "https://aham.pages.dev",
           "desc": "Personal portfolio. Vite + React. Cloudflare Pages."
+        },
+        {
+          "id": "nidhiflow",
+          "name": "Nidhiflow",
+          "type": "app",
+          "logo": "nextdotjs",
+          "color": "#be185d",
+          "url": "https://nidhiflow.pages.dev",
+          "desc": "Financial identity. Next.js static web."
         }
       ]
     },
@@ -349,6 +367,11 @@
       "label": "API"
     },
     {
+      "from": "nidhiflow",
+      "to": "oradb",
+      "label": "API"
+    },
+    {
       "from": "oradev",
       "to": "oradb",
       "label": "SSH Tunnel"
@@ -384,6 +407,11 @@
       "label": "DB"
     },
     {
+      "from": "nidhiflow-api",
+      "to": "pg16",
+      "label": "DB"
+    },
+    {
       "from": "paca",
       "to": "pg16",
       "label": "DB"
@@ -396,11 +424,11 @@
   ],
   "generated_at": "2026-08-11T00:00:00.000Z",
   "stats": {
-    "total_services": 28,
-    "online": 24,
+    "total_services": 30,
+    "online": 25,
     "zones": 4,
-    "connections": 18,
-    "total": 28
+    "connections": 20,
+    "total": 30
   },
   "health": {
     "nginx": {
@@ -513,6 +541,14 @@
     },
     "github": {
       "online": true,
+      "checked_at": "2026-08-11T00:00:00.000Z"
+    },
+    "nidhiflow-api": {
+      "online": true,
+      "checked_at": "2026-08-11T00:00:00.000Z"
+    },
+    "nidhiflow": {
+      "online": false,
       "checked_at": "2026-08-11T00:00:00.000Z"
     }
   }
