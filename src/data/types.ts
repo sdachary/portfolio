@@ -48,9 +48,11 @@ export interface WorkTrack {
 }
 
 export interface ActivityEntry {
+  kind?: 'feature' | 'bugfix' | 'refactor' | 'docs' | 'build' | 'perf' | 'test' | 'chore'
   phase: string
   project: string
   description: string
   date: string
   status: 'active' | 'completed' | 'blocked'
+  count?: number
 }

@@ -1,0 +1,9 @@
+[Unit]
+Description=Portfolio activity sync
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+ExecStart=/home/ubuntu/portfolio/scripts/sync-activity.sh
+User=ubuntu

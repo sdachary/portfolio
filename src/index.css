@@ -233,6 +233,7 @@ body::before {
 .activity-meta { display: flex; align-items: center; gap: 0.6rem; flex-wrap: wrap; margin-bottom: 0.4rem; }
 .activity-project { font-family: var(--font-display); font-size: 0.85rem; color: var(--white); font-weight: 600; letter-spacing: -0.01em; }
 .activity-phase { font-family: var(--font-mono); font-size: 0.55rem; color: var(--muted); letter-spacing: 0.15em; text-transform: uppercase; }
+.activity-count { font-family: var(--font-mono); font-size: 0.55rem; color: var(--accent); letter-spacing: 0.05em; }
 .activity-desc { font-family: var(--font-body); font-size: 0.78rem; color: var(--muted); line-height: 1.5; font-weight: 300; }
 
 @media (prefers-reduced-motion: reduce) {

@@ -10,6 +10,10 @@ const statusClass: Record<string, string> = {
   completed: 'status-live',
   blocked: 'status-local',
 }
+const kindLabel: Record<string, string> = {
+  feature: 'feature', bugfix: 'bugfix', refactor: 'refactor', docs: 'docs',
+  build: 'build', perf: 'perf', test: 'test', chore: 'chore',
+}
 
 export default function RecentActivity() {
   const [activity, setActivity] = useState<ActivityEntry[]>([])
@@ -75,10 +79,12 @@ export default function RecentActivity() {
             <div className="activity-card">
               <div className="activity-meta">
                 <span className="activity-project">{item.project}</span>
+                {item.kind && <span className="activity-phase">{kindLabel[item.kind] || item.kind}</span>}
                 <span className="activity-phase">{item.phase}</span>
                 <span className={`status-badge ${statusClass[item.status] || ''}`}>
                   {statusLabel[item.status] || item.status}
                 </span>
+                {item.count && item.count > 1 && <span className="activity-count">+{item.count}</span>}
               </div>
               <p className="activity-desc">{item.description}</p>
             </div>

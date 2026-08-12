@@ -29,7 +29,7 @@ export default function InfoPanel() {
       for (const svc of zone.services) {
         if (svc.id === activeId) {
           const h = data.health[activeId];
-          return { name: svc.name, type: svc.type, desc: svc.desc, color: svc.color, online: h?.online ?? null, zone: zone.label, id: svc.id, url: svc.url };
+          return { name: svc.name, type: svc.type, desc: svc.desc, color: svc.color, online: h?.online ?? null, zone: zone.label, id: svc.id, url: svc.url, meta: svc.meta };
         }
       }
     }
@@ -82,6 +82,23 @@ export default function InfoPanel() {
               </a>
             </div>
           )}
+          {info.meta && (() => {
+            const meta = info.meta;
+            const rows: [string, string][] = [];
+            (['protocol', 'upstream', 'dataStored', 'pii', 'topology'] as const).forEach(k => {
+              if (meta[k]) rows.push([k, meta[k] as string]);
+            });
+            return rows.length === 0 ? null : (
+              <div style={{ marginTop: '.75rem', borderTop: '1px solid rgba(28,28,26,0.08)', paddingTop: '.6rem', display: 'flex', flexDirection: 'column', gap: '.3rem' }}>
+                {rows.map(([k, v]) => (
+                  <div key={k} style={{ fontSize: '.68rem', display: 'flex', gap: '.5rem', alignItems: 'baseline' }}>
+                    <span style={{ color: 'rgba(28,28,26,0.35)', minWidth: 56, textTransform: 'uppercase', letterSpacing: '.08em', fontSize: '.6rem' }}>{k}</span>
+                    <span style={{ color: 'rgba(28,28,26,0.7)', wordBreak: 'break-word', fontFamily: 'ui-monospace, SFMono-Regular, monospace', fontSize: '.66rem' }}>{v}</span>
+                  </div>
+                ))}
+              </div>
+            );
+          })()}
         </motion.div>
       )}
     </AnimatePresence>

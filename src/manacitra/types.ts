@@ -3,6 +3,14 @@ export interface HealthEntry {
   checked_at: string;
 }
 
+export interface ServiceMeta {
+  protocol?: string;
+  upstream?: string;
+  dataStored?: string;
+  pii?: string;
+  topology?: string;
+}
+
 export interface Service {
   id: string;
   name: string;
@@ -12,6 +20,7 @@ export interface Service {
   h: number;
   desc: string;
   url?: string;
+  meta?: ServiceMeta;
 }
 
 export interface Zone {
