@@ -1,128 +1,66 @@
 [
   {
-    "phase": "Phase 53",
-    "project": "Portfolio",
-    "description": "Redesign with Recent Activity section and bento project grid",
-    "date": "2026-07-13",
-    "status": "active"
+    "phase": "Phase 52",
+    "project": "Infra",
+    "kind": "build",
+    "description": "Paca MCP rewiring restored: local stdio @paca-ai/paca-mcp + X-API-Key auth, opencode key minted & age-encrypted in dotfiles; Job Search board retired (sadhan tracks applications in-app)",
+    "date": "2026-08-25",
+    "status": "completed"
   },
   {
     "phase": "Phase 52",
-    "project": "PACA",
-    "description": "Deep integration: Paca MCP protocol, session tracking, webhook GitHub plugin, 14 repos linked",
-    "date": "2026-07-13",
+    "project": "Sadhan",
+    "kind": "refactor",
+    "description": "unnati\u2192sadhan rebrand inside Paca (ACHA-190), dead paca-sync module removed, dotfiles template decrypts via age",
+    "date": "2026-08-24",
     "status": "completed"
   },
   {
-    "phase": "Phase 51",
-    "project": "PACA",
-    "description": "Rollout: 7 Docker containers, MCP server wiring, GitHub plugin install, acharylab workspace",
-    "date": "2026-07-12",
+    "phase": "Phase 60",
+    "project": "Sadhan",
+    "kind": "feature",
+    "description": "SPA rewrite shipped to CF Pages (UI-only static export); claude-auto model prober for omniroute routing",
+    "date": "2026-08-22",
     "status": "completed"
   },
   {
-    "phase": "Phase 50",
+    "phase": "Phase 57",
+    "project": "Sampada",
+    "kind": "bugfix",
+    "description": "Standalone deploy to VM + kubera-era password drift fix",
+    "date": "2026-08-21",
+    "status": "completed"
+  },
+  {
+    "phase": "Phase 65",
     "project": "Chitragupta",
-    "description": "Auth redirect fix — dynamic origin resolution, removed hardcoded URLs",
-    "date": "2026-07-11",
+    "kind": "bugfix",
+    "description": "Post-BetterAuth login fix: pre-migration user linking + invite flow (UAT #245)",
+    "date": "2026-08-20",
     "status": "completed"
   },
   {
-    "phase": "Phase 50",
-    "project": "Kanak",
-    "description": "Auth redirect fix — dynamic origin resolution, removed hardcoded URLs",
-    "date": "2026-07-11",
+    "phase": "Phase 65",
+    "project": "Infra",
+    "kind": "build",
+    "description": "Shared PostgREST fixed for all app schemas, GoTrue removed, DB schemas renamed (unnati\u2192sadhan)",
+    "date": "2026-08-19",
     "status": "completed"
   },
   {
-    "phase": "Phase 49",
+    "phase": "Phase 65",
     "project": "Bepara",
-    "description": "Password toggle + forgot/reset flow",
-    "date": "2026-07-10",
+    "kind": "bugfix",
+    "description": "UAT #244 PASS after root-causing ORADB_URL https\u2192http (oradb has no 443; CF edge 521)",
+    "date": "2026-08-17",
     "status": "completed"
   },
   {
-    "phase": "Phase 49",
-    "project": "Unnati",
-    "description": "Password toggle + forgot/reset flow",
-    "date": "2026-07-10",
-    "status": "completed"
-  },
-  {
-    "phase": "Phase 49",
-    "project": "Vishwakarma",
-    "description": "Password toggle + forgot/reset flow",
-    "date": "2026-07-10",
-    "status": "completed"
-  },
-  {
-    "phase": "Phase 49",
-    "project": "Darpan",
-    "description": "Password toggle + forgot/reset flow",
-    "date": "2026-07-10",
-    "status": "completed"
-  },
-  {
-    "phase": "Phase 49",
-    "project": "Karma",
-    "description": "Password toggle + forgot/reset flow",
-    "date": "2026-07-10",
-    "status": "completed"
-  },
-  {
-    "phase": "",
+    "phase": "Phase 64",
     "project": "Udhyam",
-    "description": "Kanak→Udhyam rebrand: repo rename, PG schema, CF project, 143 brand refs",
-    "date": "2026-07-24",
-    "status": "completed"
-  },
-  {
-    "phase": "",
-    "project": "Narad",
-    "description": "Badhai audio extraction tool added, PC guide moved from portfolio",
-    "date": "2026-07-24",
-    "status": "completed"
-  },
-  {
-    "phase": "",
-    "project": "MCP Hub",
-    "description": "Usage dashboard, Zapier MCP eval, Sentry error fixes",
-    "date": "2026-07-24",
-    "status": "completed"
-  },
-  {
-    "phase": "",
-    "project": "Codebase",
-    "description": "codebase-memory-mcp installed and indexed across all 14 repos",
-    "date": "2026-07-24",
-    "status": "completed"
-  },
-  {
-    "phase": "",
-    "project": "Portfolio",
-    "description": "Manacitra 3D infrastructure map task created, activity sync moved to oradev systemd timer",
-    "date": "2026-07-25",
-    "status": "completed"
-  },
-  {
-    "phase": "",
-    "project": "Udhyam",
-    "description": "Better-Auth integration (14 API files rewritten), JWT verification, logAudit refactored, all UUID cols migrated to TEXT",
-    "date": "2026-07-26",
-    "status": "completed"
-  },
-  {
-    "phase": "",
-    "project": "Udhyam",
-    "description": "End-to-end UAT completed — 14 API endpoints verified, gold rate cron fixed, billing/ledger/inventory tested, email+WhatsApp verified",
-    "date": "2026-07-26",
-    "status": "completed"
-  },
-  {
-    "phase": "",
-    "project": "Udhyam",
-    "description": "Login page UX redesign — 3-tab replaced with identifier-first pattern, test data cleaned",
-    "date": "2026-07-26",
+    "kind": "bugfix",
+    "description": "UAT security audit: CRITICAL RLS bypass + cross-tenant IDOR fixed (auth-gated proxy, forced scoping)",
+    "date": "2026-08-16",
     "status": "completed"
   }
 ]

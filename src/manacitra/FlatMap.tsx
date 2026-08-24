@@ -1,4 +1,5 @@
 import { useMemo, useRef } from 'react';
+import { motion } from 'framer-motion';
 import { useManacitraStore } from './store';
 import { logoFor } from './logos';
 import { TOKENS, TOKENS_HC } from './tokens';
@@ -336,24 +337,37 @@ export default function FlatMap({ data }: { data: ManacitraData }) {
         const stroke = isActive ? T.accent : T.ink;
         const dur = (8 + (i % 5) * 2).toFixed(1);
         return (
-          <g key={`r${i}`} opacity={opacity} style={{ transition: 'opacity .2s' }}>
-            <path d={conn.d} fill="none" stroke={stroke} strokeWidth={isActive ? 2.2 : 1.5} strokeLinecap="round" />
+          <motion.g key={`r${i}`}
+            initial={reducedMotion ? false : { opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={reducedMotion ? { duration: 0 } : { delay: 0.9 + i * 0.04, duration: 0.25 }}>
+          <g opacity={opacity} style={{ transition: 'opacity .2s' }}>
+            <motion.path d={conn.d} fill="none" stroke={stroke} strokeWidth={isActive ? 2.2 : 1.5} strokeLinecap="round"
+              initial={reducedMotion ? false : { pathLength: 0 }}
+              animate={{ pathLength: 1 }}
+              transition={{ delay: reducedMotion ? 0 : 0.35 + i * 0.06, duration: 0.55, ease: 'easeOut' }} />
             {!reducedMotion && (
               <circle r={2.4} fill={T.accent}>
                 <animateMotion dur={`${dur}s`} repeatCount="indefinite" path={conn.d} />
               </circle>
             )}
           </g>
+          </motion.g>
         );
       })}
 
       {/* zone cards */}
-      {visibleLayers.zones && cards.map(card => {
+      {visibleLayers.zones && cards.map((card, zoneIdx) => {
         const zoneDim = card.tiles.every(t => dimmed.has(t.id));
         const tint = card.zone.color;
         return (
+          <motion.g key={`${card.zone.id}-wrap`}
+            initial={reducedMotion ? false : { opacity: 0, y: 14 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={reducedMotion ? { duration: 0 } : { delay: zoneIdx * 0.09, duration: 0.45, ease: 'easeOut' }}>
           <g key={card.zone.id} opacity={zoneDim ? 0.4 : 1} style={{ transition: 'opacity .2s' }}>
-            <rect x={card.x} y={card.y} width={card.w} height={card.h} rx={16} fill={T.surface} stroke={T.lineStrong} strokeWidth={1.2} />
+            <rect x={card.x} y={card.y} width={card.w} height={card.h} rx={16} fill={T.surface} stroke={T.lineStrong} strokeWidth={1.2}
+              style={{ filter: 'drop-shadow(0 1px 3px rgba(28,28,26,0.05))' }} />
             <rect x={card.x + 1} y={card.y + 1} width={6} height={card.h - 2} rx={3} fill={tint} opacity={0.85} />
             <text x={card.x + PAD + 12} y={card.y + 30} fontFamily={T.fontMono} fontSize={15} fontWeight={600} fill={T.ink} letterSpacing={1}>
               {card.zone.name}
@@ -362,7 +376,7 @@ export default function FlatMap({ data }: { data: ManacitraData }) {
               {card.zone.label}{card.zone.subtitle ? ` · ${card.zone.subtitle}` : ''}
             </text>
 
-            {visibleLayers.services && card.tiles.map(tile => {
+            {visibleLayers.services && card.tiles.map((tile, tileIdx) => {
               const svc = card.zone.services.find(s => s.id === tile.id)!;
               const h = data.health[tile.id];
               const online = h?.online ?? null;
@@ -370,18 +384,28 @@ export default function FlatMap({ data }: { data: ManacitraData }) {
               const dim = dimmed.has(tile.id);
               const statusColor = online === null ? T.unknown : online ? T.online : T.offline;
               return (
-                <g
-                  key={tile.id}
-                  opacity={isActive ? 1 : dim ? 0.3 : 1}
-                  style={{ transition: 'opacity .2s', cursor: svc.url ? 'pointer' : 'default' }}
-                  onMouseEnter={() => setHovered(tile.id)}
-                  onMouseLeave={() => setHovered(null)}
-                  onClick={e => {
-                    e.stopPropagation();
-                    setSelected(tile.id);
-                    if (svc.url) window.open(svc.url, '_blank', 'noopener,noreferrer');
-                  }}
-                >
+          <motion.g
+            key={`${tile.id}-enter`}
+            initial={reducedMotion ? false : { opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={reducedMotion ? { duration: 0 } : { delay: 0.25 + zoneIdx * 0.09 + tileIdx * 0.03, duration: 0.35, ease: 'easeOut' }}
+          >
+          <g
+            key={tile.id}
+            opacity={isActive ? 1 : dim ? 0.3 : 1}
+            style={{
+              transition: 'opacity .2s, transform .2s ease-out',
+              cursor: svc.url ? 'pointer' : 'default',
+              transform: isActive && !reducedMotion ? 'translateY(-2px)' : undefined,
+            }}
+            onMouseEnter={() => setHovered(tile.id)}
+            onMouseLeave={() => setHovered(null)}
+            onClick={e => {
+              e.stopPropagation();
+              setSelected(tile.id);
+              if (svc.url) window.open(svc.url, '_blank', 'noopener,noreferrer');
+            }}
+          >
                   <rect
                     x={tile.x} y={tile.y} width={tile.w} height={tile.h} rx={16}
                     fill={isActive ? T.surfaceBorder : T.bg}
@@ -400,12 +424,21 @@ export default function FlatMap({ data }: { data: ManacitraData }) {
                     {svc.name}
                   </text>
                   {visibleLayers.labels && (
-                    <circle cx={tile.x + tile.w - 9} cy={tile.y + 9} r={4.5} fill={statusColor} stroke={T.bg} strokeWidth={1.5} />
+                    <>
+                      {online === false && !reducedMotion && (
+                        <circle cx={tile.x + tile.w - 9} cy={tile.y + 9} r={8} fill="none" stroke={T.offline} strokeWidth={1}
+                          opacity={0.4} className="mc-offline-halo" />
+                      )}
+                      <circle cx={tile.x + tile.w - 9} cy={tile.y + 9} r={4.5} fill={statusColor} stroke={T.bg} strokeWidth={1.5}
+                        className={online && !reducedMotion ? 'mc-dot-online' : undefined} />
+                    </>
                   )}
                 </g>
+          </motion.g>
               );
             })}
           </g>
+          </motion.g>
         );
       })}
 
@@ -416,8 +449,13 @@ export default function FlatMap({ data }: { data: ManacitraData }) {
         const opacity = isActive ? 0.9 : dim ? 0.15 : 0.5;
         const stroke = isActive ? T.accent : T.ink;
         return (
-          <path key={`i${i}`} d={conn.d} fill="none" stroke={stroke} strokeWidth={isActive ? 2.2 : 1.5}
-            opacity={opacity} strokeLinecap="round" style={{ transition: 'opacity .2s' }} />
+          <g key={`i${i}`} opacity={opacity} style={{ transition: 'opacity .2s' }}>
+            <motion.path d={conn.d} fill="none" stroke={stroke} strokeWidth={isActive ? 2.2 : 1.5}
+              initial={reducedMotion ? false : { pathLength: 0 }}
+              animate={{ pathLength: 1 }}
+              transition={{ delay: reducedMotion ? 0 : 0.45 + i * 0.05, duration: 0.5, ease: 'easeOut' }}
+              strokeLinecap="round" />
+          </g>
         );
       })}
 
@@ -427,7 +465,12 @@ export default function FlatMap({ data }: { data: ManacitraData }) {
         const dim = dimmed.has(conn.from) || dimmed.has(conn.to);
         const opacity = isActive ? 0.95 : dim ? 0.15 : 0.5;
         return (
-          <polygon key={`ar${i}`} points={arrowPts(conn.end.x, conn.end.y, conn.angle)} fill={isActive ? T.accent : T.ink} opacity={opacity} style={{ transition: 'opacity .2s' }} />
+          <g key={`ar${i}`} opacity={opacity} style={{ transition: 'opacity .2s' }}>
+            <motion.polygon points={arrowPts(conn.end.x, conn.end.y, conn.angle)} fill={isActive ? T.accent : T.ink}
+              initial={reducedMotion ? false : { opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={reducedMotion ? { duration: 0 } : { delay: 0.85 + i * 0.03, duration: 0.25 }} />
+          </g>
         );
       })}
 
@@ -439,12 +482,23 @@ export default function FlatMap({ data }: { data: ManacitraData }) {
         const dim = dimmed.has(conn.from) || dimmed.has(conn.to);
         const opacity = isActive ? 1 : dim ? 0.15 : 0.6;
         return (
-          <text key={`l${i}`} x={conn.label.x} y={conn.label.y} fontFamily={T.fontMono} fontSize={9.5}
-            fill={isActive ? T.accent : T.ink} opacity={opacity} filter="url(#halo)" style={{ transition: 'opacity .2s' }}>
-            {label}
-          </text>
+          <motion.g key={`l${i}`}
+            initial={reducedMotion ? false : { opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={reducedMotion ? { duration: 0 } : { delay: 1.05 + i * 0.03, duration: 0.3 }}>
+            <text x={conn.label.x} y={conn.label.y} fontFamily={T.fontMono} fontSize={9.5}
+              fill={isActive ? T.accent : T.ink} opacity={opacity} filter="url(#halo)" style={{ transition: 'opacity .2s' }}>
+              {label}
+            </text>
+          </motion.g>
         );
       })}
+      <style>{`
+        @keyframes mc-breathe { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+        .mc-dot-online { animation: mc-breathe 3.2s ease-in-out infinite; }
+        @keyframes mc-halo { 0%, 100% { opacity: 0.4; } 50% { opacity: 0.12; } }
+        .mc-offline-halo { animation: mc-halo 2.4s ease-in-out infinite; }
+      `}</style>
     </svg>
   );
 }

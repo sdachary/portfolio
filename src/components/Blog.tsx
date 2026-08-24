@@ -74,7 +74,9 @@ export default function Blog() {
                 <span key={tag} className="blog-tag">{tag}</span>
               ))}
             </div>
-            <h3 className="blog-title">{post.title}</h3>
+            <h3 className="blog-title">
+              <a id={post.slug} href={`#${post.slug}`} className="blog-title-link">{post.title}</a>
+            </h3>
             <div className="blog-body" dangerouslySetInnerHTML={{ __html: post.body }} />
           </motion.article>
         ))}

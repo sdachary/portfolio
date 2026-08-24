@@ -43,8 +43,33 @@ function Loader({ progress, status }: { progress: number; status: string }) {
   );
 }
 
-function Header({ online, offline, total }: { online: number; offline: number; total: number }) {
+function Legend() {
+  const dot = (color: string, label: string, breathe?: boolean) => (
+    <span style={{ display: 'flex', alignItems: 'center', gap: '.35rem', color: 'rgba(28,28,26,0.55)' }}>
+      <span style={{
+        width: 6, height: 6, borderRadius: '50%', background: color, display: 'inline-block',
+        animation: breathe ? 'mc-breathe 3.2s ease-in-out infinite' : undefined,
+      }} />
+      {label}
+    </span>
+  );
   return (
+    <div style={{
+      position: 'fixed', bottom: '1.25rem', left: '1.25rem', zIndex: 10,
+      display: 'flex', alignItems: 'center', gap: '.9rem',
+      padding: '.45rem 1rem', background: 'rgba(247,245,240,0.86)', backdropFilter: 'blur(24px)',
+      border: '1px solid rgba(28,28,26,0.08)', borderRadius: 100, fontSize: '.72rem',
+    }}>
+      {dot('#2f6d4f', 'online', true)}
+      {dot('#b5472e', 'offline')}
+      {dot('#8a8577', 'unknown')}
+      <span style={{ color: 'rgba(28,28,26,0.10)' }}>·</span>
+      <span style={{ color: 'rgba(28,28,26,0.4)' }}>click a service to open · hover to trace</span>
+    </div>
+  );
+}
+
+function Header({ online, offline, total }: { online: number; offline: number; total: number }) {  return (
     <div style={{
       position: 'fixed', top: '1.25rem', left: '50%', transform: 'translateX(-50%)', zIndex: 10,
     }}>
@@ -153,6 +178,7 @@ export default function Manacitra() {
         </div>
       ) : !loaded && <Loader progress={progress} status={status} />}
       <Header online={online} offline={offline} total={total} />
+      {!error && loaded && <Legend />}
       <div style={{
         position: 'fixed', top: '4.5rem', left: '50%', transform: 'translateX(-50%)', zIndex: 10,
         display: 'flex', alignItems: 'center', gap: 8,
