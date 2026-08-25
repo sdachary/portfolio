@@ -8,6 +8,30 @@
     "status": "completed"
   },
   {
+    "kind": "feature",
+    "phase": "Phase 60",
+    "project": "SADHAN",
+    "description": "Career platform: Sadhan + career-ops",
+    "date": "2026-08-24",
+    "status": "completed"
+  },
+  {
+    "kind": "feature",
+    "phase": "Phase 63",
+    "project": "INFRA",
+    "description": "Restore opencode-Paca wiring; drop Job Search board (unnati rebrand)",
+    "date": "2026-08-24",
+    "status": "completed"
+  },
+  {
+    "kind": "feature",
+    "phase": "Phase 65",
+    "project": "MANACITRA",
+    "description": "Manacitra URL fixes + calm animation/polish pass",
+    "date": "2026-08-24",
+    "status": "completed"
+  },
+  {
     "phase": "Phase 52",
     "project": "Sadhan",
     "kind": "refactor",
@@ -16,11 +40,99 @@
     "status": "completed"
   },
   {
+    "kind": "test",
+    "phase": "Phase 61",
+    "project": "CHITRAGUPTA",
+    "description": "UAT: Chitragupta — Hono/TS GST accounting, CSV import/export",
+    "date": "2026-08-22",
+    "status": "completed"
+  },
+  {
+    "kind": "test",
+    "phase": "Phase 60",
+    "project": "SADHAN",
+    "description": "UAT: Sadhan — Next.js 15 career platform, jobs, CV",
+    "date": "2026-08-22",
+    "status": "completed"
+  },
+  {
+    "kind": "test",
+    "phase": "Phase 61",
+    "project": "DARPAN",
+    "description": "UAT: Darpan — React/Vite + CF Workers + D1, DPDP compliance",
+    "date": "2026-08-22",
+    "status": "completed"
+  },
+  {
+    "kind": "test",
+    "phase": "Phase 65",
+    "project": "PORTFOLIO",
+    "description": "UAT: Portfolio — Vite+React, Manacitra, blog, contact",
+    "date": "2026-08-22",
+    "status": "completed"
+  },
+  {
+    "kind": "test",
+    "phase": "Phase 61",
+    "project": "VISHWAKARMA",
+    "description": "UAT: Vishwakarma — CF Pages static, provisioning portal",
+    "date": "2026-08-22",
+    "status": "completed"
+  },
+  {
+    "kind": "test",
+    "phase": "Phase 61",
+    "project": "KARMA",
+    "description": "UAT: Karma — Python FastAPI backend, API endpoints",
+    "date": "2026-08-22",
+    "status": "completed"
+  },
+  {
+    "kind": "test",
+    "phase": "Phase 61",
+    "project": "PRAYOG",
+    "description": "UAT: Prayog — 9 static browser tools, zero-build",
+    "date": "2026-08-22",
+    "status": "completed"
+  },
+  {
+    "kind": "test",
+    "phase": "Phase 52",
+    "project": "MCP-HUB",
+    "description": "UAT: MCP Hub — Python FastAPI, MCP server, provider routing",
+    "date": "2026-08-22",
+    "status": "completed"
+  },
+  {
+    "kind": "feature",
+    "phase": "Phase 57",
+    "project": "SAMPADA",
+    "description": "Sadhan: rewrite frontend as static SPA on CF Pages (sampada pattern)",
+    "date": "2026-08-22",
+    "status": "completed"
+  },
+  {
+    "kind": "feature",
+    "phase": "",
+    "project": "ACHARYLAB",
+    "description": "Omniroute: auto-model selection for headless claude (probe free models before launch)",
+    "date": "2026-08-22",
+    "status": "completed"
+  },
+  {
     "phase": "Phase 60",
     "project": "Sadhan",
     "kind": "feature",
     "description": "SPA rewrite shipped to CF Pages (UI-only static export); claude-auto model prober for omniroute routing",
     "date": "2026-08-22",
+    "status": "completed"
+  },
+  {
+    "kind": "feature",
+    "phase": "",
+    "project": "ACHARYLAB",
+    "description": "Workstation Discovery Report (acharylab-workstation)",
+    "date": "2026-08-21",
     "status": "completed"
   },
   {
@@ -48,6 +160,38 @@
     "status": "completed"
   },
   {
+    "kind": "feature",
+    "phase": "Phase 57",
+    "project": "SAMPADA",
+    "description": "Sampada forgot-password flow broken (Udhyam subject, INVALID_TOKEN 404)",
+    "date": "2026-08-18",
+    "status": "completed"
+  },
+  {
+    "kind": "test",
+    "phase": "Phase 61",
+    "project": "BEPARA",
+    "description": "UAT: Bepara — Next.js 16, pricing, catalog, auth",
+    "date": "2026-08-17",
+    "status": "completed"
+  },
+  {
+    "kind": "feature",
+    "phase": "Phase 63",
+    "project": "INFRA",
+    "description": "Infrastructure Discovery Report (acharylab-infrastructure)",
+    "date": "2026-08-17",
+    "status": "completed"
+  },
+  {
+    "kind": "feature",
+    "phase": "Phase 63",
+    "project": "INFRA",
+    "description": "Resolve VM issues found in infrastructure discovery",
+    "date": "2026-08-17",
+    "status": "completed"
+  },
+  {
     "phase": "Phase 65",
     "project": "Bepara",
     "kind": "bugfix",
@@ -56,11 +200,43 @@
     "status": "completed"
   },
   {
+    "kind": "test",
+    "phase": "Phase 64",
+    "project": "UDHYAM",
+    "description": "UAT: Udhyam — jewellery retail mgmt, auth, billing, ledger, gold rates",
+    "date": "2026-08-16",
+    "status": "completed"
+  },
+  {
+    "kind": "bugfix",
+    "phase": "",
+    "project": "ACHARYLAB",
+    "description": "Fix adjust_stock RPC ownership check (DB-level)",
+    "date": "2026-08-16",
+    "status": "completed"
+  },
+  {
+    "kind": "feature",
+    "phase": "",
+    "project": "ACHARYLAB",
+    "description": "Set owner profile role to super-admin (admin panel access)",
+    "date": "2026-08-16",
+    "status": "completed"
+  },
+  {
     "phase": "Phase 64",
     "project": "Udhyam",
     "kind": "bugfix",
     "description": "UAT security audit: CRITICAL RLS bypass + cross-tenant IDOR fixed (auth-gated proxy, forced scoping)",
     "date": "2026-08-16",
+    "status": "completed"
+  },
+  {
+    "kind": "test",
+    "phase": "Phase 57",
+    "project": "SAMPADA",
+    "description": "UAT: Sampada — Rails API + React SPA, PWA, dark mode, 24 pages",
+    "date": "2026-08-15",
     "status": "completed"
   }
 ]
