@@ -11,7 +11,7 @@
     "phase": "Phase 52",
     "project": "Sadhan",
     "kind": "refactor",
-    "description": "unnati\u2192sadhan rebrand inside Paca (ACHA-190), dead paca-sync module removed, dotfiles template decrypts via age",
+    "description": "unnati→sadhan rebrand inside Paca (ACHA-190), dead paca-sync module removed, dotfiles template decrypts via age",
     "date": "2026-08-24",
     "status": "completed"
   },
@@ -43,7 +43,7 @@
     "phase": "Phase 65",
     "project": "Infra",
     "kind": "build",
-    "description": "Shared PostgREST fixed for all app schemas, GoTrue removed, DB schemas renamed (unnati\u2192sadhan)",
+    "description": "Shared PostgREST fixed for all app schemas, GoTrue removed, DB schemas renamed (unnati→sadhan)",
     "date": "2026-08-19",
     "status": "completed"
   },
@@ -51,7 +51,7 @@
     "phase": "Phase 65",
     "project": "Bepara",
     "kind": "bugfix",
-    "description": "UAT #244 PASS after root-causing ORADB_URL https\u2192http (oradb has no 443; CF edge 521)",
+    "description": "UAT #244 PASS after root-causing ORADB_URL https→http (oradb has no 443; CF edge 521)",
     "date": "2026-08-17",
     "status": "completed"
   },
