@@ -51,7 +51,7 @@ const posts: BlogPost[] = [
       <p>MCP Hub started as a simple proxy — route prompts to the cheapest available AI model. It grew into something bigger: a skill engine, a workflow orchestrator, a code-review-graph analyzer, and a memory system.</p>
       <p>The architecture is a Python FastAPI server with plugin-based tool registration. Skills are versioned Markdown files with execution metadata. The evolution engine analyzes execution results and auto-improves skills over time.</p>
       <p>The most-used feature is <code>detect_changes</code> — before I edit any repo, this tool tells me what functions I'll affect, what tests might break, and how many tokens I'll save by understanding the code graph first. It's saved me hours of context window waste.</p>
-      <p>Running on <strong>oradev</strong> (68.233.97.153) with cloudflared tunnel, connected to opencode via SSH tunnel (<code>ssh -fNL 3001:localhost:3000 oradev</code>). A companion NIM proxy (28MB, zero-dependency Node.js) handles Claude Code integration.</p>
+      <p>Running on <strong>oradev</strong> (68.233.97.153) behind a cloudflared tunnel, wired into my local coding agents over SSH (<code>ssh -fNL 3001:localhost:3000 oradev</code>). Multi-provider model routing sits on top, so agents fail over between providers instead of dying when one route goes stale.</p>
     `,
   },
   {

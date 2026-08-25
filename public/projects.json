@@ -14,7 +14,7 @@
     ],
     "live_url": "https://bepara.pages.dev/",
     "local": true,
-    "last_updated": "2026-06-26",
+    "last_updated": "2026-08-25",
     "github_remote": "git@github.com:sdachary/bepara.git"
   },
   {
@@ -153,27 +153,11 @@
     "github_remote": "git@github.com:sdachary/mcp-hub.git"
   },
   {
-    "name": "SRI",
-    "slug": "sri",
-    "status": "Local / Standalone",
-    "status_key": "local",
-    "description": "Open-source design toolkit and the alternative to Claude Design. Local-first, web-deployable — 16 coding-agent CLIs, 31 composable Skills, 72 brand-grade Design Systems. Built with Next.js + TypeScript.",
-    "tags": [
-      "TypeScript",
-      "Next.js",
-      "React"
-    ],
-    "live_url": null,
-    "local": true,
-    "last_updated": "2026-07-02",
-    "github_remote": "git@github.com:sdachary/sri.git"
-  },
-  {
     "name": "SADHAN",
     "slug": "sadhan",
     "status": "Live",
     "status_key": "live",
-    "description": "AI-powered job search assistant that automates tedious parts of job hunting while keeping you in control",
+    "description": "Modern career platform — government job alerts, application tracking, and AI-assisted CV tools that keep you in control of the hunt. Next.js + Supabase on Cloudflare Pages.",
     "tags": [
       "Next.js",
       "React",
@@ -183,7 +167,7 @@
     ],
     "live_url": "https://sadhan.pages.dev/",
     "local": true,
-    "last_updated": "2026-07-29",
+    "last_updated": "2026-08-25",
     "github_remote": "git@github.com:sdachary/sadhan.git"
   },
   {
@@ -199,7 +183,7 @@
     ],
     "live_url": "https://vishwakarma.pages.dev/",
     "local": true,
-    "last_updated": "2026-06-26",
+    "last_updated": "2026-08-25",
     "github_remote": "git@github.com:sdachary/vishwakarma.git"
   },
   {
@@ -207,17 +191,16 @@
     "slug": "manacitra",
     "status": "Live",
     "status_key": "live",
-    "description": "AcharyLab ops map — flat 2D SVG diagram of every VM, service, and Cloudflare app across four zones with live health checks, brand logos, and animated flow connections. Built with React + zustand + React Flow.",
+    "description": "AcharyLab ops map — flat 2D SVG diagram of every VM, service, and Cloudflare app across four zones with live health checks, brand logos, and animated flow connections. Built with React + framer-motion.",
     "tags": [
       "React",
       "SVG",
-      "React Flow",
-      "TypeScript",
-      "zustand"
+      "framer-motion",
+      "TypeScript"
     ],
     "live_url": "https://aham.pages.dev/manacitra.html",
     "local": true,
-    "last_updated": "2026-07-31",
+    "last_updated": "2026-08-25",
     "github_remote": "git@github.com:sdachary/portfolio.git"
   },
   {
