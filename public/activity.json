@@ -1,5 +1,37 @@
 [
   {
+    "kind": "test",
+    "phase": "Phase 64",
+    "project": "UDHYAM",
+    "description": "UAT: Udhyam — UX, frontend logic, user interaction flows",
+    "date": "2026-08-26",
+    "status": "completed"
+  },
+  {
+    "kind": "test",
+    "phase": "Phase 61",
+    "project": "CHITRAGUPTA",
+    "description": "UAT: Chitragupta — Hono/TS GST accounting, CSV import/export",
+    "date": "2026-08-25",
+    "status": "completed"
+  },
+  {
+    "kind": "feature",
+    "phase": "Phase 65",
+    "project": "PORTFOLIO",
+    "description": "Portfolio content audit + Paca-sourced activity sync",
+    "date": "2026-08-25",
+    "status": "completed"
+  },
+  {
+    "kind": "test",
+    "phase": "Phase 61",
+    "project": "CHITRAGUPTA",
+    "description": "Chitragupta UAT round 2 — core flows (invoices/CSV/GSTR)",
+    "date": "2026-08-25",
+    "status": "completed"
+  },
+  {
     "phase": "Phase 52",
     "project": "Infra",
     "kind": "build",
@@ -205,38 +237,6 @@
     "project": "UDHYAM",
     "description": "UAT: Udhyam — jewellery retail mgmt, auth, billing, ledger, gold rates",
     "date": "2026-08-16",
-    "status": "completed"
-  },
-  {
-    "kind": "bugfix",
-    "phase": "",
-    "project": "ACHARYLAB",
-    "description": "Fix adjust_stock RPC ownership check (DB-level)",
-    "date": "2026-08-16",
-    "status": "completed"
-  },
-  {
-    "kind": "feature",
-    "phase": "",
-    "project": "ACHARYLAB",
-    "description": "Set owner profile role to super-admin (admin panel access)",
-    "date": "2026-08-16",
-    "status": "completed"
-  },
-  {
-    "phase": "Phase 64",
-    "project": "Udhyam",
-    "kind": "bugfix",
-    "description": "UAT security audit: CRITICAL RLS bypass + cross-tenant IDOR fixed (auth-gated proxy, forced scoping)",
-    "date": "2026-08-16",
-    "status": "completed"
-  },
-  {
-    "kind": "test",
-    "phase": "Phase 57",
-    "project": "SAMPADA",
-    "description": "UAT: Sampada — Rails API + React SPA, PWA, dark mode, 24 pages",
-    "date": "2026-08-15",
     "status": "completed"
   }
 ]
