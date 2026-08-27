@@ -1,5 +1,37 @@
 [
   {
+    "kind": "feature",
+    "phase": "",
+    "project": "ACHARYLAB",
+    "description": "Implement IaC stale-reference scanner for retired terms (Kubera, NIM Proxy, etc.)",
+    "date": "2026-08-26",
+    "status": "completed"
+  },
+  {
+    "kind": "feature",
+    "phase": "",
+    "project": "ACHARYLAB",
+    "description": "Add IaC Service Change Checklist template to knowledge folder",
+    "date": "2026-08-26",
+    "status": "completed"
+  },
+  {
+    "kind": "feature",
+    "phase": "",
+    "project": "ACHARYLAB",
+    "description": "Inventory both VMs' real, live state for IaC backup repo",
+    "date": "2026-08-26",
+    "status": "completed"
+  },
+  {
+    "kind": "test",
+    "phase": "Phase 64",
+    "project": "UDHYAM",
+    "description": "UAT: Udhyam — jewellery retail mgmt, auth, billing, ledger, gold rates",
+    "date": "2026-08-26",
+    "status": "completed"
+  },
+  {
     "kind": "test",
     "phase": "Phase 64",
     "project": "UDHYAM",
@@ -205,38 +237,6 @@
     "project": "BEPARA",
     "description": "UAT: Bepara — Next.js 16, pricing, catalog, auth",
     "date": "2026-08-17",
-    "status": "completed"
-  },
-  {
-    "kind": "feature",
-    "phase": "Phase 63",
-    "project": "INFRA",
-    "description": "Infrastructure Discovery Report (acharylab-infrastructure)",
-    "date": "2026-08-17",
-    "status": "completed"
-  },
-  {
-    "kind": "feature",
-    "phase": "Phase 63",
-    "project": "INFRA",
-    "description": "Resolve VM issues found in infrastructure discovery",
-    "date": "2026-08-17",
-    "status": "completed"
-  },
-  {
-    "phase": "Phase 65",
-    "project": "Bepara",
-    "kind": "bugfix",
-    "description": "UAT #244 PASS after root-causing ORADB_URL https→http (oradb has no 443; CF edge 521)",
-    "date": "2026-08-17",
-    "status": "completed"
-  },
-  {
-    "kind": "test",
-    "phase": "Phase 64",
-    "project": "UDHYAM",
-    "description": "UAT: Udhyam — jewellery retail mgmt, auth, billing, ledger, gold rates",
-    "date": "2026-08-16",
     "status": "completed"
   }
 ]
