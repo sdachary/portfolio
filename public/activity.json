@@ -1,5 +1,13 @@
 [
   {
+    "kind": "refactor",
+    "phase": "",
+    "project": "ACHARYLAB",
+    "description": "Infisical secrets manager rollout (self-hosted, all services migrated)",
+    "date": "2026-08-28",
+    "status": "completed"
+  },
+  {
     "kind": "feature",
     "phase": "",
     "project": "ACHARYLAB",
@@ -229,14 +237,6 @@
     "project": "SAMPADA",
     "description": "Sampada forgot-password flow broken (Udhyam subject, INVALID_TOKEN 404)",
     "date": "2026-08-18",
-    "status": "completed"
-  },
-  {
-    "kind": "test",
-    "phase": "Phase 61",
-    "project": "BEPARA",
-    "description": "UAT: Bepara — Next.js 16, pricing, catalog, auth",
-    "date": "2026-08-17",
     "status": "completed"
   }
 ]
