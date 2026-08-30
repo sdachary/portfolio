@@ -35,6 +35,13 @@ async function run() {
   const data = JSON.parse(fs.readFileSync(data_file, 'utf8'));
   data.generated_at = new Date().toISOString();
 
+  // cold-start tailnet pings: first ping to an idle peer pays DERP handshake cost
+  // (>2s); warm them once so the actual probes complete in ms.
+  for (const peer of ['workstation', 'pixel-10a']) {
+    try { execSync(`tailscale ping --timeout=5s ${peer} 2>/dev/null`, { timeout: 6000, stdio: 'pipe' }); } catch {}
+  }
+  await new Promise(r => setTimeout(r, 1000));
+
   const checks = [
     { id: 'nginx',       cmd: "ssh -o StrictHostKeyChecking=accept-new 140.245.227.176 'curl -s -o /dev/null -w %{http_code} http://localhost 2>/dev/null' 2>/dev/null | grep -qE '^[234]'", ssh: true },
     { id: 'postgrest',   cmd: "ssh -o StrictHostKeyChecking=accept-new 140.245.227.176 'curl -s -o /dev/null -w %{http_code} http://localhost:3000 2>/dev/null' 2>/dev/null | grep -qE '^[234]'", ssh: true },
