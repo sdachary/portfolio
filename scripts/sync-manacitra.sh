@@ -113,6 +113,13 @@ export MANACITRA_DATA_FILE="$REPO_DIR/$DATA_FILE"
 node /tmp/__sync_manacitra.mjs 2>&1 | tee "$TMP"
 rm -f /tmp/__sync_manacitra.mjs
 
+# deterministic invariants gate — a broken map must never sync
+if [ -f "$REPO_DIR/scripts/lint-manacitra.cjs" ]; then
+  node "$REPO_DIR/scripts/lint-manacitra.cjs" "$REPO_DIR/$DATA_FILE"
+else
+  echo "lint-manacitra.cjs not present (stale checkout) — skipping invariants gate"
+fi
+
 git add "$DATA_FILE"
 if git diff --cached --quiet; then
   echo "No changes to commit."

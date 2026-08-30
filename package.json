@@ -10,7 +10,9 @@
     "typecheck": "tsc --noEmit",
     "preview": "vite preview",
     "test": "vitest run",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "lint:manacitra": "node scripts/lint-manacitra.cjs",
+    "verify": "npm run lint && npm run typecheck && npm run lint:manacitra && npm run test"
   },
   "dependencies": {
     "@xyflow/react": "^12.11.2",

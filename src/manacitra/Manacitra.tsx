@@ -11,7 +11,7 @@ import AudioToggle from './ui/AudioToggle';
 import TouchControls from './controls/TouchControls';
 import useAmbientAudio from './audio/useAmbientAudio';
 import { useManacitraStore } from './store';
-import type { ManacitraData } from './types';
+import type { ManacitraData, Stats } from './types';
 
 function Loader({ progress, status }: { progress: number; status: string }) {
   return (
@@ -65,6 +65,24 @@ function Legend() {
       {dot('#8a8577', 'unknown')}
       <span style={{ color: 'rgba(28,28,26,0.10)' }}>·</span>
       <span style={{ color: 'rgba(28,28,26,0.4)' }}>click a service to open · hover to trace</span>
+    </div>
+  );
+}
+
+function Caption({ stats, generated_at }: { stats: Stats; generated_at: string }) {
+  const [isTouch] = useState(() => typeof window !== 'undefined' && 'ontouchstart' in window);
+  const when = generated_at ? generated_at.slice(0, 16).replace('T', ' ') + ' UTC' : 'unknown';
+  return (
+    <div style={{
+      position: 'fixed', right: '1.25rem', bottom: isTouch ? '7.25rem' : '1.25rem',
+      zIndex: 8, maxWidth: 'min(300px, calc(100vw - 2.5rem))', textAlign: 'right',
+      fontSize: '.68rem', lineHeight: 1.55, color: 'rgba(28,28,26,0.42)',
+      pointerEvents: 'none',
+    }}>
+      <div style={{ fontWeight: 500, color: 'rgba(28,28,26,0.6)', letterSpacing: '.02em' }}>
+        AchayLab — every live service, one map. {stats.zones} zones · {stats.total_services} services · {stats.connections} links
+      </div>
+      <div>dots = live health · edges = traffic · data as of {when}</div>
     </div>
   );
 }
@@ -179,6 +197,7 @@ export default function Manacitra() {
       ) : !loaded && <Loader progress={progress} status={status} />}
       <Header online={online} offline={offline} total={total} />
       {!error && loaded && <Legend />}
+      {data && <Caption stats={data.stats} generated_at={data.generated_at} />}
       <div style={{
         position: 'fixed', top: '4.5rem', left: '50%', transform: 'translateX(-50%)', zIndex: 10,
         display: 'flex', alignItems: 'center', gap: 8,
