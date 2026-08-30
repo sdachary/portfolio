@@ -1,6 +1,22 @@
 [
   {
     "kind": "feature",
+    "phase": "Phase 63",
+    "project": "INFRA",
+    "description": "Pi-hole DNS watchdog — EasyList/EasyPrivacy gravity validated, config reconciled (oradev)",
+    "date": "2026-08-30",
+    "status": "completed"
+  },
+  {
+    "kind": "bugfix",
+    "phase": "",
+    "project": "ACHARYLAB",
+    "description": "Tailscale DNS fix on workstation — accept-dns=false (systemd-resolved no longer routes all DNS via tailscale0)",
+    "date": "2026-08-30",
+    "status": "completed"
+  },
+  {
+    "kind": "feature",
     "phase": "",
     "project": "ACHARYLAB",
     "description": "Ops batch: Kuma monitors+notifier, Pi-hole domain declarative, zram swappiness, Infisical on-demand",
@@ -210,32 +226,16 @@
   {
     "kind": "test",
     "phase": "Phase 61",
-    "project": "CHITRAGUPTA",
-    "description": "UAT: Chitragupta — Hono/TS GST accounting, CSV import/export",
-    "date": "2026-08-22",
-    "status": "completed"
-  },
-  {
-    "kind": "test",
-    "phase": "Phase 60",
-    "project": "SADHAN",
-    "description": "UAT: Sadhan — Next.js 15 career platform, jobs, CV",
+    "project": "VISHWAKARMA",
+    "description": "UAT: Vishwakarma — CF Pages static, provisioning portal",
     "date": "2026-08-22",
     "status": "completed"
   },
   {
     "kind": "test",
     "phase": "Phase 61",
-    "project": "DARPAN",
-    "description": "UAT: Darpan — React/Vite + CF Workers + D1, DPDP compliance",
-    "date": "2026-08-22",
-    "status": "completed"
-  },
-  {
-    "kind": "test",
-    "phase": "Phase 65",
-    "project": "PORTFOLIO",
-    "description": "UAT: Portfolio — Vite+React, Manacitra, blog, contact",
+    "project": "KARMA",
+    "description": "UAT: Karma — Python FastAPI backend, API endpoints",
     "date": "2026-08-22",
     "status": "completed"
   }
