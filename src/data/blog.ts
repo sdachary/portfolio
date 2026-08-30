@@ -26,7 +26,7 @@ const posts: BlogPost[] = [
     tags: ['saraswati', 'education', 'game-design'],
     body: `
       <p>Saraswati is a coding education platform for kids 8-14. The core insight: kids don't learn from tutorials, they learn from games that trick them into understanding concepts.</p>
-      <p>The platform has snake-ladder (deployed with premium animations), random color game, and levels covering loops, conditionals, and debugging. Each level is a mini-game where the answer is a code snippet. Kids type Python to solve puzzles — the game interprets their answer against expected patterns.</p>
+      <p>The levels cover loops, conditionals, and debugging. Each level is a mini-game where the answer is a code snippet — kids type Python to solve puzzles, and the game interprets their answer against expected patterns. The looser arcade games (snake &amp; ladder, colour match) have since moved to Prayog as browser tools, so Saraswati stays focused on the coding curriculum.</p>
       <p>Technical choices: localStorage for progress (no auth friction for kids), printable certificates via <code>@media print</code> CSS, and a badge system that tracks streaks. The certificate modal shows stars for completed levels — kids love collecting them.</p>
       <p>What surprised me: the debugging puzzle was the most popular level. Kids enjoy being "detectives" more than writing code from scratch.</p>
     `,

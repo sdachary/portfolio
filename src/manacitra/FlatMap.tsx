@@ -12,9 +12,9 @@ const TILE_GAP = 24;
 const ROW_PITCH = TILE + TILE_GAP;
 const PAD = 26;
 const HEADER = 58;
-const MARGIN = 64;
-const COL_GAP = 420;
-const ROW_GAP = 240;
+const MARGIN = 48;
+const COL_GAP = 200;
+const ROW_GAP = 150;
 
 interface Rect { x: number; y: number; w: number; h: number }
 interface Tile extends Rect { id: string }
@@ -43,8 +43,13 @@ function layout(data: ManacitraData): { cards: ZoneCard[]; W: number; H: number 
   const external = get('external');
   const personal = get('personal');
 
-  const leftW = Math.max(cloudflare.size.w, oradev.size.w);
-  const rightX = MARGIN + leftW + COL_GAP;
+  // Three-column facade: EDGE tier top-left, oradev middle, oradb as the right
+  // spine (its traffic sink). External sits under cloudflare so CI deploys flow
+  // upward into the edge tier; home sits under oradev so home→orbit edges also
+  // flow upward. Every connection therefore resolves to a rightward, an inward,
+  // or an upward route — nothing is dropped.
+  const colB = Math.max(MARGIN + cloudflare.size.w, MARGIN + 316) + COL_GAP;
+  const colC = colB + oradev.size.w + COL_GAP;
 
   const place = (entry: { zone: Zone; size: { w: number; h: number } }, x: number, y: number): ZoneCard => {
     const { zone, size } = entry;
@@ -61,16 +66,16 @@ function layout(data: ManacitraData): { cards: ZoneCard[]; W: number; H: number 
 
   const cards = [
     place(cloudflare, MARGIN, MARGIN),
-    place(oradb, rightX, MARGIN),
-    place(oradev, MARGIN, MARGIN + cloudflare.size.h + ROW_GAP),
-    place(external, rightX, MARGIN + oradb.size.h + ROW_GAP),
-    place(personal, rightX, MARGIN + oradb.size.h + ROW_GAP + external.size.h + ROW_GAP),
+    place(oradev, colB, MARGIN),
+    place(oradb, colC, MARGIN),
+    place(external, MARGIN, MARGIN + cloudflare.size.h + ROW_GAP),
+    place(personal, colB, MARGIN + oradev.size.h + ROW_GAP),
   ];
 
-  const W = rightX + Math.max(oradb.size.w, external.size.w, personal.size.w) + MARGIN;
+  const W = colC + oradb.size.w + MARGIN;
   const H = Math.max(
-    MARGIN + cloudflare.size.h + ROW_GAP + oradev.size.h,
-    MARGIN + oradb.size.h + ROW_GAP + external.size.h + ROW_GAP + personal.size.h,
+    MARGIN + cloudflare.size.h + ROW_GAP + external.size.h,
+    MARGIN + oradev.size.h + ROW_GAP + personal.size.h,
   ) + MARGIN;
   return { cards, W, H };
 }
@@ -268,8 +273,8 @@ function arrowPts(x: number, y: number, angleDeg: number) {
   return `${tip} ${b1} ${b2}`;
 }
 
-function LogoMark({ key, size }: { key: string; size: number }) {
-  const def = logoFor(key);
+function LogoMark({ logoKey, size }: { logoKey: string; size: number }) {
+  const def = logoFor(logoKey);
   if (!def) return null;
   return (
     <svg viewBox={def.vb} width={size} height={size} aria-hidden="true" style={{ flexShrink: 0 }}>
@@ -413,7 +418,31 @@ export default function FlatMap({ data }: { data: ManacitraData }) {
         <filter id="halo" x="-40%" y="-40%" width="180%" height="180%">
           <feDropShadow dx="0" dy="0" stdDeviation="1.2" floodColor={T.bg} floodOpacity="0.95" />
         </filter>
+        <pattern id="mc-dots" width={22} height={22} patternUnits="userSpaceOnUse">
+          <circle cx={2} cy={2} r={1} fill={T.ink} opacity={0.45} />
+        </pattern>
+        <radialGradient id="mc-vignette" cx="50%" cy="44%" r="78%">
+          <stop offset="55%" stopColor={T.bgCanvas} stopOpacity="0" />
+          <stop offset="100%" stopColor={T.bgCanvas} stopOpacity="0.85" />
+        </radialGradient>
       </defs>
+
+      {/* canvas backdrop: dot grid + soft vignette, then one faint tier label per column */}
+      <rect x={0} y={0} width={W} height={H} fill="url(#mc-dots)" opacity={0.35} pointerEvents="none" />
+      <rect x={0} y={0} width={W} height={H} fill="url(#mc-vignette)" pointerEvents="none" />
+      {(() => {
+        const cols = new Map<number, ZoneCard>();
+        for (const c of cards) {
+          const prev = cols.get(c.x);
+          if (!prev || c.y < prev.y) cols.set(c.x, c);
+        }
+        return [...cols.values()].sort((a, b) => a.x - b.x).map((c, i) => (
+          <text key={`tier${i}`} x={c.x + c.w / 2} y={c.y - 14} textAnchor="middle"
+            fontFamily={T.fontMono} fontSize={9.5} letterSpacing={3} fill={T.inkMuted} opacity={0.6} pointerEvents="none">
+            {c.zone.label}
+          </text>
+        ));
+      })()}
 
       {/* inter-zone connections (under cards) */}
       {visibleLayers.connections && routes.map((conn, i) => {
@@ -446,6 +475,8 @@ export default function FlatMap({ data }: { data: ManacitraData }) {
       {visibleLayers.zones && cards.map((card, zoneIdx) => {
         const zoneDim = card.tiles.every(t => dimmed.has(t.id));
         const tint = card.zone.color;
+        const zhLogo = logoFor(card.zone.id);
+        const zoneTextX = card.x + PAD + 12 + (zhLogo ? 36 : 0);
         return (
           <motion.g key={`${card.zone.id}-wrap`}
             initial={reducedMotion ? false : { opacity: 0, y: 14 }}
@@ -455,10 +486,16 @@ export default function FlatMap({ data }: { data: ManacitraData }) {
             <rect x={card.x} y={card.y} width={card.w} height={card.h} rx={16} fill={T.surface} stroke={T.lineStrong} strokeWidth={1.2}
               style={{ filter: 'drop-shadow(0 1px 3px rgba(28,28,26,0.05))' }} />
             <rect x={card.x + 1} y={card.y + 1} width={6} height={card.h - 2} rx={3} fill={tint} opacity={0.85} />
-            <text x={card.x + PAD + 12} y={card.y + 30} fontFamily={T.fontMono} fontSize={15} fontWeight={600} fill={T.ink} letterSpacing={1}>
+            <rect x={card.x + 1} y={card.y + 1} width={card.w - 2} height={HEADER - 1} rx={14} fill={tint} opacity={0.08} />
+            {zhLogo && (
+              <g transform={`translate(${card.x + PAD + 12}, ${card.y + 16})`} aria-hidden="true">
+                <LogoMark logoKey={card.zone.id} size={20} />
+              </g>
+            )}
+            <text x={zoneTextX} y={card.y + 30} fontFamily={T.fontMono} fontSize={15} fontWeight={600} fill={T.ink} letterSpacing={1}>
               {card.zone.name}
             </text>
-            <text x={card.x + PAD + 12} y={card.y + 48} fontFamily={T.fontMono} fontSize={10} letterSpacing={2} fill={T.inkMuted}>
+            <text x={zoneTextX} y={card.y + 48} fontFamily={T.fontMono} fontSize={10} letterSpacing={2} fill={T.inkMuted}>
               {card.zone.label}{card.zone.subtitle ? ` · ${card.zone.subtitle}` : ''}
             </text>
             {(() => {
@@ -477,7 +514,7 @@ export default function FlatMap({ data }: { data: ManacitraData }) {
                 </>
               );
             })()}
-            <line x1={card.x + PAD} y1={card.y + HEADER} x2={card.x + card.w - PAD} y2={card.y + HEADER} stroke={T.line} strokeWidth={1} />
+            <line x1={card.x + PAD} y1={card.y + HEADER} x2={card.x + card.w - PAD} y2={card.y + HEADER} stroke={tint} strokeWidth={1} opacity={0.3} />
 
             {visibleLayers.services && card.tiles.map((tile, tileIdx) => {
               const svc = card.zone.services.find(s => s.id === tile.id)!;
@@ -516,12 +553,14 @@ export default function FlatMap({ data }: { data: ManacitraData }) {
                     stroke={isActive ? T.ink : T.surfaceBorder}
                     strokeWidth={isActive ? 1.6 : 1}
                   />
+                  <rect x={tile.x + 5} y={tile.y + tile.h - 5} width={tile.w - 10} height={3} rx={1.5}
+                    fill={tint} opacity={isActive ? 0.9 : 0.4} />
                   <g transform={`translate(${tile.x + (tile.w - 26) / 2}, ${tile.y + 8})`}>
-                    <LogoMark key={svc.logo} size={26} />
+                    <LogoMark logoKey={svc.logo} size={26} />
                   </g>
                   <text
                     x={tile.x + tile.w / 2} y={logoFor(svc.logo) ? tile.y + tile.h - 10 : tile.y + tile.h / 2}
-                    fontFamily={T.fontSans} fontSize={logoFor(svc.logo) ? 10 : 11} fontWeight={500} fill={T.ink}
+                    fontFamily={T.fontSans} fontSize={logoFor(svc.logo) ? 10 : 11} fontWeight={600} fill={T.ink}
                     textAnchor="middle"
                     style={{ pointerEvents: 'none' }}
                   >

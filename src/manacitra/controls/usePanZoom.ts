@@ -10,8 +10,9 @@ const MAX_SCALE = 4;
 
 // Touch/mouse pan-zoom applied to the fitted SVG map (scale 1 = content exactly
 // fits the viewport). Zoom is anchored to the cursor / pinch midpoint; pan is
-// clamped so the map never flies off-screen. Touch drag pan only engages once
-// zoomed in (>1.02), so a plain tap still selects a service.
+// clamped so the map never flies off-screen. Mouse drag always pans (even at
+// fit zoom — a click without movement still selects). Touch drag pan only
+// engages once zoomed in (>1.02), so a plain tap still selects a service.
 export function usePanZoom() {
   const [view, setView] = useState<PanZoomView>({ scale: 1, x: 0, y: 0 });
   const svgRef = useRef<SVGSVGElement>(null);
@@ -59,9 +60,15 @@ export function usePanZoom() {
     return () => el.removeEventListener('wheel', onWheel);
   }, [clampBounds]);
 
-  // pinch (2 pointers) + touch-drag pan (1 pointer, zoomed in)
+  // pinch (2 pointers) + drag pan (1 pointer): mouse may pan at any zoom,
+  // touch only once zoomed in (>1.02) so a plain tap still selects a service.
   const onPointerDown = useCallback((e: React.PointerEvent) => {
-    if (e.pointerType === 'mouse') return;
+    if (e.pointerType === 'mouse') {
+      svgRef.current?.setPointerCapture(e.pointerId);
+      pointers.current.set(e.pointerId, { x: e.clientX, y: e.clientY });
+      drag.current = { x0: e.clientX, y0: e.clientY, tx0: view.x, ty0: view.y };
+      return;
+    }
     svgRef.current?.setPointerCapture(e.pointerId);
     pointers.current.set(e.pointerId, { x: e.clientX, y: e.clientY });
     if (pointers.current.size === 2) {
