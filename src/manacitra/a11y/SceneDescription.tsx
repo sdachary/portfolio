@@ -10,7 +10,7 @@ export default function SceneDescription() {
       overflow: 'hidden', clip: 'rect(0,0,0,0)', border: 0,
     }}>
       <p>Infrastructure map with {data.stats.total_services} services across {data.stats.zones} zones.</p>
-      <p>{data.stats.online} online, {data.stats.total - data.stats.online} offline.</p>
+      <p>{data.stats.online} live, {data.stats.total - data.stats.online} need attention.</p>
       <ul>
         {data.zones.map(zone => (
           <li key={zone.id}>
@@ -20,7 +20,7 @@ export default function SceneDescription() {
                 const h = data.health[svc.id];
                 return (
                   <li key={svc.id}>
-                    {svc.name} — {svc.type} — {h ? (h.online ? 'Online' : 'Offline') : 'Unknown'}
+                    {svc.name} — {svc.type} — {h ? (h.online ? 'Live' : 'Needs attention') : 'Unchecked'}
                   </li>
                 );
               })}

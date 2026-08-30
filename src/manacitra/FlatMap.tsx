@@ -2,6 +2,7 @@ import { useMemo, useCallback, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { useManacitraStore } from './store';
 import { logoFor } from './logos';
+import { hostingFor } from './hosting';
 import { TOKENS, TOKENS_HC } from './tokens';
 import { usePanZoom } from './controls/usePanZoom';
 import type { ManacitraData, Zone } from './types';
@@ -26,7 +27,8 @@ function gridFor(n: number) {
 
 function zoneSize(n: number) {
   const { cols, rows } = gridFor(n);
-  const w = PAD * 2 + cols * (TILE + TILE_GAP) - TILE_GAP;
+  // MIN_CARD_W keeps zone-name + right-aligned hosting tag from colliding on tiny zones
+  const w = Math.max(PAD * 2 + cols * (TILE + TILE_GAP) - TILE_GAP, 260);
   const h = HEADER + PAD + rows * ROW_PITCH - TILE_GAP + PAD;
   return { w, h };
 }
@@ -459,6 +461,23 @@ export default function FlatMap({ data }: { data: ManacitraData }) {
             <text x={card.x + PAD + 12} y={card.y + 48} fontFamily={T.fontMono} fontSize={10} letterSpacing={2} fill={T.inkMuted}>
               {card.zone.label}{card.zone.subtitle ? ` · ${card.zone.subtitle}` : ''}
             </text>
+            {(() => {
+              const hosting = hostingFor(card.zone);
+              const liveCount = card.tiles.filter(t => data.health[t.id]?.online).length;
+              return (
+                <>
+                  {hosting && (
+                    <text x={card.x + card.w - PAD} y={card.y + 30} textAnchor="end" fontFamily={T.fontMono} fontSize={9} letterSpacing={1.5} fill={T.inkMuted}>
+                      <tspan fill={tint} fontWeight={700} fontSize={8}>▪ </tspan>{hosting.short}
+                    </text>
+                  )}
+                  <text x={card.x + card.w - PAD} y={card.y + 48} textAnchor="end" fontFamily={T.fontMono} fontSize={10} letterSpacing={1} fill={liveCount === card.tiles.length ? T.inkMuted : tint}>
+                    {liveCount}/{card.tiles.length} live
+                  </text>
+                </>
+              );
+            })()}
+            <line x1={card.x + PAD} y1={card.y + HEADER} x2={card.x + card.w - PAD} y2={card.y + HEADER} stroke={T.line} strokeWidth={1} />
 
             {visibleLayers.services && card.tiles.map((tile, tileIdx) => {
               const svc = card.zone.services.find(s => s.id === tile.id)!;

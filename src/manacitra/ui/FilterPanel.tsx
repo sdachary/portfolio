@@ -30,7 +30,7 @@ export default function FilterPanel() {
               fontSize: '.75rem', fontFamily: 'inherit',
             }}
           >
-            {s === 'online' ? '● Online' : '● Offline'}
+            {s === 'online' ? '● Live' : '● Attention'}
           </button>
         );
       })}

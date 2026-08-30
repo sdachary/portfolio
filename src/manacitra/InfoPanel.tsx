@@ -1,5 +1,6 @@
 import { motion, AnimatePresence } from 'framer-motion';
 import { useManacitraStore } from './store';
+import { hostingFor } from './hosting';
 import { useMemo } from 'react';
 import { EASE, DURATION } from './motion/constants';
 
@@ -38,7 +39,7 @@ export default function InfoPanel() {
               const sv = data.zones.flatMap(z => z.services).find(s => s.id === other);
               return sv ? sv.name : other;
             });
-          return { name: svc.name, type: svc.type, desc: svc.desc, color: svc.color, online: h?.online ?? null, zone: zone.label, id: svc.id, url: svc.url, meta: svc.meta, links, checkedAt: h?.checked_at ?? null };
+          return { name: svc.name, type: svc.type, desc: svc.desc, color: svc.color, online: h?.online ?? null, zone: zone.label, hosting: hostingFor(zone)?.short ?? null, onPrem: hostingFor(zone)?.short === 'ON-PREM', who: hostingFor(zone)?.who ?? null, id: svc.id, url: svc.url, meta: svc.meta, links, checkedAt: h?.checked_at ?? null };
         }
       }
     }
@@ -66,7 +67,7 @@ export default function InfoPanel() {
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '.5rem' }}>
             <div>
               <div style={{ fontSize: '1rem', fontWeight: 600, color: '#1c1c1a', letterSpacing: '-0.01em' }}>{info.name}</div>
-              <div style={{ fontSize: '.7rem', color: 'rgba(28,28,26,0.4)', textTransform: 'uppercase', letterSpacing: '.12em', marginTop: 2 }}>{info.type} · {info.zone}</div>
+              <div style={{ fontSize: '.7rem', color: 'rgba(28,28,26,0.4)', textTransform: 'uppercase', letterSpacing: '.12em', marginTop: 2 }}>{info.type} · {info.zone}{info.hosting ? ` · ${info.hosting}` : ''}</div>
             </div>
             {!isHover && (
               <button
@@ -79,11 +80,16 @@ export default function InfoPanel() {
           <div style={{ display: 'flex', gap: '.5rem', alignItems: 'center' }}>
             <StatusDot online={info.online} />
             <span style={{ fontSize: '.75rem', color: info.online === null ? '#8a8577' : info.online ? '#2f6d4f' : '#b5472e' }}>
-              {info.online === null ? 'Unknown' : info.online ? 'Online' : 'Offline'}
+              {info.online === null ? 'Unchecked' : info.online ? 'Live' : 'Needs attention'}
             </span>
             <span style={{ color: 'rgba(28,28,26,0.12)' }}>|</span>
             <span style={{ fontSize: '.7rem', color: 'rgba(28,28,26,0.25)' }}>{info.id}</span>
           </div>
+          {info.online === false && info.onPrem && (
+            <div style={{ fontSize: '.67rem', color: 'rgba(28,28,26,0.4)', marginTop: '.3rem' }}>
+              self-hosted on-prem ({info.who}) — restore via ssh
+            </div>
+          )}
           {info.links.length > 0 && (
             <div style={{ marginTop: '.5rem', display: 'flex', gap: '.4rem', alignItems: 'baseline', flexWrap: 'wrap' }}>
               <span style={{ color: 'rgba(28,28,26,0.35)', textTransform: 'uppercase', letterSpacing: '.08em', fontSize: '.6rem' }}>Links</span>
