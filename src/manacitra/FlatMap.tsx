@@ -124,11 +124,11 @@ function buildRoutes(data: ManacitraData, cards: ZoneCard[]) {
   const nextDst = (t: Tile) => {
     const k = dstCount.get(t.id) ?? 0;
     dstCount.set(t.id, k + 1);
-    return t.x + 10 + (k % 5) * 11;
+    return t.x + 10 + (k % 6) * 10;
   };
   const nextDstLane = (t: Tile) => {
     const k = dstCount.get(t.id) ?? 0;
-    return t.y - TILE_GAP + 4 + (k % 3) * 3;
+    return t.y - TILE_GAP + 4 + (k % 6) * 3;
   };
 
   const routes: Route[] = [];
@@ -180,6 +180,31 @@ function buildRoutes(data: ManacitraData, cards: ZoneCard[]) {
     }
   }
 
+  // per-edge row stacking so arrows leaving/entering the same card row fan out
+  const rowOf = (tileY: number, card: ZoneCard) => Math.round((tileY - card.y - HEADER - PAD) / ROW_PITCH);
+  const srcRowKey = (c: (typeof data.connections)[number]) => {
+    const st = tileOf.get(c.from);
+    if (!st) return null;
+    const fc = cardOf(zoneOf(c.from)!.id)!;
+    return `${fc.y}|${rowOf(st.tile.y, fc)}`;
+  };
+  const dstRowKey = (c: (typeof data.connections)[number]) => {
+    const dt = tileOf.get(c.to);
+    if (!dt) return null;
+    const tc = cardOf(zoneOf(c.to)!.id)!;
+    return `${tc.y}|${rowOf(dt.tile.y, tc)}`;
+  };
+  const srcRowCounts = new Map<string, number>();
+  const srcRowUsed = new Map<string, number>();
+  const dstRowCounts = new Map<string, number>();
+  const dstRowUsed = new Map<string, number>();
+  for (const c of rightConnList) {
+    const sk = srcRowKey(c);
+    if (sk) srcRowCounts.set(sk, (srcRowCounts.get(sk) ?? 0) + 1);
+    const dk = dstRowKey(c);
+    if (dk) dstRowCounts.set(dk, (dstRowCounts.get(dk) ?? 0) + 1);
+  }
+
   data.connections.forEach(conn => {
     const fromZone = zoneOf(conn.from);
     const toZone = zoneOf(conn.to);
@@ -216,12 +241,29 @@ function buildRoutes(data: ManacitraData, cards: ZoneCard[]) {
       const fam = famList.find(f => f.from.id === fromZone.id && f.to.id === toZone.id)!;
       const pos = Math.max(0, fam.conns.findIndex(c => c.from === conn.from && c.to === conn.to));
       const laneX = slice.min + ((pos + 0.5) / Math.max(1, fam.conns.length)) * (slice.max - slice.min);
-      const src = srcT ? edgePoint(fromCard, 'r', (srcT.tile.y - fromCard.y) / fromCard.h)
-                       : edgePoint(fromCard, 'r', 0.5);
+
+      // exit the source card on a per-edge stacked y so same-row tiles never share a horizontal run
+      const src = srcT
+        ? (() => {
+            const k = srcRowKey(conn)!;
+            const n = srcRowCounts.get(k) ?? 1;
+            const u = srcRowUsed.get(k) ?? 0;
+            srcRowUsed.set(k, u + 1);
+            const y = srcT.tile.y + 10 + (n > 1 ? (u / (n - 1)) * (TILE - 20) : (TILE - 20) / 2);
+            return { x: fromCard.x + fromCard.w, y: clamp(y, fromCard.y + PAD + 4, fromCard.y + fromCard.h - PAD - 4) };
+          })()
+        : edgePoint(fromCard, 'r', 0.5);
 
       if (dstT) {
-        // route into the card through the left padding gutter, then touch the tile's top edge
-        const entry = edgePoint(toCard, 'l', (dstT.tile.y - toCard.y) / toCard.h);
+        // enter the card on a per-edge stacked y, then through the left gutter to the tile's top edge
+        const entry = (() => {
+          const k = dstRowKey(conn)!;
+          const n = dstRowCounts.get(k) ?? 1;
+          const u = dstRowUsed.get(k) ?? 0;
+          dstRowUsed.set(k, u + 1);
+          const y = dstT.tile.y + 10 + (n > 1 ? (u / (n - 1)) * (TILE - 20) : (TILE - 20) / 2);
+          return { x: toCard.x, y: clamp(y, toCard.y + PAD + 4, toCard.y + toCard.h - PAD - 6) };
+        })();
         const gutterX = toCard.x + PAD / 2;
         const lane = nextDstLane(dstT.tile);
         const tx = nextDst(dstT.tile);

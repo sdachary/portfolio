@@ -10,15 +10,17 @@ const MAX_SCALE = 4;
 
 // Touch/mouse pan-zoom applied to the fitted SVG map (scale 1 = content exactly
 // fits the viewport). Zoom is anchored to the cursor / pinch midpoint; pan is
-// clamped so the map never flies off-screen. Mouse drag always pans (even at
-// fit zoom — a click without movement still selects). Touch drag pan only
-// engages once zoomed in (>1.02), so a plain tap still selects a service.
+// softly clamped so the map always stays reachable — at fit zoom there is a
+// 40%-of-viewport slack so the canvas can be dragged by mouse. Mouse drag
+// always pans (armed lazily after ~4px of movement so a click still selects);
+// touch drag pan only engages once zoomed in (>1.02), so a plain tap selects.
 export function usePanZoom() {
   const [view, setView] = useState<PanZoomView>({ scale: 1, x: 0, y: 0 });
   const svgRef = useRef<SVGSVGElement>(null);
   const pointers = useRef(new Map<number, { x: number; y: number }>());
   const pinch = useRef<{ d0: number; cx: number; cy: number; s0: number } | null>(null);
   const drag = useRef<{ x0: number; y0: number; tx0: number; ty0: number } | null>(null);
+  const mouseDown = useRef<{ id: number; x: number; y: number } | null>(null);
   const movedRef = useRef(false);
 
   const rect = useCallback(
@@ -26,11 +28,15 @@ export function usePanZoom() {
     [],
   );
 
+  // Elastic pan limit: full travel at zoomed-in scales, plus a fixed slack of
+  // 40% of the viewport so the map can be dragged around by mouse even at fit
+  // zoom (scale 1, where the fit bounds alone would clamp movement to zero).
+  const PAN_SLACK = 0.4;
   const clampBounds = useCallback((s: number, x: number, y: number) => {
     const { width, height } = rect();
     if (width === 0) return { scale: s, x, y };
-    const xm = Math.max(0, (width * (s - 1)) / 2);
-    const ym = Math.max(0, (height * (s - 1)) / 2);
+    const xm = Math.max(0, (width * (s - 1)) / 2 + width * PAN_SLACK);
+    const ym = Math.max(0, (height * (s - 1)) / 2 + height * PAN_SLACK);
     return { scale: Math.max(1, Math.min(MAX_SCALE, s)), x: Math.max(-xm, Math.min(xm, x)), y: Math.max(-ym, Math.min(ym, y)) };
   }, [rect]);
 
@@ -64,9 +70,11 @@ export function usePanZoom() {
   // touch only once zoomed in (>1.02) so a plain tap still selects a service.
   const onPointerDown = useCallback((e: React.PointerEvent) => {
     if (e.pointerType === 'mouse') {
-      svgRef.current?.setPointerCapture(e.pointerId);
+      // Mouse drag is armed lazily in onPointerMove once the cursor moves past
+      // a small threshold. We hold off on setPointerCapture until then so that
+      // a plain press+release still clicks a tile underneath.
+      mouseDown.current = { id: e.pointerId, x: e.clientX, y: e.clientY };
       pointers.current.set(e.pointerId, { x: e.clientX, y: e.clientY });
-      drag.current = { x0: e.clientX, y0: e.clientY, tx0: view.x, ty0: view.y };
       return;
     }
     svgRef.current?.setPointerCapture(e.pointerId);
@@ -89,6 +97,14 @@ export function usePanZoom() {
   const onPointerMove = useCallback((e: React.PointerEvent) => {
     const p = pointers.current.get(e.pointerId);
     if (!p) return;
+    if (e.pointerType === 'mouse' && !drag.current && mouseDown.current?.id === e.pointerId) {
+      const dx = e.clientX - mouseDown.current.x;
+      const dy = e.clientY - mouseDown.current.y;
+      if (Math.hypot(dx, dy) > 4) {
+        svgRef.current?.setPointerCapture(e.pointerId);
+        drag.current = { x0: mouseDown.current.x, y0: mouseDown.current.y, tx0: view.x, ty0: view.y };
+      }
+    }
     if (pinch.current && pointers.current.size === 2) {
       const other = [...pointers.current.entries()].find(([k]) => k !== e.pointerId);
       if (!other) return;
@@ -104,10 +120,11 @@ export function usePanZoom() {
       setView(v => clampBounds(v.scale, drag.current!.tx0 + dx, drag.current!.ty0 + dy));
     }
     pointers.current.set(e.pointerId, { x: e.clientX, y: e.clientY });
-  }, [rect, clampBounds]);
+  }, [view, rect, clampBounds]);
 
   const onPointerEnd = useCallback((e: React.PointerEvent) => {
     pointers.current.delete(e.pointerId);
+    if (mouseDown.current?.id === e.pointerId) mouseDown.current = null;
     if (pointers.current.size < 2) pinch.current = null;
     if (pointers.current.size === 1) {
       const [p] = [...pointers.current.values()];

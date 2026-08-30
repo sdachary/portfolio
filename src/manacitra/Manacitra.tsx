@@ -242,8 +242,8 @@ export default function Manacitra() {
       {!error && loaded && <Legend />}
       {data && <Caption stats={data.stats} generated_at={data.generated_at} />}
       <div style={{
-        position: 'fixed', top: '4.5rem', left: '50%', transform: 'translateX(-50%)', zIndex: 10,
-        display: 'flex', alignItems: 'center', gap: 8,
+        position: 'fixed', top: '5.25rem', right: '1.25rem', zIndex: 10,
+        display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: 8,
       }}>
         <button
           onClick={() => setToolsOpen(o => !o)}
@@ -259,18 +259,23 @@ export default function Manacitra() {
         >{toolsOpen ? '✕' : '···'}</button>
         {toolsOpen && (
           <div style={isMobile ? {
-            display: 'flex', gap: 6, alignItems: 'center', maxWidth: 'calc(100vw - 5rem)',
-            overflowX: 'auto', padding: '8px 12px',
+            display: 'flex', flexDirection: 'row', gap: 6, alignItems: 'center',
+            maxWidth: 'calc(100vw - 3.5rem)', overflowX: 'auto', padding: '8px 12px',
             background: 'rgba(247,245,240,0.92)', backdropFilter: 'blur(24px)',
             border: '1px solid rgba(28,28,26,0.08)', borderRadius: 16, WebkitOverflowScrolling: 'touch',
           } : {
-            display: 'flex', gap: 8, alignItems: 'center',
+            display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: 10,
+            padding: '10px 12px', maxHeight: 'calc(100vh - 10rem)', overflowY: 'auto',
+            background: 'rgba(247,245,240,0.92)', backdropFilter: 'blur(24px)',
+            border: '1px solid rgba(28,28,26,0.08)', borderRadius: 16,
           }}>
             <SearchBar />
             <FilterPanel />
             <LayerToggles />
-            <ContrastToggle />
-            <AudioToggle />
+            <div style={{ display: 'flex', gap: 8 }}>
+              <ContrastToggle />
+              <AudioToggle />
+            </div>
           </div>
         )}
       </div>
