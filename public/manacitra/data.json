@@ -17,7 +17,7 @@
           "logo": "postgresql",
           "color": "#2563eb",
           "h": 3.2,
-          "desc": "Primary database. 7 schemas. Port 5432.",
+          "desc": "Primary database. All app schemas. Port 5432.",
           "meta": {
             "protocol": "TCP 5432",
             "dataStored": "All app schemas",
@@ -123,13 +123,13 @@
           "desc": "SQL monitoring dashboard. Port 8787."
         },
         {
-          "id": "uptime-kuma",
-          "name": "Uptime Kuma",
+          "id": "gatus",
+          "name": "Gatus",
           "type": "monitoring",
-          "logo": "uptimekuma",
+          "logo": "monitor",
           "color": "#eab308",
           "h": 1,
-          "desc": "Service uptime monitoring. Port 3003."
+          "desc": "Self-hosted service health monitoring. Port 8080."
         }
       ]
     },
@@ -162,24 +162,6 @@
           "desc": "Project management. Docker Compose. Port 80."
         },
         {
-          "id": "nim-proxy",
-          "name": "NIM Proxy",
-          "type": "ai",
-          "logo": "nvidia",
-          "color": "#64748b",
-          "h": 1.4,
-          "desc": "Anthropic→OpenAI proxy for Claude Code. Port 8082."
-        },
-        {
-          "id": "cloudflared",
-          "name": "cloudflared",
-          "type": "network",
-          "logo": "cloudflare",
-          "color": "#38bdf8",
-          "h": 1,
-          "desc": "Cloudflare Tunnel (x2). Exposes MCP Hub + Sampada."
-        },
-        {
           "id": "ttyd",
           "name": "ttyd",
           "type": "service",
@@ -198,6 +180,47 @@
           "desc": "S3-compatible storage. Ports 9000/9001."
         },
         {
+          "id": "pihole",
+          "name": "Pi-hole",
+          "type": "dns",
+          "logo": "shield",
+          "color": "#3498db",
+          "h": 1.4,
+          "desc": "Network-wide ad-blocking DNS. Gravity 1.9M domains, home + tailnet.",
+          "meta": {
+            "protocol": "UDP/TCP 53",
+            "upstream": "unbound (5335)",
+            "topology": "Docker on oradev, home bridge"
+          }
+        },
+        {
+          "id": "unbound",
+          "name": "Unbound",
+          "type": "dns",
+          "logo": "shield",
+          "color": "#a78bfa",
+          "h": 1.2,
+          "desc": "Recursive resolver upstream for Pi-hole. Port 5335.",
+          "meta": {
+            "protocol": "UDP 5335",
+            "upstream": "root name servers",
+            "topology": "oradev Docker (pihole-docker-user)"
+          }
+        },
+        {
+          "id": "tailscale",
+          "name": "Tailscale",
+          "type": "network",
+          "logo": "network",
+          "color": "#059669",
+          "h": 1.2,
+          "desc": "Mesh VPN (tailnet). Connects home, oradev, oradb, agents.",
+          "meta": {
+            "protocol": "WireGuard UDP 41641",
+            "topology": "oradev + oradb + workstation"
+          }
+        },
+        {
           "id": "fail2ban",
           "name": "fail2ban",
           "type": "security",
@@ -212,7 +235,7 @@
       "id": "cloudflare",
       "name": "cloudflare",
       "label": "EDGE TIER",
-      "subtitle": "Pages · 9 apps",
+      "subtitle": "Pages · 10 apps",
       "x": -12,
       "z": 7,
       "color": "#f38020",
@@ -261,16 +284,16 @@
           "logo": "nextdotjs",
           "color": "#6366f1",
           "url": "https://sadhan.pages.dev",
-          "desc": "AI career platform. Next.js 15."
+          "desc": "AI career platform. Next.js 16."
         },
         {
           "id": "vishwakarma",
           "name": "Vishwakarma",
           "type": "app",
-          "logo": "cloudflareworkers",
+          "logo": "cloudflare",
           "color": "#0d9488",
           "url": "https://vishwakarma.pages.dev",
-          "desc": "Provisioning portal. CF Worker."
+          "desc": "Provisioning portal. Static CF Pages + Supabase."
         },
         {
           "id": "darpan",
@@ -279,7 +302,7 @@
           "logo": "react",
           "color": "#ef4444",
           "url": "https://darpan.pages.dev",
-          "desc": "Social media audit. D1 + DPDP compliant."
+          "desc": "DPDP compliance audits. AI reports, D1."
         },
         {
           "id": "prayog",
@@ -370,21 +393,6 @@
       "label": "API"
     },
     {
-      "from": "darpan",
-      "to": "oradb",
-      "label": "API"
-    },
-    {
-      "from": "prayog",
-      "to": "oradb",
-      "label": "API"
-    },
-    {
-      "from": "portfolio",
-      "to": "oradb",
-      "label": "API"
-    },
-    {
       "from": "nidhiflow",
       "to": "oradb",
       "label": "API"
@@ -393,6 +401,16 @@
       "from": "oradev",
       "to": "oradb",
       "label": "SSH Tunnel"
+    },
+    {
+      "from": "tailscale",
+      "to": "oradb",
+      "label": "Mesh"
+    },
+    {
+      "from": "pihole",
+      "to": "unbound",
+      "label": "Upstream"
     },
     {
       "from": "mcp-hub",
@@ -440,13 +458,13 @@
       "label": "CI deploy"
     }
   ],
-  "generated_at": "2026-08-24T00:39:50.977Z",
+  "generated_at": "2026-08-30T07:49:06.000Z",
   "stats": {
-    "total_services": 30,
-    "online": 27,
+    "total_services": 31,
+    "online": 31,
     "zones": 4,
-    "connections": 20,
-    "total": 30
+    "connections": 19,
+    "total": 31
   },
   "health": {
     "nginx": {
@@ -485,9 +503,9 @@
       "online": true,
       "checked_at": "2026-08-24T00:39:50.977Z"
     },
-    "uptime-kuma": {
+    "gatus": {
       "online": true,
-      "checked_at": "2026-08-24T00:39:50.977Z"
+      "checked_at": "2026-08-30T07:49:06.000Z"
     },
     "pg16": {
       "online": true,
@@ -498,16 +516,20 @@
       "checked_at": "2026-08-24T00:39:50.977Z"
     },
     "mcp-hub": {
-      "online": false,
-      "checked_at": "2026-08-24T00:39:50.977Z"
+      "online": true,
+      "checked_at": "2026-08-30T07:49:06.000Z"
     },
     "paca": {
       "online": true,
       "checked_at": "2026-08-24T00:39:50.977Z"
     },
-    "nim-proxy": {
-      "online": false,
-      "checked_at": "2026-08-24T00:39:50.977Z"
+    "pihole": {
+      "online": true,
+      "checked_at": "2026-08-30T07:49:06.000Z"
+    },
+    "unbound": {
+      "online": true,
+      "checked_at": "2026-08-30T07:49:06.000Z"
     },
     "ttyd": {
       "online": true,
@@ -521,9 +543,9 @@
       "online": true,
       "checked_at": "2026-08-24T00:39:50.977Z"
     },
-    "cloudflared": {
+    "tailscale": {
       "online": true,
-      "checked_at": "2026-08-24T00:39:50.977Z"
+      "checked_at": "2026-08-30T07:49:06.000Z"
     },
     "github": {
       "online": true,
@@ -542,8 +564,8 @@
       "checked_at": "2026-08-24T00:39:50.977Z"
     },
     "sampada-web": {
-      "online": false,
-      "checked_at": "2026-08-24T00:39:50.977Z"
+      "online": true,
+      "checked_at": "2026-08-30T07:49:06.000Z"
     },
     "sadhan": {
       "online": true,

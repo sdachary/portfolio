@@ -40,7 +40,7 @@
     "slug": "darpan",
     "status": "Live",
     "status_key": "live",
-    "description": "AI-powered social media audit and growth strategy tool. Profile analysis, AI content plans, brand kits, and competitor tracking — built with React + Vite frontend and Cloudflare Workers + D1 backend.",
+    "description": "DPDP compliance platform — AI-driven privacy audits that crawl a site's pages, analyze data handling, flag compliance gaps, and generate PDF reports. React + Vite frontend, Cloudflare Workers + D1 backend.",
     "tags": [
       "React",
       "Vite",
@@ -140,7 +140,7 @@
     "slug": "mcp-hub",
     "status": "Local / Standalone",
     "status_key": "local",
-    "description": "Unified AI Agent Orchestration Platform — 120+ tools, 55 skills, 22 agents via SSE transport on port 3000. Multi-provider AI routing, DAG workflow engine, skill evolution system, and memory-augmented agents.",
+    "description": "Unified AI Agent Orchestration Platform — 21 skills, 23 specialized agents via SSE transport on port 3000. Multi-provider AI routing, DAG workflow engine, skill evolution system, and memory-augmented agents.",
     "tags": [
       "Python",
       "FastAPI",
@@ -175,7 +175,7 @@
     "slug": "vishwakarma",
     "status": "Live",
     "status_key": "live",
-    "description": "One-click cloud provisioning portal. Guided form workflow for requesting cloud resources while the backend handles Terraform and OCI orchestration automatically.",
+    "description": "Cloud provisioning portal for OCI keys, credentials, and project management. Static vanilla HTML/CSS/JS frontend on Cloudflare Pages, Supabase (PG16) + Better-Auth on the backend.",
     "tags": [
       "Cloudflare Pages",
       "Supabase",

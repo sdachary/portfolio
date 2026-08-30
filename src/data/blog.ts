@@ -9,14 +9,14 @@ export interface BlogPost {
 const posts: BlogPost[] = [
   {
     slug: 'darpan-scan-engine',
-    title: 'Building Darpan: An AI Vulnerability Scanner',
+    title: 'Building Darpan: An AI Privacy Auditor',
     date: '2026-07-10',
-    tags: ['darpan', 'ai', 'security'],
+    tags: ['darpan', 'ai', 'security', 'privacy'],
     body: `
-      <p>Darpan started as a weekend experiment — can we build a web vulnerability scanner that actually understands what it finds? Most scanners are regex-based noise machines. I wanted something that reads a page like a security engineer would.</p>
-      <p>The architecture is simple: a Cloudflare Worker crawls the target, extracts DOM + JS, sends it to Gemini for analysis, and stores findings in D1. The AI handles what would've been 200 lines of heuristic rules in a single prompt: <code>Analyze this page for XSS, CSRF, exposed secrets, and misconfigurations. Be specific about what you find and how to fix it.</code></p>
-      <p>The killer feature turned out to be scheduled scans and PDF reports. You set a URL, pick daily/weekly scans, and get a Slack-ready PDF in your inbox. Built with <strong>ponytail</strong> discipline — the cron handler is 40 lines, the PDF generator wraps html2canvas+jsPDF in a React portal.</p>
-      <p>Lessons: AI scanners hallucinate findings about 15% of the time, so every finding needs a "confidence" field. Also, rate limiting matters — you can't scan a production site every 5 minutes without asking.</p>
+      <p>Darpan started as a web scanner that read pages the way a security engineer would. When India's DPDP Act gained traction, the same engine found a sharper job: auditing sites for privacy-compliance gaps — is consent captured before any tracking starts? Are data-handling practices actually disclosed? What PII leaves the browser at all?</p>
+      <p>The architecture is uncomplicated: a Cloudflare Worker crawls the target, extracts DOM + JS, sends it to Gemini for analysis, and stores findings in D1. The AI handles what would've been 200 lines of heuristic rules in a single prompt: <code>Analyze this page for consent flows, PII leakage, data retention disclosures, and third-party trackers. Be specific about what you find and how to fix it.</code></p>
+      <p>The killer feature turned out to be scheduled audits and PDF reports. You set a URL, pick daily/weekly scans, and get a Slack-ready compliance PDF in your inbox. Built with <strong>ponytail</strong> discipline — the cron handler is 40 lines, the PDF generator wraps html2canvas+jsPDF in a React portal.</p>
+      <p>Lessons: AI audits hallucinate findings about 15% of the time, so every finding needs a "confidence" field. Also, rate limiting matters — you can't crawl a production site every 5 minutes without asking.</p>
     `,
   },
   {
@@ -51,7 +51,7 @@ const posts: BlogPost[] = [
       <p>MCP Hub started as a simple proxy — route prompts to the cheapest available AI model. It grew into something bigger: a skill engine, a workflow orchestrator, a code-review-graph analyzer, and a memory system.</p>
       <p>The architecture is a Python FastAPI server with plugin-based tool registration. Skills are versioned Markdown files with execution metadata. The evolution engine analyzes execution results and auto-improves skills over time.</p>
       <p>The most-used feature is <code>detect_changes</code> — before I edit any repo, this tool tells me what functions I'll affect, what tests might break, and how many tokens I'll save by understanding the code graph first. It's saved me hours of context window waste.</p>
-      <p>Running on <strong>oradev</strong> (68.233.97.153) behind a cloudflared tunnel, wired into my local coding agents over SSH (<code>ssh -fNL 3001:localhost:3000 oradev</code>). Multi-provider model routing sits on top, so agents fail over between providers instead of dying when one route goes stale.</p>
+      <p>Running on <strong>oradev</strong> (68.233.97.153), wired into my local coding agents over an SSH tunnel (<code>ssh -fNL 3001:localhost:3000 oradev</code>). Multi-provider model routing sits on top, so agents fail over between providers instead of dying when one route goes stale.</p>
     `,
   },
   {
