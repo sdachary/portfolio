@@ -1,5 +1,101 @@
 [
   {
+    "kind": "feature",
+    "phase": "",
+    "project": "ACHARYLAB",
+    "description": "Ops batch: Kuma monitors+notifier, Pi-hole domain declarative, zram swappiness, Infisical on-demand",
+    "date": "2026-08-30",
+    "status": "completed"
+  },
+  {
+    "kind": "feature",
+    "phase": "",
+    "project": "ACHARYLAB",
+    "description": "Renew alert-router Telegram bot token (blocked: operator)",
+    "date": "2026-08-30",
+    "status": "completed"
+  },
+  {
+    "kind": "feature",
+    "phase": "Phase 63",
+    "project": "INFRA",
+    "description": "Load-consolidation plan for 1 GB hosts (oradev + oradb)",
+    "date": "2026-08-30",
+    "status": "completed"
+  },
+  {
+    "kind": "feature",
+    "phase": "",
+    "project": "ACHARYLAB",
+    "description": "Load cuts on both 1GB VMs + Kuma->Gatus swap",
+    "date": "2026-08-30",
+    "status": "completed"
+  },
+  {
+    "kind": "feature",
+    "phase": "Phase 52",
+    "project": "MCP-HUB",
+    "description": "Security: lock mcp-hub to loopback + remove public quick tunnel",
+    "date": "2026-08-30",
+    "status": "completed"
+  },
+  {
+    "kind": "feature",
+    "phase": "",
+    "project": "ACHARYLAB",
+    "description": "Replace Infisical with SOPS+age secrets; retire stack",
+    "date": "2026-08-30",
+    "status": "completed"
+  },
+  {
+    "kind": "feature",
+    "phase": "Phase 63",
+    "project": "INFRA",
+    "description": "VM maintenance: patch oradev/oradb + oradb release-upgrade",
+    "date": "2026-08-29",
+    "status": "completed"
+  },
+  {
+    "kind": "feature",
+    "phase": "Phase 63",
+    "project": "INFRA",
+    "description": "Resolve blocked-direct-ports note on oradb (nginx :80 routing)",
+    "date": "2026-08-29",
+    "status": "completed"
+  },
+  {
+    "kind": "bugfix",
+    "phase": "Phase 57",
+    "project": "SAMPADA",
+    "description": "Shared Better-Auth auth-origin: sampada 530 fix + per-app flow verification",
+    "date": "2026-08-29",
+    "status": "completed"
+  },
+  {
+    "kind": "build",
+    "phase": "Phase 61",
+    "project": "VISHWAKARMA",
+    "description": "Vishwakarma: Cloudflare Access blanket gate blocks public /api/auth + provisioning - decide public vs private",
+    "date": "2026-08-29",
+    "status": "completed"
+  },
+  {
+    "kind": "build",
+    "phase": "Phase 61",
+    "project": "VISHWAKARMA",
+    "description": "Vishwakarma: add RESOURCES KV + SUPABASE bindings in CF Pages dashboard; verify /api/clients + provision",
+    "date": "2026-08-29",
+    "status": "completed"
+  },
+  {
+    "kind": "refactor",
+    "phase": "Phase 61",
+    "project": "DARPAN",
+    "description": "Darpan: migrate auth from custom worker token flow to shared Better-Auth",
+    "date": "2026-08-29",
+    "status": "completed"
+  },
+  {
     "kind": "refactor",
     "phase": "",
     "project": "ACHARYLAB",
@@ -141,102 +237,6 @@
     "project": "PORTFOLIO",
     "description": "UAT: Portfolio — Vite+React, Manacitra, blog, contact",
     "date": "2026-08-22",
-    "status": "completed"
-  },
-  {
-    "kind": "test",
-    "phase": "Phase 61",
-    "project": "VISHWAKARMA",
-    "description": "UAT: Vishwakarma — CF Pages static, provisioning portal",
-    "date": "2026-08-22",
-    "status": "completed"
-  },
-  {
-    "kind": "test",
-    "phase": "Phase 61",
-    "project": "KARMA",
-    "description": "UAT: Karma — Python FastAPI backend, API endpoints",
-    "date": "2026-08-22",
-    "status": "completed"
-  },
-  {
-    "kind": "test",
-    "phase": "Phase 61",
-    "project": "PRAYOG",
-    "description": "UAT: Prayog — 9 static browser tools, zero-build",
-    "date": "2026-08-22",
-    "status": "completed"
-  },
-  {
-    "kind": "test",
-    "phase": "Phase 52",
-    "project": "MCP-HUB",
-    "description": "UAT: MCP Hub — Python FastAPI, MCP server, provider routing",
-    "date": "2026-08-22",
-    "status": "completed"
-  },
-  {
-    "kind": "feature",
-    "phase": "Phase 57",
-    "project": "SAMPADA",
-    "description": "Sadhan: rewrite frontend as static SPA on CF Pages (sampada pattern)",
-    "date": "2026-08-22",
-    "status": "completed"
-  },
-  {
-    "kind": "feature",
-    "phase": "",
-    "project": "ACHARYLAB",
-    "description": "Omniroute: auto-model selection for headless claude (probe free models before launch)",
-    "date": "2026-08-22",
-    "status": "completed"
-  },
-  {
-    "phase": "Phase 60",
-    "project": "Sadhan",
-    "kind": "feature",
-    "description": "SPA rewrite shipped to CF Pages (UI-only static export); claude-auto model prober for omniroute routing",
-    "date": "2026-08-22",
-    "status": "completed"
-  },
-  {
-    "kind": "feature",
-    "phase": "",
-    "project": "ACHARYLAB",
-    "description": "Workstation Discovery Report (acharylab-workstation)",
-    "date": "2026-08-21",
-    "status": "completed"
-  },
-  {
-    "phase": "Phase 57",
-    "project": "Sampada",
-    "kind": "bugfix",
-    "description": "Standalone deploy to VM + kubera-era password drift fix",
-    "date": "2026-08-21",
-    "status": "completed"
-  },
-  {
-    "phase": "Phase 65",
-    "project": "Chitragupta",
-    "kind": "bugfix",
-    "description": "Post-BetterAuth login fix: pre-migration user linking + invite flow (UAT #245)",
-    "date": "2026-08-20",
-    "status": "completed"
-  },
-  {
-    "phase": "Phase 65",
-    "project": "Infra",
-    "kind": "build",
-    "description": "Shared PostgREST fixed for all app schemas, GoTrue removed, DB schemas renamed (unnati→sadhan)",
-    "date": "2026-08-19",
-    "status": "completed"
-  },
-  {
-    "kind": "feature",
-    "phase": "Phase 57",
-    "project": "SAMPADA",
-    "description": "Sampada forgot-password flow broken (Udhyam subject, INVALID_TOKEN 404)",
-    "date": "2026-08-18",
     "status": "completed"
   }
 ]
