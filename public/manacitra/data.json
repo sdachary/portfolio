@@ -516,10 +516,10 @@
       "label": "DNS"
     }
   ],
-  "generated_at": "2026-08-30T08:37:28.592Z",
+  "generated_at": "2026-08-30T08:38:56.190Z",
   "stats": {
     "total_services": 33,
-    "online": 31,
+    "online": 30,
     "zones": 5,
     "connections": 23,
     "total": 33
@@ -527,135 +527,135 @@
   "health": {
     "nginx": {
       "online": true,
-      "checked_at": "2026-08-30T08:37:28.592Z"
+      "checked_at": "2026-08-30T08:38:56.190Z"
     },
     "postgrest": {
       "online": true,
-      "checked_at": "2026-08-30T08:37:28.592Z"
+      "checked_at": "2026-08-30T08:38:56.190Z"
     },
     "better-auth": {
       "online": true,
-      "checked_at": "2026-08-30T08:37:28.592Z"
+      "checked_at": "2026-08-30T08:38:56.190Z"
     },
     "mail-relay": {
       "online": true,
-      "checked_at": "2026-08-30T08:37:28.592Z"
+      "checked_at": "2026-08-30T08:38:56.190Z"
     },
     "sampada-api": {
       "online": true,
-      "checked_at": "2026-08-30T08:37:28.592Z"
+      "checked_at": "2026-08-30T08:38:56.190Z"
     },
     "bepara-api": {
       "online": true,
-      "checked_at": "2026-08-30T08:37:28.592Z"
+      "checked_at": "2026-08-30T08:38:56.190Z"
     },
     "sadhan-server": {
       "online": true,
-      "checked_at": "2026-08-30T08:37:28.592Z"
+      "checked_at": "2026-08-30T08:38:56.190Z"
     },
     "nidhiflow-api": {
       "online": true,
-      "checked_at": "2026-08-30T08:37:28.592Z"
+      "checked_at": "2026-08-30T08:38:56.190Z"
     },
     "headroom": {
       "online": true,
-      "checked_at": "2026-08-30T08:37:28.592Z"
+      "checked_at": "2026-08-30T08:38:56.190Z"
     },
     "gatus": {
       "online": true,
-      "checked_at": "2026-08-30T08:37:28.592Z"
+      "checked_at": "2026-08-30T08:38:56.190Z"
     },
     "pg16": {
       "online": true,
-      "checked_at": "2026-08-30T08:37:28.592Z"
+      "checked_at": "2026-08-30T08:38:56.190Z"
     },
     "redis": {
       "online": true,
-      "checked_at": "2026-08-30T08:37:28.592Z"
+      "checked_at": "2026-08-30T08:38:56.190Z"
     },
     "mcp-hub": {
-      "online": true,
-      "checked_at": "2026-08-30T08:37:28.592Z"
+      "online": false,
+      "checked_at": "2026-08-30T08:38:56.190Z"
     },
     "paca": {
       "online": true,
-      "checked_at": "2026-08-30T08:37:28.592Z"
+      "checked_at": "2026-08-30T08:38:56.190Z"
     },
     "ttyd": {
       "online": true,
-      "checked_at": "2026-08-30T08:37:28.592Z"
+      "checked_at": "2026-08-30T08:38:56.190Z"
     },
     "minio": {
       "online": true,
-      "checked_at": "2026-08-30T08:37:28.592Z"
+      "checked_at": "2026-08-30T08:38:56.190Z"
     },
     "pihole": {
       "online": true,
-      "checked_at": "2026-08-30T08:37:28.592Z"
+      "checked_at": "2026-08-30T08:38:56.190Z"
     },
     "unbound": {
       "online": true,
-      "checked_at": "2026-08-30T08:37:28.592Z"
+      "checked_at": "2026-08-30T08:38:56.190Z"
     },
     "tailscale": {
       "online": true,
-      "checked_at": "2026-08-30T08:37:28.592Z"
+      "checked_at": "2026-08-30T08:38:56.190Z"
     },
     "fail2ban": {
       "online": true,
-      "checked_at": "2026-08-30T08:37:28.592Z"
+      "checked_at": "2026-08-30T08:38:56.190Z"
     },
     "workstation": {
       "online": false,
-      "checked_at": "2026-08-30T08:37:28.592Z"
+      "checked_at": "2026-08-30T08:38:56.190Z"
     },
     "pixel-10a": {
       "online": false,
-      "checked_at": "2026-08-30T08:37:28.592Z"
+      "checked_at": "2026-08-30T08:38:56.190Z"
     },
     "github": {
       "online": true,
-      "checked_at": "2026-08-30T08:37:28.592Z"
+      "checked_at": "2026-08-30T08:38:56.190Z"
     },
     "chitragupta": {
       "online": true,
-      "checked_at": "2026-08-30T08:37:28.592Z"
+      "checked_at": "2026-08-30T08:38:56.190Z"
     },
     "bepara": {
       "online": true,
-      "checked_at": "2026-08-30T08:37:28.592Z"
+      "checked_at": "2026-08-30T08:38:56.190Z"
     },
     "udhyam": {
       "online": true,
-      "checked_at": "2026-08-30T08:37:28.592Z"
+      "checked_at": "2026-08-30T08:38:56.190Z"
     },
     "sampada-web": {
       "online": true,
-      "checked_at": "2026-08-30T08:37:28.592Z"
+      "checked_at": "2026-08-30T08:38:56.190Z"
     },
     "sadhan": {
       "online": true,
-      "checked_at": "2026-08-30T08:37:28.592Z"
+      "checked_at": "2026-08-30T08:38:56.190Z"
     },
     "nidhiflow": {
       "online": true,
-      "checked_at": "2026-08-30T08:37:28.592Z"
+      "checked_at": "2026-08-30T08:38:56.190Z"
     },
     "vishwakarma": {
       "online": true,
-      "checked_at": "2026-08-30T08:37:28.592Z"
+      "checked_at": "2026-08-30T08:38:56.190Z"
     },
     "darpan": {
       "online": true,
-      "checked_at": "2026-08-30T08:37:28.592Z"
+      "checked_at": "2026-08-30T08:38:56.190Z"
     },
     "prayog": {
       "online": true,
-      "checked_at": "2026-08-30T08:37:28.592Z"
+      "checked_at": "2026-08-30T08:38:56.190Z"
     },
     "portfolio": {
       "online": true,
-      "checked_at": "2026-08-30T08:37:28.592Z"
+      "checked_at": "2026-08-30T08:38:56.190Z"
     }
   }
 }
