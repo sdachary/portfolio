@@ -104,13 +104,12 @@ function Legend() {
   );
 }
 
-function Caption({ stats, generated_at }: { stats: Stats; generated_at: string }) {
-  const [isTouch] = useState(() => typeof window !== 'undefined' && 'ontouchstart' in window);
+function Caption({ stats, generated_at, mobile }: { stats: Stats; generated_at: string; mobile: boolean }) {
   const when = generated_at ? generated_at.slice(0, 16).replace('T', ' ') + ' UTC' : 'unknown';
   return (
     <div style={{
-      position: 'fixed', right: '1.25rem', bottom: isTouch ? '7.25rem' : '1.25rem',
-      zIndex: 8, maxWidth: 'min(300px, calc(100vw - 2.5rem))', textAlign: 'right',
+      position: 'fixed', right: '1.25rem', bottom: mobile ? '7.25rem' : '1.25rem',
+      zIndex: 8, maxWidth: mobile ? 'min(300px, calc(100vw - 2.5rem))' : 220, textAlign: mobile ? 'right' : 'left',
       fontSize: '.68rem', lineHeight: 1.55, color: 'rgba(28,28,26,0.42)',
       pointerEvents: 'none',
     }}>
@@ -240,9 +239,11 @@ export default function Manacitra() {
       ) : !loaded && <Loader progress={progress} status={status} />}
       <Header online={online} offline={offline} unchecked={unchecked} total={total} />
       {!error && loaded && <Legend />}
-      {data && <Caption stats={data.stats} generated_at={data.generated_at} />}
+      {data && <Caption stats={data.stats} generated_at={data.generated_at} mobile={isMobile} />}
       <div style={{
-        position: 'fixed', top: '5.25rem', right: '1.25rem', zIndex: 10,
+        position: 'fixed',
+        top: isMobile ? '5.25rem' : '1.1rem',
+        right: '1.25rem', zIndex: 10,
         display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: 8,
       }}>
         <button
@@ -265,7 +266,8 @@ export default function Manacitra() {
             border: '1px solid rgba(28,28,26,0.08)', borderRadius: 16, WebkitOverflowScrolling: 'touch',
           } : {
             display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: 10,
-            padding: '10px 12px', maxHeight: 'calc(100vh - 10rem)', overflowY: 'auto',
+            padding: '10px 12px', width: 'fit-content', minWidth: 208, maxWidth: 224,
+            maxHeight: 'calc(100vh - 8rem)', overflowY: 'auto',
             background: 'rgba(247,245,240,0.92)', backdropFilter: 'blur(24px)',
             border: '1px solid rgba(28,28,26,0.08)', borderRadius: 16,
           }}>
@@ -282,7 +284,20 @@ export default function Manacitra() {
       <SceneDescription />
       <TouchControls />
       <InfoPanel />
-      {data && <FlatMap data={data} />}
+      {/* Desktop: the map is inset so the header/tools/legend/caption live in
+          reserved gutters around it — nothing floats over the canvas. Mobile
+          (narrow) keeps a full-bleed map with compact overlays. */}
+      {data && (
+        <div style={{
+          position: 'absolute',
+          top: isMobile ? 0 : '5.5rem',
+          right: isMobile ? 0 : 252,
+          bottom: isMobile ? 0 : '10.5rem',
+          left: 0,
+        }}>
+          <FlatMap data={data} />
+        </div>
+      )}
     </div>
   );
 }
