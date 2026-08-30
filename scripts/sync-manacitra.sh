@@ -48,7 +48,7 @@ async function run() {
     { id: 'gatus',       cmd: "ssh -o StrictHostKeyChecking=accept-new 140.245.227.176 'curl -s -o /dev/null -w %{http_code} http://localhost:8080 2>/dev/null' 2>/dev/null | grep -qE '^[234]'", ssh: true },
     { id: 'pg16',        cmd: "ssh -o StrictHostKeyChecking=accept-new 140.245.227.176 'pg_isready -q' 2>/dev/null", ssh: true },
     { id: 'redis',       cmd: "ssh -o StrictHostKeyChecking=accept-new 140.245.227.176 'redis-cli ping' 2>/dev/null | grep -q PONG", ssh: true },
-    { id: 'mcp-hub',     url: 'http://localhost:3000/api/health' },
+    { id: 'mcp-hub',     url: 'http://localhost:3000/api/healthz' },
     { id: 'paca',        url: 'http://localhost:80/' },
     { id: 'ttyd',        url: 'http://localhost:7681/' },
     { id: 'minio',       cmd: "sudo docker inspect --format '{{.State.Health.Status}}' paca-minio-1 2>/dev/null | grep -q healthy", ssh: true },
