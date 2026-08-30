@@ -1,8 +1,9 @@
-import { useMemo, useRef, useCallback, useEffect } from 'react';
+import { useMemo, useCallback, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { useManacitraStore } from './store';
 import { logoFor } from './logos';
 import { TOKENS, TOKENS_HC } from './tokens';
+import { usePanZoom } from './controls/usePanZoom';
 import type { ManacitraData, Zone } from './types';
 
 const TILE = 72;
@@ -274,7 +275,7 @@ function LogoMark({ key, size }: { key: string; size: number }) {
 }
 
 export default function FlatMap({ data }: { data: ManacitraData }) {
-  const svgRef = useRef<SVGSVGElement>(null);
+  const pz = usePanZoom();
   const { cards, W, H } = useMemo(() => layout(data), [data]);
 
   const hoveredId = useManacitraStore(s => s.hoveredId);
@@ -285,6 +286,7 @@ export default function FlatMap({ data }: { data: ManacitraData }) {
   const searchQuery = useManacitraStore(s => s.searchQuery);
   const reducedMotion = useManacitraStore(s => s.reducedMotion);
   const highContrast = useManacitraStore(s => s.highContrast);
+  const resetToken = useManacitraStore(s => s.resetToken);
   const setHovered = useManacitraStore(s => s.setHovered);
   const setSelected = useManacitraStore(s => s.setSelected);
   const setFocusId = useManacitraStore(s => s.setFocusId);
@@ -379,6 +381,9 @@ export default function FlatMap({ data }: { data: ManacitraData }) {
     if (focusId && dimmed.has(focusId)) setFocusId(null);
   }, [focusId, dimmed, setFocusId]);
 
+  const resetView = pz.reset;
+  useEffect(() => { resetView(); }, [resetToken, resetView]);
+
   const linkActive = (from: string, to: string) => {
     if (!activeId) return true;
     return from === activeId || to === activeId;
@@ -386,17 +391,19 @@ export default function FlatMap({ data }: { data: ManacitraData }) {
 
   return (
     <svg
-      ref={svgRef}
+      ref={pz.ref}
       className="mc-map"
       tabIndex={0}
       role="group"
-      aria-label="AchayLab infrastructure map. Use arrow keys to move between services, Enter to open, Escape to clear."
+      aria-label="AchayLab infrastructure map. Use arrow keys to move between services, Enter to open, Escape to clear. Pinch, scroll, or drag to zoom."
       onKeyDown={onKeyDown}
-      onBlur={() => { if (!svgRef.current?.contains(document.activeElement)) { setFocusId(null); setHovered(null); } }}
+      onBlur={() => { if (!pz.ref.current?.contains(document.activeElement)) { setFocusId(null); setHovered(null); } }}
+      onClick={e => { if (e.target === pz.ref.current) { setSelected(null); setFocusId(null); } }}
+      onClickCapture={e => { if (pz.isMoved()) { e.preventDefault(); e.stopPropagation(); } }}
+      {...pz.pointerHandlers}
       viewBox={`0 0 ${W} ${H}`}
       preserveAspectRatio="xMidYMid meet"
-      onClick={e => { if (e.target === svgRef.current) { setSelected(null); setFocusId(null); } }}
-      style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', background: T.bgCanvas }}
+      style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', background: T.bgCanvas, touchAction: 'none', transform: pz.style.transform, transformOrigin: pz.style.transformOrigin }}
     >
       <defs>
         <filter id="halo" x="-40%" y="-40%" width="180%" height="180%">

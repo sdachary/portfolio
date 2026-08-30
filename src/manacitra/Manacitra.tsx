@@ -64,7 +64,7 @@ function Legend() {
       {dot('#b5472e', 'offline')}
       {dot('#8a8577', 'unknown')}
       <span style={{ color: 'rgba(28,28,26,0.10)' }}>·</span>
-      <span style={{ color: 'rgba(28,28,26,0.4)' }}>click a service to open · hover to trace · tab + arrows to navigate</span>
+      <span style={{ color: 'rgba(28,28,26,0.4)' }}>click a service to open · hover to trace · tab + arrows to navigate · pinch / scroll to zoom</span>
     </div>
   );
 }
