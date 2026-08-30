@@ -1,4 +1,4 @@
-import { useMemo, useRef } from 'react';
+import { useMemo, useRef, useCallback, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { useManacitraStore } from './store';
 import { logoFor } from './logos';
@@ -279,6 +279,7 @@ export default function FlatMap({ data }: { data: ManacitraData }) {
 
   const hoveredId = useManacitraStore(s => s.hoveredId);
   const selectedId = useManacitraStore(s => s.selectedId);
+  const focusId = useManacitraStore(s => s.focusId);
   const filters = useManacitraStore(s => s.filters);
   const visibleLayers = useManacitraStore(s => s.visibleLayers);
   const searchQuery = useManacitraStore(s => s.searchQuery);
@@ -286,6 +287,7 @@ export default function FlatMap({ data }: { data: ManacitraData }) {
   const highContrast = useManacitraStore(s => s.highContrast);
   const setHovered = useManacitraStore(s => s.setHovered);
   const setSelected = useManacitraStore(s => s.setSelected);
+  const setFocusId = useManacitraStore(s => s.setFocusId);
 
   const T = highContrast ? TOKENS_HC : TOKENS;
   const q = searchQuery.trim().toLowerCase();
@@ -310,6 +312,73 @@ export default function FlatMap({ data }: { data: ManacitraData }) {
 
   const { routes, intraRoutes } = useMemo(() => buildRoutes(data, cards), [data, cards]);
 
+  const allServices = useMemo(() => data.zones.flatMap(z => z.services), [data]);
+
+  const visibleTiles = useMemo(
+    () => [...tileById.values()].filter(({ tile }) => !dimmed.has(tile.id)),
+    [tileById, dimmed],
+  );
+
+  const moveFocus = useCallback((key: string) => {
+    if (visibleTiles.length === 0) return null;
+    let cur: { cx: number; cy: number };
+    const focused = focusId ? tileById.get(focusId) : undefined;
+    if (focused) {
+      cur = { cx: focused.tile.x + focused.tile.w / 2, cy: focused.tile.y + focused.tile.h / 2 };
+    } else {
+      cur = { cx: W / 2, cy: H / 2 };
+    }
+    const horizontal = key === 'ArrowLeft' || key === 'ArrowRight';
+    let best: string | null = null;
+    let bestScore = Infinity;
+    for (const { tile } of visibleTiles) {
+      const dx = tile.x + tile.w / 2 - cur.cx;
+      const dy = tile.y + tile.h / 2 - cur.cy;
+      const ok = horizontal
+        ? (key === 'ArrowRight' ? dx > 2 : dx < -2)
+        : (key === 'ArrowDown' ? dy > 2 : dy < -2);
+      if (!ok || (focused && tile.id === focusId)) continue;
+      const perp = horizontal ? dy : dx;
+      const dist = Math.abs(perp) * 3 + Math.abs(horizontal ? dx : dy);
+      if (dist < bestScore) {
+        bestScore = dist;
+        best = tile.id;
+      }
+    }
+    return best;
+  }, [visibleTiles, tileById, focusId, W, H]);
+
+  const openService = useCallback((id: string) => {
+    setSelected(id);
+    const svc = allServices.find(s => s.id === id);
+    if (svc?.url) window.open(svc.url, '_blank', 'noopener,noreferrer');
+  }, [allServices, setSelected]);
+
+  const onKeyDown = useCallback((e: React.KeyboardEvent) => {
+    const k = e.key;
+    if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'Enter', ' ', 'Escape'].indexOf(k) === -1) return;
+    e.preventDefault();
+    if (k === 'Escape') {
+      setFocusId(null);
+      setHovered(null);
+      setSelected(null);
+      return;
+    }
+    if (k === 'Enter' || k === ' ') {
+      if (focusId) openService(focusId);
+      return;
+    }
+    const next = moveFocus(k);
+    if (next && next !== focusId) {
+      setFocusId(next);
+      setHovered(next);
+    }
+  }, [focusId, moveFocus, openService, setFocusId, setHovered, setSelected]);
+
+  useEffect(() => {
+    if (focusId && dimmed.has(focusId)) setFocusId(null);
+  }, [focusId, dimmed, setFocusId]);
+
   const linkActive = (from: string, to: string) => {
     if (!activeId) return true;
     return from === activeId || to === activeId;
@@ -318,9 +387,15 @@ export default function FlatMap({ data }: { data: ManacitraData }) {
   return (
     <svg
       ref={svgRef}
+      className="mc-map"
+      tabIndex={0}
+      role="group"
+      aria-label="AchayLab infrastructure map. Use arrow keys to move between services, Enter to open, Escape to clear."
+      onKeyDown={onKeyDown}
+      onBlur={() => { if (!svgRef.current?.contains(document.activeElement)) { setFocusId(null); setHovered(null); } }}
       viewBox={`0 0 ${W} ${H}`}
       preserveAspectRatio="xMidYMid meet"
-      onClick={e => { if (e.target === svgRef.current) setSelected(null); }}
+      onClick={e => { if (e.target === svgRef.current) { setSelected(null); setFocusId(null); } }}
       style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', background: T.bgCanvas }}
     >
       <defs>
@@ -403,6 +478,7 @@ export default function FlatMap({ data }: { data: ManacitraData }) {
             onClick={e => {
               e.stopPropagation();
               setSelected(tile.id);
+              setFocusId(tile.id);
               if (svc.url) window.open(svc.url, '_blank', 'noopener,noreferrer');
             }}
           >
@@ -432,6 +508,10 @@ export default function FlatMap({ data }: { data: ManacitraData }) {
                       <circle cx={tile.x + tile.w - 9} cy={tile.y + 9} r={4.5} fill={statusColor} stroke={T.bg} strokeWidth={1.5}
                         className={online && !reducedMotion ? 'mc-dot-online' : undefined} />
                     </>
+                  )}
+                  {focusId === tile.id && (
+                    <rect x={tile.x} y={tile.y} width={tile.w} height={tile.h} rx={16} fill="none"
+                      stroke={T.accent} strokeWidth={1.8} strokeDasharray="5 4" strokeLinecap="round" />
                   )}
                 </g>
           </motion.g>
@@ -498,6 +578,8 @@ export default function FlatMap({ data }: { data: ManacitraData }) {
         .mc-dot-online { animation: mc-breathe 3.2s ease-in-out infinite; }
         @keyframes mc-halo { 0%, 100% { opacity: 0.4; } 50% { opacity: 0.12; } }
         .mc-offline-halo { animation: mc-halo 2.4s ease-in-out infinite; }
+        .mc-map:focus { outline: none; }
+        .mc-map:focus-visible { outline: 1.5px dashed #b5472e; outline-offset: 3px; border-radius: 12px; }
       `}</style>
     </svg>
   );

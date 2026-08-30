@@ -17,6 +17,7 @@ interface ManacitraStore {
   data: ManacitraData | null;
   selectedId: string | null;
   hoveredId: string | null;
+  focusId: string | null;
   filters: Filters;
   visibleLayers: VisibleLayers;
   searchQuery: string;
@@ -30,6 +31,7 @@ interface ManacitraStore {
   setLoadError: (v: boolean) => void;
   setSelected: (id: string | null) => void;
   setHovered: (id: string | null) => void;
+  setFocusId: (id: string | null) => void;
   setFilters: (filters: Filters) => void;
   toggleLayer: (layer: keyof VisibleLayers) => void;
   setSearchQuery: (q: string) => void;
@@ -48,6 +50,7 @@ export const useManacitraStore = create<ManacitraStore>((set, get) => ({
   data: null,
   selectedId: null,
   hoveredId: null,
+  focusId: null,
   filters: { status: [], type: [] },
   visibleLayers: { zones: true, services: true, connections: true, labels: true },
   searchQuery: '',
@@ -60,6 +63,7 @@ export const useManacitraStore = create<ManacitraStore>((set, get) => ({
   setData: data => set({ data }),
   setSelected: selectedId => set({ selectedId }),
   setHovered: hoveredId => set({ hoveredId }),
+  setFocusId: focusId => set({ focusId }),
   setFilters: filters => set({ filters }),
   toggleLayer: layer => set(s => ({ visibleLayers: { ...s.visibleLayers, [layer]: !s.visibleLayers[layer] } })),
   setSearchQuery: searchQuery => set({ searchQuery }),
