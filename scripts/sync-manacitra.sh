@@ -35,16 +35,6 @@ async function run() {
   const data = JSON.parse(fs.readFileSync(data_file, 'utf8'));
   data.generated_at = new Date().toISOString();
 
-  // cold-start tailnet pings: a cold first ping to an idle peer pays DERP/ICE
-  // handshake cost (~5.7s observed), so give the warm-up long budgets and retry.
-  for (const peer of ['workstation', 'pixel-10a']) {
-    for (let i = 0; i < 3; i++) {
-      try { execSync(`tailscale ping --timeout=8s ${peer} 2>/dev/null`, { timeout: 15000, stdio: 'pipe' }); break; }
-      catch { await new Promise(r => setTimeout(r, 1500)); }
-    }
-  }
-  await new Promise(r => setTimeout(r, 1000));
-
   const checks = [
     { id: 'nginx',       cmd: "ssh -o StrictHostKeyChecking=accept-new 140.245.227.176 'curl -s -o /dev/null -w %{http_code} http://localhost 2>/dev/null' 2>/dev/null | grep -qE '^[234]'", ssh: true },
     { id: 'postgrest',   cmd: "ssh -o StrictHostKeyChecking=accept-new 140.245.227.176 'curl -s -o /dev/null -w %{http_code} http://localhost:3000 2>/dev/null' 2>/dev/null | grep -qE '^[234]'", ssh: true },
@@ -66,8 +56,10 @@ async function run() {
     { id: 'unbound',     cmd: "systemctl is-active pihole-docker-user 2>/dev/null | grep -q active", ssh: true },
     { id: 'tailscale',   cmd: "systemctl is-active tailscaled 2>/dev/null | grep -q active", ssh: true },
     { id: 'fail2ban',    cmd: "systemctl is-active fail2ban 2>/dev/null | grep -q active", ssh: true },
-    { id: 'workstation', cmd: "(tailscale ping --timeout=4s workstation 2>/dev/null || tailscale ping --timeout=4s workstation 2>/dev/null) | grep -q pong" },
-    { id: 'pixel-10a',   cmd: "(tailscale ping --timeout=4s pixel-10a 2>/dev/null || tailscale ping --timeout=4s pixel-10a 2>/dev/null) | grep -q pong" },
+    // tailnet pings pay a ~5.7s DERP/ICE handshake on any idle start, so each check
+// re-warms first (8s budget) then probes (extra per-check execSync window).
+    { id: 'workstation', cmd: "tailscale ping --timeout=8s workstation >/dev/null 2>&1; tailscale ping --timeout=4s workstation 2>/dev/null | grep -q pong", ssh: true, timeout: 20000 },
+    { id: 'pixel-10a',   cmd: "tailscale ping --timeout=8s pixel-10a >/dev/null 2>&1; tailscale ping --timeout=4s pixel-10a 2>/dev/null | grep -q pong", ssh: true, timeout: 20000 },
     { id: 'github',      url: 'https://github.com' },
     { id: 'chitragupta', url: 'https://chitragupta.pages.dev' },
     { id: 'bepara',      url: 'https://bepara.pages.dev' },
@@ -86,7 +78,7 @@ async function run() {
     let ok;
     if (c.ssh) {
       try {
-        execSync(c.cmd, { timeout: 8000, stdio: 'pipe' });
+        execSync(c.cmd, { timeout: c.timeout || 8000, stdio: 'pipe' });
         ok = true;
       } catch {
         ok = false;
