@@ -29,7 +29,16 @@ export default function InfoPanel() {
       for (const svc of zone.services) {
         if (svc.id === activeId) {
           const h = data.health[activeId];
-          return { name: svc.name, type: svc.type, desc: svc.desc, color: svc.color, online: h?.online ?? null, zone: zone.label, id: svc.id, url: svc.url, meta: svc.meta };
+          const links = (data.connections || [])
+            .filter(c => c.from === activeId || c.to === activeId)
+            .map(c => {
+              const other = c.from === activeId ? c.to : c.from;
+              const owner = data.zones.find(z => z.id === other);
+              if (owner) return owner.label;
+              const sv = data.zones.flatMap(z => z.services).find(s => s.id === other);
+              return sv ? sv.name : other;
+            });
+          return { name: svc.name, type: svc.type, desc: svc.desc, color: svc.color, online: h?.online ?? null, zone: zone.label, id: svc.id, url: svc.url, meta: svc.meta, links, checkedAt: h?.checked_at ?? null };
         }
       }
     }
@@ -75,6 +84,21 @@ export default function InfoPanel() {
             <span style={{ color: 'rgba(28,28,26,0.12)' }}>|</span>
             <span style={{ fontSize: '.7rem', color: 'rgba(28,28,26,0.25)' }}>{info.id}</span>
           </div>
+          {info.links.length > 0 && (
+            <div style={{ marginTop: '.5rem', display: 'flex', gap: '.4rem', alignItems: 'baseline', flexWrap: 'wrap' }}>
+              <span style={{ color: 'rgba(28,28,26,0.35)', textTransform: 'uppercase', letterSpacing: '.08em', fontSize: '.6rem' }}>Links</span>
+              <span style={{ fontSize: '.68rem', color: 'rgba(28,28,26,0.7)' }}>
+                {info.links.map((n, i) => (
+                  <span key={i} style={{ fontFamily: 'ui-monospace, SFMono-Regular, monospace' }}>{n}{i < info.links.length - 1 ? ' · ' : ''}</span>
+                ))}
+              </span>
+            </div>
+          )}
+          {info.checkedAt && (
+            <div style={{ marginTop: '.4rem', fontSize: '.62rem', color: 'rgba(28,28,26,0.3)', fontVariantNumeric: 'tabular-nums' }}>
+              health at {info.checkedAt.slice(0, 16).replace('T', ' ')} UTC
+            </div>
+          )}
           {info.url && (
             <div style={{ marginTop: '.6rem' }}>
               <a href={info.url} target="_blank" rel="noreferrer" onClick={e => e.stopPropagation()} style={{ fontSize: '.72rem', color: '#1c1c1a', textDecoration: 'none', borderBottom: '1px dashed rgba(28,28,26,0.3)' }}>
