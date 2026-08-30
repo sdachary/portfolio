@@ -56,6 +56,8 @@ async function run() {
     { id: 'unbound',     cmd: "systemctl is-active pihole-docker-user 2>/dev/null | grep -q active", ssh: true },
     { id: 'tailscale',   cmd: "systemctl is-active tailscaled 2>/dev/null | grep -q active", ssh: true },
     { id: 'fail2ban',    cmd: "systemctl is-active fail2ban 2>/dev/null | grep -q active", ssh: true },
+    { id: 'workstation', cmd: "tailscale ping --timeout=2s workstation 2>/dev/null | grep -q pong" },
+    { id: 'pixel-10a',   cmd: "tailscale ping --timeout=2s pixel-10a 2>/dev/null | grep -q pong" },
     { id: 'github',      url: 'https://github.com' },
     { id: 'chitragupta', url: 'https://chitragupta.pages.dev' },
     { id: 'bepara',      url: 'https://bepara.pages.dev' },

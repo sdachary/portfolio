@@ -359,6 +359,44 @@
           "desc": "Source control. CI via GitHub Actions."
         }
       ]
+    },
+    {
+      "id": "personal",
+      "name": "home",
+      "label": "HOME TIER",
+      "subtitle": "tailnet · DNS clients",
+      "x": 0,
+      "z": 12,
+      "color": "#db2777",
+      "size": 4,
+      "services": [
+        {
+          "id": "workstation",
+          "name": "Workstation",
+          "type": "host",
+          "logo": "",
+          "color": "#db2777",
+          "h": 1.4,
+          "desc": "Dev machine. Tailnet 100.68.99.68 (via DERP). Resolves via Pi-hole.",
+          "meta": {
+            "protocol": "Tailnet 100.68.99.68",
+            "topology": "home LAN + tailnet"
+          }
+        },
+        {
+          "id": "pixel-10a",
+          "name": "Pixel 10a",
+          "type": "host",
+          "logo": "",
+          "color": "#f472b6",
+          "h": 1.4,
+          "desc": "Phone. Tailnet 100.100.38.29 (direct). Home WAN 223.184.124.63.",
+          "meta": {
+            "protocol": "Tailnet 100.100.38.29",
+            "topology": "home LAN + tailnet"
+          }
+        }
+      ]
     }
   ],
   "connections": [
@@ -456,15 +494,35 @@
       "from": "github",
       "to": "cloudflare",
       "label": "CI deploy"
+    },
+    {
+      "from": "workstation",
+      "to": "tailscale",
+      "label": "Mesh"
+    },
+    {
+      "from": "pixel-10a",
+      "to": "tailscale",
+      "label": "Mesh"
+    },
+    {
+      "from": "workstation",
+      "to": "pihole",
+      "label": "DNS"
+    },
+    {
+      "from": "pixel-10a",
+      "to": "pihole",
+      "label": "DNS"
     }
   ],
-  "generated_at": "2026-08-30T08:19:31.266Z",
+  "generated_at": "2026-08-30T13:00:00.000Z",
   "stats": {
-    "total_services": 31,
-    "online": 31,
-    "zones": 4,
-    "connections": 19,
-    "total": 31
+    "total_services": 33,
+    "online": 33,
+    "zones": 5,
+    "connections": 23,
+    "total": 33
   },
   "health": {
     "nginx": {
@@ -590,6 +648,14 @@
     "portfolio": {
       "online": true,
       "checked_at": "2026-08-30T08:19:31.266Z"
+    },
+    "workstation": {
+      "online": true,
+      "checked_at": "2026-08-30T13:00:00.000Z"
+    },
+    "pixel-10a": {
+      "online": true,
+      "checked_at": "2026-08-30T13:00:00.000Z"
     }
   }
 }

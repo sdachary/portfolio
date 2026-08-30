@@ -39,6 +39,7 @@ function layout(data: ManacitraData): { cards: ZoneCard[]; W: number; H: number 
   const oradb = get('oradb');
   const oradev = get('oradev');
   const external = get('external');
+  const personal = get('personal');
 
   const leftW = Math.max(cloudflare.size.w, oradev.size.w);
   const rightX = MARGIN + leftW + COL_GAP;
@@ -61,12 +62,13 @@ function layout(data: ManacitraData): { cards: ZoneCard[]; W: number; H: number 
     place(oradb, rightX, MARGIN),
     place(oradev, MARGIN, MARGIN + cloudflare.size.h + ROW_GAP),
     place(external, rightX, MARGIN + oradb.size.h + ROW_GAP),
+    place(personal, rightX, MARGIN + oradb.size.h + ROW_GAP + external.size.h + ROW_GAP),
   ];
 
-  const W = rightX + Math.max(oradb.size.w, external.size.w) + MARGIN;
+  const W = rightX + Math.max(oradb.size.w, external.size.w, personal.size.w) + MARGIN;
   const H = Math.max(
     MARGIN + cloudflare.size.h + ROW_GAP + oradev.size.h,
-    MARGIN + oradb.size.h + ROW_GAP + external.size.h,
+    MARGIN + oradb.size.h + ROW_GAP + external.size.h + ROW_GAP + personal.size.h,
   ) + MARGIN;
   return { cards, W, H };
 }
