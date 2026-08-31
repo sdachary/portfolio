@@ -1,5 +1,117 @@
 [
   {
+    "kind": "build",
+    "phase": "Phase 60",
+    "project": "SADHAN",
+    "description": "Sadhan career-ops: seed the multi-tenant pipeline (BYOK compute) — audit + reproducibility",
+    "date": "2026-08-30",
+    "status": "completed"
+  },
+  {
+    "kind": "test",
+    "phase": "Phase 64",
+    "project": "UDHYAM",
+    "description": "Sprint 3 UAT — All Apps (excl. Udhyam)",
+    "date": "2026-08-30",
+    "status": "completed"
+  },
+  {
+    "kind": "feature",
+    "phase": "",
+    "project": "ACHARYLAB",
+    "description": "Homelab Phase 1: Tailscale + Pi-hole + Unbound + Portainer (HOME-NETWORK playbook)",
+    "date": "2026-08-30",
+    "status": "completed"
+  },
+  {
+    "kind": "feature",
+    "phase": "Phase 65",
+    "project": "PORTFOLIO",
+    "description": "Portfolio: manacitra/CF reality audit + content refresh (round 2, extends ACHA-395)",
+    "date": "2026-08-30",
+    "status": "completed"
+  },
+  {
+    "kind": "feature",
+    "phase": "Phase 65",
+    "project": "MANACITRA",
+    "description": "Application of architecture-visual skill to manacitra: data-driven caption + lint-manacitra invariant gate",
+    "date": "2026-08-30",
+    "status": "completed"
+  },
+  {
+    "kind": "feature",
+    "phase": "Phase 65",
+    "project": "MANACITRA",
+    "description": "Manacitra round 4: InfoPanel links + health freshness; live health sweep 31/31",
+    "date": "2026-08-30",
+    "status": "completed"
+  },
+  {
+    "kind": "feature",
+    "phase": "Phase 65",
+    "project": "MANACITRA",
+    "description": "Manacitra round 5: keyboard traversal (roving tabindex, arrows + Enter/Escape)",
+    "date": "2026-08-30",
+    "status": "completed"
+  },
+  {
+    "kind": "feature",
+    "phase": "Phase 65",
+    "project": "MANACITRA",
+    "description": "Manacitra round 5b: pinch / wheel / drag pan-zoom (zero deps)",
+    "date": "2026-08-30",
+    "status": "completed"
+  },
+  {
+    "kind": "feature",
+    "phase": "Phase 65",
+    "project": "MANACITRA",
+    "description": "Manacitra round 6: HOME TIER zone (workstation + pixel-10a, honest tailnet probes)",
+    "date": "2026-08-30",
+    "status": "completed"
+  },
+  {
+    "kind": "feature",
+    "phase": "Phase 52",
+    "project": "MCP-HUB",
+    "description": "manacitra round 7: mcp-hub healthz probe + status-semantics / on-prem redesign (retro)",
+    "date": "2026-08-30",
+    "status": "completed"
+  },
+  {
+    "kind": "feature",
+    "phase": "Phase 65",
+    "project": "MANACITRA",
+    "description": "Manacitra round 8: official brand icons + spatial layout + mouse drag-pan",
+    "date": "2026-08-30",
+    "status": "completed"
+  },
+  {
+    "kind": "bugfix",
+    "phase": "Phase 65",
+    "project": "MANACITRA",
+    "description": "Manacitra round 8a: fix mouse drag-pan, resolve overlapping routes, dock controls to right edge",
+    "date": "2026-08-30",
+    "status": "completed"
+  },
+  {
+    "kind": "feature",
+    "phase": "Phase 65",
+    "project": "MANACITRA",
+    "description": "Manacitra round 8b: reserved-frame layout so chrome never overlaps + mobile/Pi-hole verification",
+    "date": "2026-08-30",
+    "status": "completed"
+  },
+  {
+    "kind": "feature",
+    "phase": "Phase 61",
+    "project": "BEPARA",
+    "description": "Bepara UX refinement — crisp & polished, page by page (GST use case)",
+    "date": "2026-08-30",
+    "status": "completed"
+  },
+  {
     "kind": "feature",
     "phase": "Phase 63",
     "project": "INFRA",
@@ -125,118 +237,6 @@
     "project": "ACHARYLAB",
     "description": "Implement IaC stale-reference scanner for retired terms (Kubera, NIM Proxy, etc.)",
     "date": "2026-08-26",
-    "status": "completed"
-  },
-  {
-    "kind": "feature",
-    "phase": "",
-    "project": "ACHARYLAB",
-    "description": "Add IaC Service Change Checklist template to knowledge folder",
-    "date": "2026-08-26",
-    "status": "completed"
-  },
-  {
-    "kind": "feature",
-    "phase": "",
-    "project": "ACHARYLAB",
-    "description": "Inventory both VMs' real, live state for IaC backup repo",
-    "date": "2026-08-26",
-    "status": "completed"
-  },
-  {
-    "kind": "test",
-    "phase": "Phase 64",
-    "project": "UDHYAM",
-    "description": "UAT: Udhyam — jewellery retail mgmt, auth, billing, ledger, gold rates",
-    "date": "2026-08-26",
-    "status": "completed"
-  },
-  {
-    "kind": "test",
-    "phase": "Phase 64",
-    "project": "UDHYAM",
-    "description": "UAT: Udhyam — UX, frontend logic, user interaction flows",
-    "date": "2026-08-26",
-    "status": "completed"
-  },
-  {
-    "kind": "test",
-    "phase": "Phase 61",
-    "project": "CHITRAGUPTA",
-    "description": "UAT: Chitragupta — Hono/TS GST accounting, CSV import/export",
-    "date": "2026-08-25",
-    "status": "completed"
-  },
-  {
-    "kind": "feature",
-    "phase": "Phase 65",
-    "project": "PORTFOLIO",
-    "description": "Portfolio content audit + Paca-sourced activity sync",
-    "date": "2026-08-25",
-    "status": "completed"
-  },
-  {
-    "kind": "test",
-    "phase": "Phase 61",
-    "project": "CHITRAGUPTA",
-    "description": "Chitragupta UAT round 2 — core flows (invoices/CSV/GSTR)",
-    "date": "2026-08-25",
-    "status": "completed"
-  },
-  {
-    "phase": "Phase 52",
-    "project": "Infra",
-    "kind": "build",
-    "description": "Paca MCP rewiring restored: local stdio @paca-ai/paca-mcp + X-API-Key auth, opencode key minted & age-encrypted in dotfiles; Job Search board retired (sadhan tracks applications in-app)",
-    "date": "2026-08-25",
-    "status": "completed"
-  },
-  {
-    "kind": "feature",
-    "phase": "Phase 60",
-    "project": "SADHAN",
-    "description": "Career platform: Sadhan + career-ops",
-    "date": "2026-08-24",
-    "status": "completed"
-  },
-  {
-    "kind": "feature",
-    "phase": "Phase 63",
-    "project": "INFRA",
-    "description": "Restore opencode-Paca wiring; drop Job Search board (unnati rebrand)",
-    "date": "2026-08-24",
-    "status": "completed"
-  },
-  {
-    "kind": "feature",
-    "phase": "Phase 65",
-    "project": "MANACITRA",
-    "description": "Manacitra URL fixes + calm animation/polish pass",
-    "date": "2026-08-24",
-    "status": "completed"
-  },
-  {
-    "phase": "Phase 52",
-    "project": "Sadhan",
-    "kind": "refactor",
-    "description": "unnati→sadhan rebrand inside Paca (ACHA-190), dead paca-sync module removed, dotfiles template decrypts via age",
-    "date": "2026-08-24",
-    "status": "completed"
-  },
-  {
-    "kind": "test",
-    "phase": "Phase 61",
-    "project": "VISHWAKARMA",
-    "description": "UAT: Vishwakarma — CF Pages static, provisioning portal",
-    "date": "2026-08-22",
-    "status": "completed"
-  },
-  {
-    "kind": "test",
-    "phase": "Phase 61",
-    "project": "KARMA",
-    "description": "UAT: Karma — Python FastAPI backend, API endpoints",
-    "date": "2026-08-22",
     "status": "completed"
   }
 ]
