@@ -1,6 +1,14 @@
 [
   {
     "kind": "build",
+    "phase": "Phase 57",
+    "project": "SAMPADA",
+    "description": "CI sweep: mcp-hub + sampada green; karma dep bumps verified; Pi-hole PTR monitor repointed",
+    "date": "2026-08-31",
+    "status": "completed"
+  },
+  {
+    "kind": "build",
     "phase": "Phase 60",
     "project": "SADHAN",
     "description": "Sadhan career-ops: seed the multi-tenant pipeline (BYOK compute) — audit + reproducibility",
@@ -229,14 +237,6 @@
     "project": "ACHARYLAB",
     "description": "Infisical secrets manager rollout (self-hosted, all services migrated)",
     "date": "2026-08-28",
-    "status": "completed"
-  },
-  {
-    "kind": "feature",
-    "phase": "",
-    "project": "ACHARYLAB",
-    "description": "Implement IaC stale-reference scanner for retired terms (Kubera, NIM Proxy, etc.)",
-    "date": "2026-08-26",
     "status": "completed"
   }
 ]
