@@ -30,10 +30,9 @@ on:
         type: boolean
         default: false
 
-concurrency:
-  group: ci-${{ github.ref }}
-  cancel-in-progress: true
-
+# NOTE: no top-level `concurrency:` here — it is invalid on a `workflow_call`-only
+# reusable workflow and GitHub rejects the run with "workflow file issue" (no jobs
+# created). Concurrency is enforced by each caller workflow's own top-level block.
 jobs:
   ci:
     runs-on: ubuntu-latest
