@@ -32,7 +32,7 @@
     ],
     "live_url": "https://chitragupta.pages.dev/",
     "local": true,
-    "last_updated": "2026-07-02",
+    "last_updated": "2026-09-04",
     "github_remote": "git@github.com:sdachary/chitragupta.git"
   },
   {
@@ -59,7 +59,7 @@
     "slug": "indra",
     "status": "Local / Standalone",
     "status_key": "local",
-    "description": "High-performance automation backbone for the ecosystem. Powered by n8n, orchestrates complex multi-service workflows, webhook triggers, and real-time state sync across all business units.",
+    "description": "Workflow automation backbone for the ecosystem. Powered by n8n, orchestrates multi-service workflows, webhook triggers, and real-time state sync. Render instance deleted 2026-08-30 — pending redeploy.",
     "tags": [
       "n8n",
       "Docker",
@@ -67,7 +67,7 @@
     ],
     "live_url": null,
     "local": true,
-    "last_updated": "2026-07-02",
+    "last_updated": "2026-09-04",
     "github_remote": "git@github.com:sdachary/indra.git"
   },
   {
@@ -98,7 +98,7 @@
     ],
     "live_url": null,
     "local": true,
-    "last_updated": "2026-07-02",
+    "last_updated": "2026-09-04",
     "github_remote": "git@github.com:sdachary/karma.git"
   },
   {
@@ -149,7 +149,7 @@
     ],
     "live_url": null,
     "local": true,
-    "last_updated": "2026-07-03",
+    "last_updated": "2026-09-04",
     "github_remote": "git@github.com:sdachary/mcp-hub.git"
   },
   {
