@@ -44,21 +44,30 @@ function SectionObserver({ onActive }: { onActive: (id: string) => void }) {
       },
       { rootMargin: '-40% 0px -55% 0px' }
     )
-    let observed = new Set<string>()
+    const observed = new Set<string>()
+    let timer: ReturnType<typeof setTimeout>
     let retries = 0
+
     function scan() {
       for (const id of ids) {
         if (observed.has(id)) continue
         const el = document.getElementById(id)
-        if (el) { observer.observe(el); observed.add(id) }
+        if (el) {
+          observer.observe(el)
+          observed.add(id)
+        }
       }
-      if (observed.size < ids.length && retries < 30) {
+      if (observed.size < ids.length && retries < 50) {
         retries++
-        requestAnimationFrame(scan)
+        timer = setTimeout(scan, 150)
       }
     }
     scan()
-    return () => observer.disconnect()
+
+    return () => {
+      clearTimeout(timer)
+      observer.disconnect()
+    }
   }, [onActive])
   return null
 }
