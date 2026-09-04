@@ -4,7 +4,7 @@
       "id": "oradb",
       "name": "oradb",
       "label": "DATA TIER",
-      "subtitle": "140.245.227.176",
+      "subtitle": "",
       "x": 12,
       "z": -4,
       "color": "#3b82f6",
@@ -137,7 +137,7 @@
       "id": "oradev",
       "name": "oradev",
       "label": "AI TIER",
-      "subtitle": "68.233.97.153",
+      "subtitle": "",
       "x": -12,
       "z": 7,
       "color": "#7c3aed",
@@ -153,15 +153,6 @@
           "desc": "AI orchestration. 21 skills, 23 agents. Port 3000."
         },
         {
-          "id": "paca",
-          "name": "Paca",
-          "type": "app",
-          "logo": "kanban",
-          "color": "#a855f7",
-          "h": 1.8,
-          "desc": "Project management. Docker Compose. Port 80."
-        },
-        {
           "id": "ttyd",
           "name": "ttyd",
           "type": "service",
@@ -169,15 +160,6 @@
           "color": "#22c55e",
           "h": 1,
           "desc": "Web terminal. Browser-based SSH. Port 7681."
-        },
-        {
-          "id": "minio",
-          "name": "Minio",
-          "type": "storage",
-          "logo": "minio",
-          "color": "#e11d48",
-          "h": 1.2,
-          "desc": "S3-compatible storage. Ports 9000/9001."
         },
         {
           "id": "pihole",
@@ -357,6 +339,21 @@
           "h": 1.6,
           "url": "https://github.com/sdachary",
           "desc": "Source control. CI via GitHub Actions."
+        },
+        {
+          "id": "notion",
+          "name": "Notion",
+          "type": "saas",
+          "logo": "notion",
+          "color": "#ffffff",
+          "h": 3.2,
+          "desc": "Task tracking and knowledge base. ACHA Tasks DB.",
+          "meta": {
+            "protocol": "HTTPS",
+            "dataStored": "Tasks, wiki content",
+            "pii": "No \u2014 team workspace",
+            "topology": "External SaaS"
+          }
         }
       ]
     },
@@ -486,11 +483,6 @@
       "label": "DB"
     },
     {
-      "from": "paca",
-      "to": "pg16",
-      "label": "DB"
-    },
-    {
       "from": "github",
       "to": "cloudflare",
       "label": "CI deploy"
@@ -514,15 +506,20 @@
       "from": "pixel-10a",
       "to": "pihole",
       "label": "DNS"
+    },
+    {
+      "from": "mcp-hub",
+      "to": "notion",
+      "label": "API"
     }
   ],
   "generated_at": "2026-09-04T07:26:57.775Z",
   "stats": {
-    "total_services": 33,
-    "online": 31,
+    "total_services": 32,
+    "online": 32,
     "zones": 5,
     "connections": 23,
-    "total": 33
+    "total": 32
   },
   "health": {
     "nginx": {
@@ -577,16 +574,8 @@
       "online": true,
       "checked_at": "2026-09-04T07:26:57.775Z"
     },
-    "paca": {
-      "online": false,
-      "checked_at": "2026-09-04T07:26:57.775Z"
-    },
     "ttyd": {
       "online": true,
-      "checked_at": "2026-09-04T07:26:57.775Z"
-    },
-    "minio": {
-      "online": false,
       "checked_at": "2026-09-04T07:26:57.775Z"
     },
     "pihole": {
@@ -656,6 +645,10 @@
     "portfolio": {
       "online": true,
       "checked_at": "2026-09-04T07:26:57.775Z"
+    },
+    "notion": {
+      "online": true,
+      "checked_at": "2026-09-04T07:30:00.000Z"
     }
   }
 }

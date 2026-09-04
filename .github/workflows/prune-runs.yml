@@ -1,0 +1,118 @@
+name: Prune Workflow Runs
+
+# Removes stale GitHub Actions runs + artifacts from THIS repo, keeping the
+# newest N runs per workflow (so history stays light) and purging old/expired
+# artifacts. Mirrors vishwakarma's cloudflare-cleanup.yml pattern. Runs on a
+# daily schedule + on-demand; self-scoped via GITHUB_REPOSITORY (each repo's
+# copy cleans only that repo).
+
+on:
+  schedule:
+    - cron: '0 3 * * *' # Daily at 3 AM (after 1 AM deploys/hygiene)
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: 'Preview only — report what would be deleted, change nothing'
+        type: boolean
+        default: false
+
+concurrency:
+  group: prune-runs
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+  actions: write # required to delete runs + artifacts
+
+env:
+  KEEP_RUNS: '30'          # keep the newest N runs per workflow
+  MIN_AGE_HOURS: '24'      # never delete a run newer than this (protects fresh CI)
+  ARTIFACT_AGE_DAYS: '90'  # purge artifacts older than this (GitHub default retention)
+
+jobs:
+  prune:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Prune stale runs and artifacts
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+          DRY_RUN: ${{ github.event.inputs.dry_run || 'false' }}
+        run: |
+          node <<'EOF'
+          const api = process.env.GITHUB_API_URL || 'https://api.github.com';
+          const [owner, repo] = process.env.GITHUB_REPOSITORY.split('/');
+          const token = process.env.GH_TOKEN;
+          const dryRun = process.env.DRY_RUN === 'true';
+          const KEEP = parseInt(process.env.KEEP_RUNS, 10);
+          const MIN_AGE_MS = parseInt(process.env.MIN_AGE_HOURS, 10) * 3600e3;
+          const ART_AGE_MS = parseInt(process.env.ARTIFACT_AGE_DAYS, 10) * 864e5;
+
+          async function gh(path, method = 'GET') {
+            const res = await fetch(api + path, {
+              method,
+              headers: { Authorization: `Bearer ${token}`, Accept: 'application/vnd.github+json' },
+            });
+            if (!res.ok && res.status !== 204) {
+              throw new Error(`${method} ${path} -> ${res.status} ${await res.text()}`);
+            }
+            return res.status === 204 ? null : res.json();
+          }
+
+          async function listAll(path) {
+            const items = [];
+            let page = 1;
+            for (;;) {
+              const d = await gh(`${path}?per_page=100&page=${page}`);
+              const batch = d && (d.length ?? d.workflow_runs?.length ?? d.artifacts?.length);
+              const arr = d && (d.length ? d : d.workflow_runs || d.artifacts);
+              if (!arr || arr.length === 0) break;
+              items.push(...arr);
+              if (arr.length < 100) break;
+              page++;
+            }
+            return items;
+          }
+
+          const now = Date.now();
+
+          // 1) Stale runs per workflow
+          const flows = await listAll('/repos/' + owner + '/' + repo + '/actions/workflows');
+          let runsDeleted = 0;
+          for (const wf of flows) {
+            if (wf.state !== 'active') continue;
+            const runs = await listAll(`/repos/${owner}/${repo}/actions/workflows/${wf.id}/runs`);
+            runs.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+            for (let i = 0; i < runs.length; i++) {
+              if (i < KEEP) continue;
+              const age = now - new Date(runs[i].created_at).getTime();
+              if (age < MIN_AGE_MS) continue; // too fresh to purge
+              if (dryRun) {
+                console.log(`[dry] would delete run ${runs[i].id} (${wf.name}, ${runs[i].created_at})`);
+              } else {
+                await gh(`/repos/${owner}/${repo}/actions/runs/${runs[i].id}`, 'DELETE');
+                console.log(`deleted run ${runs[i].id} (${wf.name}, ${runs[i].created_at})`);
+              }
+              runsDeleted++;
+            }
+          }
+          console.log(`Runs to delete/purged: ${runsDeleted}`);
+
+          // 2) Old + expired artifacts
+          const arts = await listAll(`/repos/${owner}/${repo}/actions/artifacts`);
+          let artsDeleted = 0;
+          for (const a of arts) {
+            const age = now - new Date(a.created_at).getTime();
+            if (!a.expired && age < ART_AGE_MS) continue;
+            if (dryRun) {
+              console.log(`[dry] would delete artifact ${a.name} (${a.created_at})`);
+            } else {
+              await gh(`/repos/${owner}/${repo}/actions/artifacts/${a.id}`, 'DELETE');
+              console.log(`deleted artifact ${a.name} (${a.created_at})`);
+            }
+            artsDeleted++;
+          }
+          console.log(`Artifacts to delete/purged: ${artsDeleted}`);
+
+          if (dryRun) console.log('DRY RUN — nothing changed');
+          EOF

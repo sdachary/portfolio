@@ -61,6 +61,7 @@ async function run() {
     { id: 'workstation', cmd: "tailscale ping --timeout=8s workstation >/dev/null 2>&1; tailscale ping --timeout=4s workstation 2>/dev/null | grep -q pong", ssh: true, timeout: 20000 },
     { id: 'pixel-10a',   cmd: "tailscale ping --timeout=8s pixel-10a >/dev/null 2>&1; tailscale ping --timeout=4s pixel-10a 2>/dev/null | grep -q pong", ssh: true, timeout: 20000 },
     { id: 'github',      url: 'https://github.com' },
+    { id: 'notion',      url: 'https://notion.so' },
     { id: 'chitragupta', url: 'https://chitragupta.pages.dev' },
     { id: 'bepara',      url: 'https://bepara.pages.dev' },
     { id: 'udhyam',      url: 'https://udhyam.pages.dev' },
