@@ -5,7 +5,7 @@ const ease = [0.32, 0.72, 0, 1] as const
 export default function Hero() {
   return (
     <section id="hero" className="hero">
-      <div className="hero-bg" />
+      <div className="hero-bg" aria-hidden="true" />
 
       <div className="hero-content">
         <motion.div
@@ -42,9 +42,9 @@ export default function Hero() {
           transition={{ duration: 0.8, delay: 0.8, ease }}
           className="hero-actions"
         >
-          <a href="/resume.pdf" target="_blank" rel="noreferrer" className="hero-cta">
+          <a href="/resume.pdf" target="_blank" rel="noreferrer" className="hero-cta" aria-label="Download resume PDF">
             Download Resume
-            <span className="hero-cta-icon">↓</span>
+            <span className="hero-cta-icon" aria-hidden="true">↓</span>
           </a>
           <a href="#work" className="hero-link">Work With Me →</a>
         </motion.div>

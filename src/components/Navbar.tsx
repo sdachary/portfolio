@@ -90,7 +90,7 @@ export default function Navbar() {
             transition={{ duration: 0.5, ease: [0.32, 0.72, 0, 1] }}
             className="nav-wrap"
           >
-            <nav className="navbar" ref={navRef}>
+            <nav className="navbar" ref={navRef} aria-label="Main navigation">
               <div className="navbar-brand">SDA</div>
               <div className="nav-group">
                 <ul className="navbar-links">

@@ -33,7 +33,7 @@ export default function Contact() {
 
   return (
     <section id="contact" className="section section-alt section-divider" style={{ position: 'relative' }}>
-      <div className="contact-bg-text">DEEPAK</div>
+      <div className="contact-bg-text" aria-hidden="true">DEEPAK</div>
 
       <div style={{ position: 'relative', zIndex: 1, maxWidth: 1100 }}>
         <div className="section-header">
@@ -52,12 +52,13 @@ export default function Contact() {
               READY<br />TO BUILD<br />TOGETHER?
             </motion.h2>
 
-            <div className="contact-links">
+            <nav className="contact-links" aria-label="Contact links">
               {links.map((l, i) => (
                 <motion.a
                   key={i}
                   href={l.href}
                   target={l.href.startsWith('http') ? '_blank' : undefined}
+                  rel={l.href.startsWith('http') ? 'noopener noreferrer' : undefined}
                   initial={{ opacity: 0, y: 10 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
@@ -67,7 +68,7 @@ export default function Contact() {
                   → {l.label}
                 </motion.a>
               ))}
-            </div>
+            </nav>
           </div>
 
           <motion.form
@@ -77,6 +78,7 @@ export default function Contact() {
             viewport={{ once: true }}
             transition={{ duration: 0.8, delay: 0.2, ease }}
             className="contact-form"
+            aria-label="Contact form"
           >
             <div className="contact-form-label">Send a message</div>
             <div className="contact-form-fields">
@@ -86,20 +88,22 @@ export default function Contact() {
               <button type="submit" disabled={status === 'sending'} className="contact-btn">
                 {status === 'sending' ? 'Sending…' : 'Send Message →'}
               </button>
-              {status === 'success' && (
-                <p className="contact-success">✓ Message sent! I'll get back to you soon.</p>
-              )}
-              {status === 'error' && (
-                <p className="contact-error">✗ Something went wrong. Try emailing directly at deepakachary246@gmail.com</p>
-              )}
+              <div aria-live="polite">
+                {status === 'success' && (
+                  <p className="contact-success">✓ Message sent! I'll get back to you soon.</p>
+                )}
+                {status === 'error' && (
+                  <p className="contact-error">✗ Something went wrong. Try emailing directly at deepakachary246@gmail.com</p>
+                )}
+              </div>
             </div>
           </motion.form>
         </div>
 
-        <div className="contact-footer">
+        <footer className="contact-footer">
           <div className="contact-footer-text">© {year} S Deepak Achary</div>
           <div className="contact-footer-text">Hyderabad, India — Built with intent.</div>
-        </div>
+        </footer>
       </div>
     </section>
   )

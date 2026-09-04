@@ -19,6 +19,7 @@ export default function About() {
           viewport={{ once: true }}
           transition={{ duration: 0.8, ease }}
           className="about-big-number"
+          aria-hidden="true"
         >
           9
         </motion.div>

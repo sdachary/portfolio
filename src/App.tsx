@@ -1,14 +1,20 @@
+import { lazy, Suspense } from 'react'
 import Navbar from './components/Navbar'
 import Hero from './components/Hero'
 import About from './components/About'
-import Experience from './components/Experience'
-import Skills from './components/Skills'
-import Projects from './components/Projects'
-import ManacitraSection from './components/ManacitraSection'
-import Blog from './components/Blog'
-import RecentActivity from './components/RecentActivity'
-import WorkWithMe from './components/WorkWithMe'
-import Contact from './components/Contact'
+
+const Experience = lazy(() => import('./components/Experience'))
+const Skills = lazy(() => import('./components/Skills'))
+const Projects = lazy(() => import('./components/Projects'))
+const ManacitraSection = lazy(() => import('./components/ManacitraSection'))
+const Blog = lazy(() => import('./components/Blog'))
+const RecentActivity = lazy(() => import('./components/RecentActivity'))
+const WorkWithMe = lazy(() => import('./components/WorkWithMe'))
+const Contact = lazy(() => import('./components/Contact'))
+
+function SectionFallback() {
+  return <div className="section" style={{ minHeight: 200 }} />
+}
 
 export default function App() {
   return (
@@ -16,14 +22,16 @@ export default function App() {
       <Navbar />
       <Hero />
       <About />
-      <Experience />
-      <Skills />
-      <Projects />
-      <ManacitraSection />
-      <Blog />
-      <RecentActivity />
-      <WorkWithMe />
-      <Contact />
+      <Suspense fallback={<SectionFallback />}>
+        <Experience />
+        <Skills />
+        <Projects />
+        <ManacitraSection />
+        <Blog />
+        <RecentActivity />
+        <WorkWithMe />
+        <Contact />
+      </Suspense>
     </>
   )
 }

@@ -74,7 +74,7 @@ export default function RecentActivity() {
             transition={{ duration: 0.5, delay: i * 0.04, ease }}
             className="activity-row"
           >
-            <div className="activity-dot" />
+            <div className="activity-dot" aria-hidden="true" />
             <time className="activity-date">{item.date}</time>
             <div className="activity-card">
               <div className="activity-meta">

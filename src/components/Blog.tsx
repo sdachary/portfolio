@@ -50,6 +50,7 @@ export default function Blog() {
           <button
             className={`blog-filter-btn ${activeFilter === null ? 'active' : ''}`}
             onClick={() => setActiveFilter(null)}
+            aria-pressed={activeFilter === null}
           >
             All
           </button>
@@ -58,6 +59,7 @@ export default function Blog() {
               key={tag}
               className={`blog-filter-btn ${activeFilter === tag ? 'active' : ''}`}
               onClick={() => setActiveFilter(tag)}
+              aria-pressed={activeFilter === tag}
             >
               {tag}
             </button>
