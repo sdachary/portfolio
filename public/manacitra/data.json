@@ -5,7 +5,7 @@
       "name": "oradb",
       "label": "DATA TIER",
       "subtitle": "140.245.227.176",
-      "x": -12,
+      "x": 12,
       "z": -4,
       "color": "#3b82f6",
       "size": 7,
@@ -21,7 +21,7 @@
           "meta": {
             "protocol": "TCP 5432",
             "dataStored": "All app schemas",
-            "pii": "Yes — identity data",
+            "pii": "Yes \u2014 identity data",
             "topology": "oradb only, single node"
           }
         },
@@ -109,7 +109,7 @@
             "protocol": "HTTP :4003",
             "upstream": "pg16 (nidhi schema)",
             "dataStored": "Identity records",
-            "pii": "Yes — DPDPA",
+            "pii": "Yes \u2014 DPDPA",
             "topology": "oradb Docker, modular monolith"
           }
         },
@@ -138,8 +138,8 @@
       "name": "oradev",
       "label": "AI TIER",
       "subtitle": "68.233.97.153",
-      "x": 12,
-      "z": -4,
+      "x": -12,
+      "z": 7,
       "color": "#7c3aed",
       "size": 5.5,
       "services": [
@@ -235,9 +235,9 @@
       "id": "cloudflare",
       "name": "cloudflare",
       "label": "EDGE TIER",
-      "subtitle": "Pages · 10 apps",
+      "subtitle": "Pages \u00b7 10 apps",
       "x": -12,
-      "z": 7,
+      "z": -4,
       "color": "#f38020",
       "size": 7,
       "services": [
@@ -333,7 +333,7 @@
           "meta": {
             "protocol": "HTTPS",
             "upstream": "nidhiflow-api via oradb",
-            "pii": "No — server-rendered shell only"
+            "pii": "No \u2014 server-rendered shell only"
           }
         }
       ]
@@ -364,9 +364,9 @@
       "id": "personal",
       "name": "home",
       "label": "HOME TIER",
-      "subtitle": "tailnet · DNS clients",
+      "subtitle": "tailnet \u00b7 DNS clients",
       "x": 0,
-      "z": 12,
+      "z": 14,
       "color": "#db2777",
       "size": 4,
       "services": [
@@ -453,7 +453,7 @@
     {
       "from": "mcp-hub",
       "to": "oradb",
-      "label": "MCP → DB"
+      "label": "MCP \u2192 DB"
     },
     {
       "from": "better-auth",

@@ -43,13 +43,14 @@ function layout(data: ManacitraData): { cards: ZoneCard[]; W: number; H: number 
   const external = get('external');
   const personal = get('personal');
 
-  // Three-column facade: EDGE tier top-left, oradev middle, oradb as the right
-  // spine (its traffic sink). External sits under cloudflare so CI deploys flow
-  // upward into the edge tier; home sits under oradev so home→orbit edges also
-  // flow upward. Every connection therefore resolves to a rightward, an inward,
-  // or an upward route — nothing is dropped.
+  // Three-column facade: EDGE tier top-left, oradb middle (traffic sink),
+  // oradev right (AI tier). External sits under cloudflare so CI deploys flow
+  // upward into the edge tier; home sits under oradb so DNS/Tailscale edges
+  // flow upward. Cloudflare→oradb API lines are now visible (not hidden
+  // behind oradev). Every connection resolves to a rightward, inward,
+  // or upward route — nothing is dropped.
   const colB = Math.max(MARGIN + cloudflare.size.w, MARGIN + 316) + COL_GAP;
-  const colC = colB + oradev.size.w + COL_GAP;
+  const colC = colB + oradb.size.w + COL_GAP;
 
   const place = (entry: { zone: Zone; size: { w: number; h: number } }, x: number, y: number): ZoneCard => {
     const { zone, size } = entry;
@@ -66,16 +67,16 @@ function layout(data: ManacitraData): { cards: ZoneCard[]; W: number; H: number 
 
   const cards = [
     place(cloudflare, MARGIN, MARGIN),
-    place(oradev, colB, MARGIN),
-    place(oradb, colC, MARGIN),
+    place(oradb, colB, MARGIN),
+    place(oradev, colC, MARGIN),
     place(external, MARGIN, MARGIN + cloudflare.size.h + ROW_GAP),
-    place(personal, colB, MARGIN + oradev.size.h + ROW_GAP),
+    place(personal, colB, MARGIN + oradb.size.h + ROW_GAP),
   ];
 
-  const W = colC + oradb.size.w + MARGIN;
+  const W = colC + oradev.size.w + MARGIN;
   const H = Math.max(
     MARGIN + cloudflare.size.h + ROW_GAP + external.size.h,
-    MARGIN + oradev.size.h + ROW_GAP + personal.size.h,
+    MARGIN + oradb.size.h + ROW_GAP + personal.size.h,
   ) + MARGIN;
   return { cards, W, H };
 }
