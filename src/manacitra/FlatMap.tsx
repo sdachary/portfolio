@@ -20,6 +20,84 @@ interface Rect { x: number; y: number; w: number; h: number }
 interface Tile extends Rect { id: string }
 interface ZoneCard extends Rect { zone: Zone; tiles: Tile[] }
 
+// --- Label collision avoidance ---
+const LABEL_FONT_SIZE = 9.5;
+const LABEL_PAD_X = 4;
+const LABEL_PAD_Y = 2;
+const CHAR_WIDTH = 5.8;
+
+function estimateLabelWidth(text: string): number {
+  return text.length * CHAR_WIDTH + LABEL_PAD_X * 2;
+}
+
+function resolveLabelOverlaps(labels: { id: string; x: number; y: number; w: number; text: string }[]): Map<string, { x: number; y: number }> {
+  const placed: { x: number; y: number; w: number; h: number }[] = [];
+  const result = new Map<string, { x: number; y: number }>();
+  const h = LABEL_FONT_SIZE + LABEL_PAD_Y * 2;
+
+  for (const label of labels) {
+    let bestX = label.x;
+    let bestY = label.y;
+    let found = false;
+
+    // Try offset positions perpendicular to the typical route direction
+    const candidates = [
+      { dx: 0, dy: 0 },    // original position
+      { dx: 0, dy: -14 },  // above
+      { dx: 0, dy: 14 },   // below
+      { dx: 0, dy: -28 },  // far above
+      { dx: 0, dy: 28 },   // far below
+      { dx: 12, dy: 0 },   // right
+      { dx: -12, dy: 0 },  // left
+      { dx: 12, dy: -14 }, // right+above
+      { dx: -12, dy: -14 },// left+above
+    ];
+
+    for (const c of candidates) {
+      const cx = label.x + c.dx;
+      const cy = label.y + c.dy;
+      const box = { x: cx - label.w / 2, y: cy - h / 2, w: label.w, h };
+      const overlaps = placed.some(p =>
+        box.x < p.x + p.w && box.x + box.w > p.x &&
+        box.y < p.y + p.h && box.y + box.h > p.y
+      );
+      if (!overlaps) {
+        bestX = cx;
+        bestY = cy;
+        found = true;
+        break;
+      }
+    }
+
+    if (!found) {
+      // Brute-force scan for a free slot
+      for (let dy = -60; dy <= 60; dy += 7) {
+        for (let dx = -30; dx <= 30; dx += 7) {
+          if (dx === 0 && dy === 0) continue;
+          const cx = label.x + dx;
+          const cy = label.y + dy;
+          const box = { x: cx - label.w / 2, y: cy - h / 2, w: label.w, h };
+          const overlaps = placed.some(p =>
+            box.x < p.x + p.w && box.x + box.w > p.x &&
+            box.y < p.y + p.h && box.y + box.h > p.y
+          );
+          if (!overlaps) {
+            bestX = cx;
+            bestY = cy;
+            found = true;
+            break;
+          }
+        }
+        if (found) break;
+      }
+    }
+
+    placed.push({ x: bestX - label.w / 2, y: bestY - h / 2, w: label.w, h });
+    result.set(label.id, { x: bestX, y: bestY });
+  }
+  return result;
+}
+
 function gridFor(n: number) {
   const cols = Math.min(4, Math.max(1, Math.ceil(Math.sqrt(n))));
   return { cols, rows: Math.ceil(n / cols) };
@@ -104,6 +182,7 @@ interface Route {
   label: { x: number; y: number };
   from: string;
   to: string;
+  labelText?: string;
 }
 
 function buildRoutes(data: ManacitraData, cards: ZoneCard[]) {
@@ -228,6 +307,7 @@ function buildRoutes(data: ManacitraData, cards: ZoneCard[]) {
         label: { x: lx - 8, y: (sy + lane) / 2 },
         from: conn.from,
         to: conn.to,
+        labelText: conn.label,
       });
       return;
     }
@@ -267,13 +347,13 @@ function buildRoutes(data: ManacitraData, cards: ZoneCard[]) {
         const lane = nextDstLane(dstT.tile);
         const tx = nextDst(dstT.tile);
         const d = `M ${src.x} ${src.y} H ${laneX} V ${entry.y} H ${gutterX} V ${lane} H ${tx} V ${dstT.tile.y}`;
-        routes.push({ d, end: { x: tx, y: dstT.tile.y }, angle: 90, label: { x: laneX + 8, y: (src.y + entry.y) / 2 }, from: conn.from, to: conn.to });
+        routes.push({ d, end: { x: tx, y: dstT.tile.y }, angle: 90, label: { x: laneX + 8, y: (src.y + entry.y) / 2 }, from: conn.from, to: conn.to, labelText: conn.label });
         return;
       }
 
       const dst = { x: toCard.x, y: toCard.y + PAD + (laneX - (fromCard.x + fromCard.w + 12)) / ((toCard.x - 12) - (fromCard.x + fromCard.w + 12)) * (toCard.h - PAD * 2) };
       const d = `M ${src.x} ${src.y} H ${laneX} V ${dst.y} H ${dst.x}`;
-      routes.push({ d, end: dst, angle: 0, label: { x: laneX + 8, y: (src.y + dst.y) / 2 }, from: conn.from, to: conn.to });
+      routes.push({ d, end: dst, angle: 0, label: { x: laneX + 8, y: (src.y + dst.y) / 2 }, from: conn.from, to: conn.to, labelText: conn.label });
       return;
     }
 
@@ -296,7 +376,7 @@ function buildRoutes(data: ManacitraData, cards: ZoneCard[]) {
       const pos = Math.max(0, upConns.findIndex(c => c.from === conn.from && c.to === conn.to));
       const laneY = corridorMin + ((pos + 0.5) / Math.max(1, upConns.length)) * (corridorMax - corridorMin);
       const d = `M ${src.x} ${src.y} V ${laneY} H ${dst.x} V ${dst.y}`;
-      routes.push({ d, end: dst, angle: -90, label: { x: (src.x + dst.x) / 2, y: laneY - 6 }, from: conn.from, to: conn.to });
+      routes.push({ d, end: dst, angle: -90, label: { x: (src.x + dst.x) / 2, y: laneY - 6 }, from: conn.from, to: conn.to, labelText: conn.label });
       return;
     }
   });
@@ -363,6 +443,21 @@ export default function FlatMap({ data }: { data: ManacitraData }) {
   }, [tileById, filters.status, q, data.health]);
 
   const { routes, intraRoutes } = useMemo(() => buildRoutes(data, cards), [data, cards]);
+
+  // Resolve label overlaps across all routes
+  const resolvedLabels = useMemo(() => {
+    const allRoutes = [...routes, ...intraRoutes];
+    const labelInputs = allRoutes
+      .filter(r => r.labelText)
+      .map(r => ({
+        id: `${r.from}>${r.to}`,
+        x: r.label.x,
+        y: r.label.y,
+        w: estimateLabelWidth(r.labelText!),
+        text: r.labelText!,
+      }));
+    return resolveLabelOverlaps(labelInputs);
+  }, [routes, intraRoutes]);
 
   const allServices = useMemo(() => data.zones.flatMap(z => z.services), [data]);
 
@@ -664,17 +759,20 @@ export default function FlatMap({ data }: { data: ManacitraData }) {
 
       {/* connection labels */}
       {visibleLayers.labels && [...routes, ...intraRoutes].map((conn, i) => {
-        const label = data.connections.find(c => c.from === conn.from && c.to === conn.to)?.label;
+        const label = conn.labelText ?? data.connections.find(c => c.from === conn.from && c.to === conn.to)?.label;
         if (!label) return null;
         const isActive = linkActive(conn.from, conn.to);
         const dim = dimmed.has(conn.from) || dimmed.has(conn.to);
         const opacity = isActive ? 1 : dim ? 0.15 : 0.6;
+        const resolved = resolvedLabels.get(`${conn.from}>${conn.to}`);
+        const lx = resolved?.x ?? conn.label.x;
+        const ly = resolved?.y ?? conn.label.y;
         return (
           <motion.g key={`l${i}`}
             initial={reducedMotion ? false : { opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={reducedMotion ? { duration: 0 } : { delay: 1.05 + i * 0.03, duration: 0.3 }}>
-            <text x={conn.label.x} y={conn.label.y} fontFamily={T.fontMono} fontSize={9.5}
+            <text x={lx} y={ly} fontFamily={T.fontMono} fontSize={9.5}
               fill={isActive ? T.accent : T.ink} opacity={opacity} filter="url(#halo)" style={{ transition: 'opacity .2s' }}>
               {label}
             </text>
