@@ -44,10 +44,20 @@ function SectionObserver({ onActive }: { onActive: (id: string) => void }) {
       },
       { rootMargin: '-40% 0px -55% 0px' }
     )
-    for (const id of ids) {
-      const el = document.getElementById(id)
-      if (el) observer.observe(el)
+    let observed = new Set<string>()
+    let retries = 0
+    function scan() {
+      for (const id of ids) {
+        if (observed.has(id)) continue
+        const el = document.getElementById(id)
+        if (el) { observer.observe(el); observed.add(id) }
+      }
+      if (observed.size < ids.length && retries < 30) {
+        retries++
+        requestAnimationFrame(scan)
+      }
     }
+    scan()
     return () => observer.disconnect()
   }, [onActive])
   return null
