@@ -122,9 +122,10 @@ function layout(data: ManacitraData): { cards: ZoneCard[]; W: number; H: number 
   const personal = get('personal');
 
   // Three-column facade: EDGE tier top-left, oradb middle (traffic sink),
-  // oradev right (AI tier). Personal (home) sits bottom-left so
-  // DNS/Tailscale edges flow upward-right without crossing oradb.
-  // External sits bottom-right so MCP→Notion flows upward into oradev.
+  // oradev right (AI tier). Personal (home) sits below oradb in the middle
+  // column so its Tailscale/DNS edges to oradev flow rightward through the
+  // clear B→C corridor instead of a full-width lane that crossed oradb.
+  // External sits below oradev so MCP→Notion drops straight down the column.
   const colB = Math.max(MARGIN + cloudflare.size.w, MARGIN + 316) + COL_GAP;
   const colC = colB + oradb.size.w + COL_GAP;
 
@@ -145,13 +146,13 @@ function layout(data: ManacitraData): { cards: ZoneCard[]; W: number; H: number 
     place(cloudflare, MARGIN, MARGIN),
     place(oradb, colB, MARGIN),
     place(oradev, colC, MARGIN),
-    place(personal, MARGIN, MARGIN + cloudflare.size.h + ROW_GAP),
+    place(personal, colB, MARGIN + oradb.size.h + ROW_GAP),
     place(external, colC, MARGIN + oradev.size.h + ROW_GAP),
   ];
 
   const W = colC + oradev.size.w + MARGIN;
   const H = Math.max(
-    MARGIN + cloudflare.size.h + ROW_GAP + personal.size.h,
+    MARGIN + oradb.size.h + ROW_GAP + personal.size.h,
     MARGIN + oradev.size.h + ROW_GAP + external.size.h,
   ) + MARGIN;
   return { cards, W, H };
@@ -354,6 +355,45 @@ function buildRoutes(data: ManacitraData, cards: ZoneCard[]) {
       const dst = { x: toCard.x, y: toCard.y + PAD + (laneX - (fromCard.x + fromCard.w + 12)) / ((toCard.x - 12) - (fromCard.x + fromCard.w + 12)) * (toCard.h - PAD * 2) };
       const d = `M ${src.x} ${src.y} H ${laneX} V ${dst.y} H ${dst.x}`;
       routes.push({ d, end: dst, angle: 0, label: { x: laneX + 8, y: (src.y + dst.y) / 2 }, from: conn.from, to: conn.to, labelText: conn.label });
+      return;
+    }
+
+    // leftward: target card is to the left of source card (e.g. oradev → oradb)
+    if (toCard.x + toCard.w <= fromCard.x) {
+      const srcT = tileOf.get(conn.from);
+      const dstT = tileOf.get(conn.to);
+      const src = srcT
+        ? { x: fromCard.x, y: clamp(srcT.tile.y + TILE / 2, fromCard.y + PAD + 4, fromCard.y + fromCard.h - PAD - 4) }
+        : edgePoint(fromCard, 'l', 0.5);
+      const laneX = (fromCard.x + toCard.x + toCard.w) / 2;
+      if (dstT) {
+        const entry = { x: toCard.x + toCard.w, y: clamp(dstT.tile.y + TILE / 2, toCard.y + PAD + 4, toCard.y + toCard.h - PAD - 6) };
+        const gutterX = toCard.x + toCard.w - PAD / 2;
+        const lane = nextDstLane(dstT.tile);
+        const tx = nextDst(dstT.tile);
+        const d = `M ${src.x} ${src.y} H ${laneX} V ${entry.y} H ${gutterX} V ${lane} H ${tx} V ${dstT.tile.y}`;
+        routes.push({ d, end: { x: tx, y: dstT.tile.y }, angle: 90, label: { x: laneX - 8, y: (src.y + entry.y) / 2 }, from: conn.from, to: conn.to, labelText: conn.label });
+        return;
+      }
+      const dst = edgePoint(toCard, 'r', clamp((src.y - toCard.y) / toCard.h, 0.15, 0.85));
+      const d = `M ${src.x} ${src.y} H ${laneX} V ${dst.y} H ${dst.x}`;
+      routes.push({ d, end: dst, angle: 180, label: { x: laneX - 8, y: (src.y + dst.y) / 2 }, from: conn.from, to: conn.to, labelText: conn.label });
+      return;
+    }
+
+    // same-column: target card directly below source card (e.g. oradev → external)
+    if (Math.abs(toCard.x - fromCard.x) < 1 && toCard.y > fromCard.y) {
+      const srcT = tileOf.get(conn.from);
+      const dstT = tileOf.get(conn.to);
+      const src = srcT
+        ? { x: clamp(srcT.tile.x + TILE / 2, fromCard.x + PAD + 6, fromCard.x + fromCard.w - PAD - 6), y: fromCard.y + fromCard.h }
+        : edgePoint(fromCard, 'b', 0.5);
+      const dst = dstT
+        ? { x: clamp(dstT.tile.x + TILE / 2, toCard.x + PAD + 6, toCard.x + toCard.w - PAD - 6), y: toCard.y }
+        : edgePoint(toCard, 't', 0.5);
+      const midY = (src.y + dst.y) / 2;
+      const d = `M ${src.x} ${src.y} V ${midY} H ${dst.x} V ${dst.y}`;
+      routes.push({ d, end: dst, angle: 90, label: { x: (src.x + dst.x) / 2, y: midY - 6 }, from: conn.from, to: conn.to, labelText: conn.label });
       return;
     }
 
