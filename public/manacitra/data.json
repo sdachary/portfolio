@@ -21,7 +21,7 @@
           "meta": {
             "protocol": "TCP 5432",
             "dataStored": "All app schemas",
-            "pii": "Yes \u2014 identity data",
+            "pii": "Yes — identity data",
             "topology": "oradb only, single node"
           }
         },
@@ -109,7 +109,7 @@
             "protocol": "HTTP :4003",
             "upstream": "pg16 (nidhi schema)",
             "dataStored": "Identity records",
-            "pii": "Yes \u2014 DPDPA",
+            "pii": "Yes — DPDPA",
             "topology": "oradb Docker, modular monolith"
           }
         },
@@ -235,7 +235,7 @@
       "id": "cloudflare",
       "name": "cloudflare",
       "label": "EDGE TIER",
-      "subtitle": "Pages \u00b7 10 apps",
+      "subtitle": "Pages · 10 apps",
       "x": -12,
       "z": -4,
       "color": "#f38020",
@@ -333,7 +333,7 @@
           "meta": {
             "protocol": "HTTPS",
             "upstream": "nidhiflow-api via oradb",
-            "pii": "No \u2014 server-rendered shell only"
+            "pii": "No — server-rendered shell only"
           }
         }
       ]
@@ -364,7 +364,7 @@
       "id": "personal",
       "name": "home",
       "label": "HOME TIER",
-      "subtitle": "tailnet \u00b7 DNS clients",
+      "subtitle": "tailnet · DNS clients",
       "x": 0,
       "z": 14,
       "color": "#db2777",
@@ -453,7 +453,7 @@
     {
       "from": "mcp-hub",
       "to": "oradb",
-      "label": "MCP \u2192 DB"
+      "label": "MCP → DB"
     },
     {
       "from": "better-auth",
@@ -516,7 +516,7 @@
       "label": "DNS"
     }
   ],
-  "generated_at": "2026-09-04T07:26:57.775Z",
+  "generated_at": "2026-09-04T07:34:49.300Z",
   "stats": {
     "total_services": 33,
     "online": 31,
@@ -527,135 +527,135 @@
   "health": {
     "nginx": {
       "online": true,
-      "checked_at": "2026-09-04T07:26:57.775Z"
+      "checked_at": "2026-09-04T07:34:49.300Z"
     },
     "postgrest": {
       "online": true,
-      "checked_at": "2026-09-04T07:26:57.775Z"
+      "checked_at": "2026-09-04T07:34:49.300Z"
     },
     "better-auth": {
       "online": true,
-      "checked_at": "2026-09-04T07:26:57.775Z"
+      "checked_at": "2026-09-04T07:34:49.300Z"
     },
     "mail-relay": {
       "online": true,
-      "checked_at": "2026-09-04T07:26:57.775Z"
+      "checked_at": "2026-09-04T07:34:49.300Z"
     },
     "sampada-api": {
       "online": true,
-      "checked_at": "2026-09-04T07:26:57.775Z"
+      "checked_at": "2026-09-04T07:34:49.300Z"
     },
     "bepara-api": {
       "online": true,
-      "checked_at": "2026-09-04T07:26:57.775Z"
+      "checked_at": "2026-09-04T07:34:49.300Z"
     },
     "sadhan-server": {
       "online": true,
-      "checked_at": "2026-09-04T07:26:57.775Z"
+      "checked_at": "2026-09-04T07:34:49.300Z"
     },
     "nidhiflow-api": {
       "online": true,
-      "checked_at": "2026-09-04T07:26:57.775Z"
+      "checked_at": "2026-09-04T07:34:49.300Z"
     },
     "headroom": {
       "online": true,
-      "checked_at": "2026-09-04T07:26:57.775Z"
+      "checked_at": "2026-09-04T07:34:49.300Z"
     },
     "gatus": {
       "online": true,
-      "checked_at": "2026-09-04T07:26:57.775Z"
+      "checked_at": "2026-09-04T07:34:49.300Z"
     },
     "pg16": {
       "online": true,
-      "checked_at": "2026-09-04T07:26:57.775Z"
+      "checked_at": "2026-09-04T07:34:49.300Z"
     },
     "redis": {
       "online": true,
-      "checked_at": "2026-09-04T07:26:57.775Z"
+      "checked_at": "2026-09-04T07:34:49.300Z"
     },
     "mcp-hub": {
       "online": true,
-      "checked_at": "2026-09-04T07:26:57.775Z"
+      "checked_at": "2026-09-04T07:34:49.300Z"
     },
     "paca": {
       "online": false,
-      "checked_at": "2026-09-04T07:26:57.775Z"
+      "checked_at": "2026-09-04T07:34:49.300Z"
     },
     "ttyd": {
       "online": true,
-      "checked_at": "2026-09-04T07:26:57.775Z"
+      "checked_at": "2026-09-04T07:34:49.300Z"
     },
     "minio": {
       "online": false,
-      "checked_at": "2026-09-04T07:26:57.775Z"
+      "checked_at": "2026-09-04T07:34:49.300Z"
     },
     "pihole": {
       "online": true,
-      "checked_at": "2026-09-04T07:26:57.775Z"
+      "checked_at": "2026-09-04T07:34:49.300Z"
     },
     "unbound": {
       "online": true,
-      "checked_at": "2026-09-04T07:26:57.775Z"
+      "checked_at": "2026-09-04T07:34:49.300Z"
     },
     "tailscale": {
       "online": true,
-      "checked_at": "2026-09-04T07:26:57.775Z"
+      "checked_at": "2026-09-04T07:34:49.300Z"
     },
     "fail2ban": {
       "online": true,
-      "checked_at": "2026-09-04T07:26:57.775Z"
+      "checked_at": "2026-09-04T07:34:49.300Z"
     },
     "workstation": {
       "online": true,
-      "checked_at": "2026-09-04T07:26:57.775Z"
+      "checked_at": "2026-09-04T07:34:49.300Z"
     },
     "pixel-10a": {
       "online": true,
-      "checked_at": "2026-09-04T07:26:57.775Z"
+      "checked_at": "2026-09-04T07:34:49.300Z"
     },
     "github": {
       "online": true,
-      "checked_at": "2026-09-04T07:26:57.775Z"
+      "checked_at": "2026-09-04T07:34:49.300Z"
     },
     "chitragupta": {
       "online": true,
-      "checked_at": "2026-09-04T07:26:57.775Z"
+      "checked_at": "2026-09-04T07:34:49.300Z"
     },
     "bepara": {
       "online": true,
-      "checked_at": "2026-09-04T07:26:57.775Z"
+      "checked_at": "2026-09-04T07:34:49.300Z"
     },
     "udhyam": {
       "online": true,
-      "checked_at": "2026-09-04T07:26:57.775Z"
+      "checked_at": "2026-09-04T07:34:49.300Z"
     },
     "sampada-web": {
       "online": true,
-      "checked_at": "2026-09-04T07:26:57.775Z"
+      "checked_at": "2026-09-04T07:34:49.300Z"
     },
     "sadhan": {
       "online": true,
-      "checked_at": "2026-09-04T07:26:57.775Z"
+      "checked_at": "2026-09-04T07:34:49.300Z"
     },
     "nidhiflow": {
       "online": true,
-      "checked_at": "2026-09-04T07:26:57.775Z"
+      "checked_at": "2026-09-04T07:34:49.300Z"
     },
     "vishwakarma": {
       "online": true,
-      "checked_at": "2026-09-04T07:26:57.775Z"
+      "checked_at": "2026-09-04T07:34:49.300Z"
     },
     "darpan": {
       "online": true,
-      "checked_at": "2026-09-04T07:26:57.775Z"
+      "checked_at": "2026-09-04T07:34:49.300Z"
     },
     "prayog": {
       "online": true,
-      "checked_at": "2026-09-04T07:26:57.775Z"
+      "checked_at": "2026-09-04T07:34:49.300Z"
     },
     "portfolio": {
       "online": true,
-      "checked_at": "2026-09-04T07:26:57.775Z"
+      "checked_at": "2026-09-04T07:34:49.300Z"
     }
   }
 }
