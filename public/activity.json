@@ -1,5 +1,21 @@
 [
   {
+    "kind": "feature",
+    "phase": "Phase 57",
+    "project": "SAMPADA",
+    "description": "Natural language transaction entry — type '₹500 lunch' and the form auto-fills amount, description, and type",
+    "date": "2026-09-04",
+    "status": "completed"
+  },
+  {
+    "kind": "docs",
+    "phase": "",
+    "project": "ACHARYLAB",
+    "description": "Wiki cleanup: remove stale saraswati references (merged into prayog 2026-07-26), update IP-PROTECTION.md",
+    "date": "2026-09-04",
+    "status": "completed"
+  },
+  {
     "kind": "build",
     "phase": "Phase 57",
     "project": "SAMPADA",
