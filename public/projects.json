@@ -57,16 +57,16 @@
   {
     "name": "INDRA",
     "slug": "indra",
-    "status": "Local / Standalone",
-    "status_key": "local",
-    "description": "Workflow automation backbone for the ecosystem. Powered by n8n, orchestrates multi-service workflows, webhook triggers, and real-time state sync. Render instance deleted 2026-08-30 — pending redeploy.",
+    "status": "Live",
+    "status_key": "live",
+    "description": "Workflow automation backbone for the ecosystem. Powered by n8n, orchestrates multi-service workflows, webhook triggers, and real-time state sync across all services. Render-hosted Docker deployment.",
     "tags": [
       "n8n",
       "Docker",
       "PostgreSQL"
     ],
-    "live_url": null,
-    "local": true,
+    "live_url": "https://indra.onrender.com/",
+    "local": false,
     "last_updated": "2026-09-04",
     "github_remote": "git@github.com:sdachary/indra.git"
   },

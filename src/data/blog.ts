@@ -8,6 +8,30 @@ export interface BlogPost {
 
 const posts: BlogPost[] = [
   {
+    slug: 'sampada-web-push',
+    title: 'Web Push Notifications for Sampada',
+    date: '2026-09-04',
+    tags: ['sampada', 'web-push', 'infrastructure'],
+    body: `
+      <p>Sampada now sends browser push notifications — real-time alerts for transaction goals, bill reminders, and net worth milestones. The implementation spans the full stack: VAPID key generation, encrypted secret management with SOPS+age, a push subscription API, Sidekiq delivery jobs, and a service worker that handles the push event.</p>
+      <p>The trickiest part was the Docker image. Sampada's code is baked into the container image, not volume-mounted. Adding the <code>webpush</code> gem meant a full image rebuild on oradb — the first build took 5+ hours because of native extensions. The solution: install the gem in the running container for immediate effect, then rebuild the image in the background for persistence.</p>
+      <p>Secrets management: VAPID keys are generated with Node.js ECDSA P-256, encrypted with SOPS+age (age1w3nwuv...), committed as <code>secrets.enc.env</code>, and decrypted at deploy time via <code>deploy.sh</code>. The age key lives on oradb at <code>~/.config/sops/age/keys.txt</code> — same pattern used across all acharylab services.</p>
+      <p>Lesson: OpenSSL 3.0 breaks the <code>webpush</code> gem's key generation (<code>pkeys are immutable</code>). Workaround: generate keys with Node.js crypto, store them encrypted, and skip the gem's generate method entirely.</p>
+    `,
+  },
+  {
+    slug: 'indra-redeploy',
+    title: 'Indra Returns: n8n on Render',
+    date: '2026-09-04',
+    tags: ['indra', 'n8n', 'infrastructure'],
+    body: `
+      <p>Indra — the automation mesh connecting Sampada, Chitragupta, Vishwakarma, and other services — is back online. The previous Render free-tier instance was auto-suspended and deleted in August. This time: pinned to <code>n8nio/n8n:2.37.10</code> (latest stable), connected to self-hosted Supabase PostgreSQL, and backed by a 7-minute keep-alive cron job.</p>
+      <p>The repo had three issues to fix before deploy: the Dockerfile pinned n8n 1.87.0 while render.yaml referenced 1.12.0 (version mismatch), the <code>sdachary/n8n-automated-backup</code> repo didn't exist (Auto Sync workflow would 404), and the README still said "NOT DEPLOYED." All resolved in one commit.</p>
+      <p>The Auto Sync workflow exports all n8n workflows every minute via the n8n API and commits them to GitHub. It's a one-line insurance policy — if someone accidentally deletes a workflow, it's in the backup repo within 60 seconds.</p>
+      <p>Next step: wire up the Kanak→Ledger sync, OCI monitoring, and Telegram bot relay workflows that make Indra the central nervous system of the acharylab fleet.</p>
+    `,
+  },
+  {
     slug: 'darpan-scan-engine',
     title: 'Building Darpan: An AI Privacy Auditor',
     date: '2026-07-10',
@@ -17,18 +41,6 @@ const posts: BlogPost[] = [
       <p>The architecture is uncomplicated: a Cloudflare Worker crawls the target, extracts DOM + JS, sends it to Gemini for analysis, and stores findings in D1. The AI handles what would've been 200 lines of heuristic rules in a single prompt: <code>Analyze this page for consent flows, PII leakage, data retention disclosures, and third-party trackers. Be specific about what you find and how to fix it.</code></p>
       <p>The killer feature turned out to be scheduled audits and PDF reports. You set a URL, pick daily/weekly scans, and get a Slack-ready compliance PDF in your inbox. Built with <strong>ponytail</strong> discipline — the cron handler is 40 lines, the PDF generator wraps html2canvas+jsPDF in a React portal.</p>
       <p>Lessons: AI audits hallucinate findings about 15% of the time, so every finding needs a "confidence" field. Also, rate limiting matters — you can't crawl a production site every 5 minutes without asking.</p>
-    `,
-  },
-  {
-    slug: 'saraswati-kids-coding',
-    title: 'Teaching Kids to Code with Saraswati',
-    date: '2026-07-05',
-    tags: ['saraswati', 'education', 'game-design'],
-    body: `
-      <p>Saraswati is a coding education platform for kids 8-14. The core insight: kids don't learn from tutorials, they learn from games that trick them into understanding concepts.</p>
-      <p>The levels cover loops, conditionals, and debugging. Each level is a mini-game where the answer is a code snippet — kids type Python to solve puzzles, and the game interprets their answer against expected patterns. The looser arcade games (snake &amp; ladder, colour match) have since moved to Prayog as browser tools, so Saraswati stays focused on the coding curriculum.</p>
-      <p>Technical choices: localStorage for progress (no auth friction for kids), printable certificates via <code>@media print</code> CSS, and a badge system that tracks streaks. The certificate modal shows stars for completed levels — kids love collecting them.</p>
-      <p>What surprised me: the debugging puzzle was the most popular level. Kids enjoy being "detectives" more than writing code from scratch.</p>
     `,
   },
   {
