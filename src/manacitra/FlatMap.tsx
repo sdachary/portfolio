@@ -44,11 +44,9 @@ function layout(data: ManacitraData): { cards: ZoneCard[]; W: number; H: number 
   const personal = get('personal');
 
   // Three-column facade: EDGE tier top-left, oradb middle (traffic sink),
-  // oradev right (AI tier). External sits under cloudflare so CI deploys flow
-  // upward into the edge tier; home sits under oradb so DNS/Tailscale edges
-  // flow upward. Cloudflare→oradb API lines are now visible (not hidden
-  // behind oradev). Every connection resolves to a rightward, inward,
-  // or upward route — nothing is dropped.
+  // oradev right (AI tier). Personal (home) sits bottom-left so
+  // DNS/Tailscale edges flow upward-right without crossing oradb.
+  // External sits bottom-right so MCP→Notion flows upward into oradev.
   const colB = Math.max(MARGIN + cloudflare.size.w, MARGIN + 316) + COL_GAP;
   const colC = colB + oradb.size.w + COL_GAP;
 
@@ -69,14 +67,14 @@ function layout(data: ManacitraData): { cards: ZoneCard[]; W: number; H: number 
     place(cloudflare, MARGIN, MARGIN),
     place(oradb, colB, MARGIN),
     place(oradev, colC, MARGIN),
-    place(external, MARGIN, MARGIN + cloudflare.size.h + ROW_GAP),
-    place(personal, colB, MARGIN + oradb.size.h + ROW_GAP),
+    place(personal, MARGIN, MARGIN + cloudflare.size.h + ROW_GAP),
+    place(external, colC, MARGIN + oradev.size.h + ROW_GAP),
   ];
 
   const W = colC + oradev.size.w + MARGIN;
   const H = Math.max(
-    MARGIN + cloudflare.size.h + ROW_GAP + external.size.h,
-    MARGIN + oradb.size.h + ROW_GAP + personal.size.h,
+    MARGIN + cloudflare.size.h + ROW_GAP + personal.size.h,
+    MARGIN + oradev.size.h + ROW_GAP + external.size.h,
   ) + MARGIN;
   return { cards, W, H };
 }

@@ -433,14 +433,9 @@
       "label": "API"
     },
     {
-      "from": "oradev",
-      "to": "oradb",
-      "label": "SSH Tunnel"
-    },
-    {
       "from": "tailscale",
       "to": "oradb",
-      "label": "Mesh"
+      "label": "Tailnet"
     },
     {
       "from": "pihole",
@@ -483,29 +478,19 @@
       "label": "DB"
     },
     {
-      "from": "github",
-      "to": "cloudflare",
-      "label": "CI deploy"
-    },
-    {
       "from": "workstation",
       "to": "tailscale",
-      "label": "Mesh"
+      "label": "Tailnet"
     },
     {
       "from": "pixel-10a",
       "to": "tailscale",
-      "label": "Mesh"
-    },
-    {
-      "from": "workstation",
-      "to": "pihole",
-      "label": "DNS"
+      "label": "Tailnet"
     },
     {
       "from": "pixel-10a",
       "to": "pihole",
-      "label": "DNS"
+      "label": "DNS via Tailscale"
     },
     {
       "from": "mcp-hub",
@@ -513,12 +498,12 @@
       "label": "API"
     }
   ],
-  "generated_at": "2026-09-04T07:26:57.775Z",
+  "generated_at": "2026-09-04T11:50:00.000Z",
   "stats": {
     "total_services": 32,
     "online": 32,
     "zones": 5,
-    "connections": 23,
+    "connections": 20,
     "total": 32
   },
   "health": {
