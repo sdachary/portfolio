@@ -487,33 +487,6 @@ export default function FlatMap({ data }: { data: ManacitraData }) {
         ));
       })()}
 
-      {/* inter-zone connections (under cards) */}
-      {visibleLayers.connections && routes.map((conn, i) => {
-        const isActive = linkActive(conn.from, conn.to);
-        const dim = dimmed.has(conn.from) || dimmed.has(conn.to);
-        const opacity = isActive ? 0.8 : dim ? 0.12 : 0.42;
-        const stroke = isActive ? T.accent : T.ink;
-        const dur = (8 + (i % 5) * 2).toFixed(1);
-        return (
-          <motion.g key={`r${i}`}
-            initial={reducedMotion ? false : { opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={reducedMotion ? { duration: 0 } : { delay: 0.9 + i * 0.04, duration: 0.25 }}>
-          <g opacity={opacity} style={{ transition: 'opacity .2s' }}>
-            <motion.path d={conn.d} fill="none" stroke={stroke} strokeWidth={isActive ? 2.2 : 1.5} strokeLinecap="round"
-              initial={reducedMotion ? false : { pathLength: 0 }}
-              animate={{ pathLength: 1 }}
-              transition={{ delay: reducedMotion ? 0 : 0.35 + i * 0.06, duration: 0.55, ease: 'easeOut' }} />
-            {!reducedMotion && (
-              <circle r={2.4} fill={T.accent}>
-                <animateMotion dur={`${dur}s`} repeatCount="indefinite" path={conn.d} />
-              </circle>
-            )}
-          </g>
-          </motion.g>
-        );
-      })}
-
       {/* zone cards */}
       {visibleLayers.zones && cards.map((card, zoneIdx) => {
         const zoneDim = card.tiles.every(t => dimmed.has(t.id));
@@ -627,6 +600,33 @@ export default function FlatMap({ data }: { data: ManacitraData }) {
           </motion.g>
               );
             })}
+          </g>
+          </motion.g>
+        );
+      })}
+
+      {/* inter-zone connections (above cards, below intra-zone) */}
+      {visibleLayers.connections && routes.map((conn, i) => {
+        const isActive = linkActive(conn.from, conn.to);
+        const dim = dimmed.has(conn.from) || dimmed.has(conn.to);
+        const opacity = isActive ? 0.8 : dim ? 0.12 : 0.42;
+        const stroke = isActive ? T.accent : T.ink;
+        const dur = (8 + (i % 5) * 2).toFixed(1);
+        return (
+          <motion.g key={`r${i}`}
+            initial={reducedMotion ? false : { opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={reducedMotion ? { duration: 0 } : { delay: 0.9 + i * 0.04, duration: 0.25 }}>
+          <g opacity={opacity} style={{ transition: 'opacity .2s' }}>
+            <motion.path d={conn.d} fill="none" stroke={stroke} strokeWidth={isActive ? 2.2 : 1.5} strokeLinecap="round"
+              initial={reducedMotion ? false : { pathLength: 0 }}
+              animate={{ pathLength: 1 }}
+              transition={{ delay: reducedMotion ? 0 : 0.35 + i * 0.06, duration: 0.55, ease: 'easeOut' }} />
+            {!reducedMotion && (
+              <circle r={2.4} fill={T.accent}>
+                <animateMotion dur={`${dur}s`} repeatCount="indefinite" path={conn.d} />
+              </circle>
+            )}
           </g>
           </motion.g>
         );

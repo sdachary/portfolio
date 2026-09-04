@@ -374,9 +374,9 @@
           "logo": "",
           "color": "#db2777",
           "h": 1.4,
-          "desc": "Dev machine. Tailnet 100.68.99.68 (via DERP). Resolves via Pi-hole.",
+          "desc": "Dev machine. Via DERP. Resolves via Pi-hole.",
           "meta": {
-            "protocol": "Tailnet 100.68.99.68",
+            "protocol": "Tailscale DERP",
             "topology": "home LAN + tailnet"
           }
         },
@@ -387,9 +387,9 @@
           "logo": "",
           "color": "#f472b6",
           "h": 1.4,
-          "desc": "Phone. Tailnet 100.100.38.29 (direct). Home WAN 223.184.124.63.",
+          "desc": "Phone. Direct Tailscale. Home WAN.",
           "meta": {
-            "protocol": "Tailnet 100.100.38.29",
+            "protocol": "Tailscale direct",
             "topology": "home LAN + tailnet"
           }
         }
