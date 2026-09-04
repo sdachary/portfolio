@@ -9,8 +9,8 @@ export default function Hero() {
 
       <div className="hero-content">
         <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, ease }}
           className="hero-location"
         >
@@ -18,9 +18,9 @@ export default function Hero() {
         </motion.div>
 
         <motion.h1
-          initial={{ opacity: 0, y: 60 }}
+          initial={{ opacity: 0, y: 40 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1, delay: 0.3, ease }}
+          transition={{ duration: 1, delay: 0.2, ease }}
           className="hero-headline"
         >
           DATA TELLS <em>STORIES.</em>
@@ -30,16 +30,16 @@ export default function Hero() {
         <motion.p
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ duration: 0.8, delay: 0.7, ease }}
+          transition={{ duration: 0.8, delay: 0.6, ease }}
           className="hero-tagline"
         >
           Senior Data Analyst &nbsp;✦&nbsp; AI Architect &nbsp;✦&nbsp; Solopreneur Builder
         </motion.p>
 
         <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.8, delay: 0.9, ease }}
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.8, ease }}
           className="hero-actions"
         >
           <a href="/resume.pdf" target="_blank" rel="noreferrer" className="hero-cta">
@@ -49,8 +49,6 @@ export default function Hero() {
           <a href="#work" className="hero-link">Work With Me →</a>
         </motion.div>
       </div>
-
-
     </section>
   )
 }

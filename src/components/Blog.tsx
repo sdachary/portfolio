@@ -1,8 +1,18 @@
 import { useState, useMemo } from 'react'
-import { motion } from 'framer-motion'
+import { motion, type Variants } from 'framer-motion'
 import posts from '../data/blog'
 
 const ease = [0.32, 0.72, 0, 1] as const
+
+const container: Variants = {
+  hidden: {},
+  show: { transition: { staggerChildren: 0.08 } },
+}
+
+const item: Variants = {
+  hidden: { opacity: 0, y: 20 },
+  show: { opacity: 1, y: 0, transition: { duration: 0.5, ease } },
+}
 
 export default function Blog() {
   const [activeFilter, setActiveFilter] = useState<string | null>(null)
@@ -18,10 +28,10 @@ export default function Blog() {
     <section id="blog" className="section section-alt section-divider">
       <div className="section-header">
         <motion.h2
-          initial={{ opacity: 0, letterSpacing: '0.3em' }}
-          whileInView={{ opacity: 1, letterSpacing: '-0.02em' }}
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          transition={{ duration: 0.5, ease }}
+          transition={{ duration: 0.6, ease }}
           className="section-title"
         >Blog</motion.h2>
       </div>
@@ -55,17 +65,20 @@ export default function Blog() {
         </div>
       </div>
 
-      <div className="blog-grid">
+      <motion.div
+        variants={container}
+        initial="hidden"
+        whileInView="show"
+        viewport={{ once: true }}
+        className="blog-grid"
+      >
         {filtered.length === 0 && (
           <p className="blog-empty">No posts match your search. Try a different query.</p>
         )}
-        {filtered.map((post, i) => (
+        {filtered.map((post) => (
           <motion.article
             key={post.slug}
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6, delay: i * 0.1, ease }}
+            variants={item}
             className="blog-post"
           >
             <div className="blog-meta">
@@ -80,7 +93,7 @@ export default function Blog() {
             <div className="blog-body" dangerouslySetInnerHTML={{ __html: post.body }} />
           </motion.article>
         ))}
-      </div>
+      </motion.div>
     </section>
   )
 }

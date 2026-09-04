@@ -2,8 +2,6 @@ import Navbar from './components/Navbar'
 import Hero from './components/Hero'
 import About from './components/About'
 import Experience from './components/Experience'
-import DualIdentity from './components/DualIdentity'
-import Services from './components/Services'
 import Skills from './components/Skills'
 import Projects from './components/Projects'
 import ManacitraSection from './components/ManacitraSection'
@@ -19,8 +17,6 @@ export default function App() {
       <Hero />
       <About />
       <Experience />
-      <DualIdentity />
-      <Services />
       <Skills />
       <Projects />
       <ManacitraSection />

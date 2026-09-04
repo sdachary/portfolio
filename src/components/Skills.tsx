@@ -5,12 +5,12 @@ const ease = [0.32, 0.72, 0, 1] as const
 
 const container: Variants = {
   hidden: {},
-  show: { transition: { staggerChildren: 0.03 } },
+  show: { transition: { staggerChildren: 0.025 } },
 }
 
 const item: Variants = {
-  hidden: { opacity: 0, y: 20, scale: 0.95 },
-  show: { opacity: 1, y: 0, scale: 1, transition: { duration: 0.5, ease } },
+  hidden: { opacity: 0, y: 16, scale: 0.96 },
+  show: { opacity: 1, y: 0, scale: 1, transition: { duration: 0.45, ease } },
 }
 
 export default function Skills() {
@@ -18,10 +18,10 @@ export default function Skills() {
     <section id="skills" className="section">
       <div className="section-header">
         <motion.h2
-          initial={{ opacity: 0, letterSpacing: '0.3em' }}
-          whileInView={{ opacity: 1, letterSpacing: '-0.02em' }}
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          transition={{ duration: 0.5, ease }}
+          transition={{ duration: 0.6, ease }}
           className="section-title"
         >Tech Stack</motion.h2>
       </div>

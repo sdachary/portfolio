@@ -25,7 +25,7 @@ const tracks: WorkTrack[] = [
 const ease = [0.32, 0.72, 0, 1] as const
 
 function Card({ data, side, accent }: { data: WorkTrack; side: 'left' | 'right'; accent: string }) {
-  const borderColor = accent === 'var(--accent)' ? 'rgba(200,146,42,0.3)' : 'rgba(184,76,42,0.3)'
+  const borderColor = accent === 'var(--accent)' ? 'rgba(201,169,110,0.25)' : 'rgba(58,74,107,0.25)'
   return (
     <motion.div
       initial={{ opacity: 0, y: 40 }}
@@ -55,10 +55,10 @@ export default function WorkWithMe() {
     <section id="work" className="section section-alt section-divider-both">
       <div className="section-header">
         <motion.h2
-          initial={{ opacity: 0, letterSpacing: '0.3em' }}
-          whileInView={{ opacity: 1, letterSpacing: '-0.02em' }}
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          transition={{ duration: 0.5, ease: [0.32, 0.72, 0, 1] }}
+          transition={{ duration: 0.6, ease }}
           className="section-title"
         >How I Can Help</motion.h2>
       </div>

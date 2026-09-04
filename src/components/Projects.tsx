@@ -1,8 +1,18 @@
 import { useEffect, useState } from 'react'
-import { motion } from 'framer-motion'
+import { motion, type Variants } from 'framer-motion'
 import type { Project } from '../data/types'
 
 const ease = [0.32, 0.72, 0, 1] as const
+
+const container: Variants = {
+  hidden: {},
+  show: { transition: { staggerChildren: 0.06 } },
+}
+
+const item: Variants = {
+  hidden: { opacity: 0, y: 24, scale: 0.97 },
+  show: { opacity: 1, y: 0, scale: 1, transition: { duration: 0.55, ease } },
+}
 
 function isFeatured(p: Project) {
   return p.status_key === 'live' || p.status_key === 'open-source'
@@ -46,19 +56,19 @@ export default function Projects() {
     <section id="projects" className="section section-alt" style={{ overflow: 'hidden' }}>
       <div className="section-header">
         <motion.h2
-          initial={{ opacity: 0, letterSpacing: '0.3em' }}
-          whileInView={{ opacity: 1, letterSpacing: '-0.02em' }}
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          transition={{ duration: 0.5, ease }}
+          transition={{ duration: 0.6, ease }}
           className="section-title"
         >Projects</motion.h2>
       </div>
 
       <motion.div
-        initial={{ opacity: 0 }}
-        whileInView={{ opacity: 1 }}
+        variants={container}
+        initial="hidden"
+        whileInView="show"
         viewport={{ once: true }}
-        transition={{ duration: 0.6, ease }}
         className="projects-bento"
       >
         {sorted.map((p, i) => {
@@ -69,10 +79,7 @@ export default function Projects() {
           return (
             <motion.div
               key={p.slug || i}
-              initial={{ opacity: 0, scale: 0.96 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: i * 0.04, ease }}
+              variants={item}
               className={`project-card${featured ? ' featured' : ''}`}
             >
               <div>
